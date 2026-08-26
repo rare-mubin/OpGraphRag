@@ -1,0 +1,11 @@
+# Ollama model weights (large binaries, ~10GB+, re-downloadable via `ollama pull`)
+kg/ollama_models/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db

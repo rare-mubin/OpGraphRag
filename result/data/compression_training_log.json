@@ -1,0 +1,1142 @@
+[
+  {
+    "epoch": 1,
+    "question": "In what year was the university where Sergei Aleksandrovich Tokarev was a professor founded?",
+    "Q_o": 1.0,
+    "T_o": 1009,
+    "rewards": [
+      1.0530227948463826,
+      1.103567888999009,
+      1.0376610505450943,
+      1.085232903865213
+    ],
+    "mean_reward": 1.0698711595639248,
+    "mean_CR": 0.13974231912784937,
+    "mean_entropy": 5.2162885665893555,
+    "best_A_c": "1755",
+    "best_R": 1.103567888999009,
+    "loss": 0.5360694527626038,
+    "pg_loss": 0.6403952240943909
+  },
+  {
+    "epoch": 1,
+    "question": "Black Book starred the actress and writer of what heritage?",
+    "Q_o": 1.0,
+    "T_o": 1858,
+    "rewards": [
+      1.2510764262648009,
+      1.1897201291711519,
+      1.0882669537136707,
+      1.1840688912809472
+    ],
+    "mean_reward": 1.1782831001076426,
+    "mean_CR": 0.35656620021528523,
+    "mean_entropy": 22.548614501953125,
+    "best_A_c": "Dutch",
+    "best_R": 1.2510764262648009,
+    "loss": 1.1380888223648071,
+    "pg_loss": 1.5890611410140991
+  },
+  {
+    "epoch": 1,
+    "question": "Which actor does American Beauty and American Beauty have in common?",
+    "Q_o": 1.0,
+    "T_o": 1399,
+    "rewards": [
+      -2.0,
+      1.2180128663330951,
+      -2.0,
+      1.1132952108649035
+    ],
+    "mean_reward": -0.4171729807005004,
+    "mean_CR": 0.3155825589706933,
+    "mean_entropy": 19.212512969970703,
+    "best_A_c": "Kevin Spacey",
+    "best_R": 1.2180128663330951,
+    "loss": -0.4202767312526703,
+    "pg_loss": -0.0360264778137207
+  },
+  {
+    "epoch": 1,
+    "question": "Ken Pruitt  was a Republican member of an upper house of the legislature with how many members ?",
+    "Q_o": 0.6666666666666666,
+    "T_o": 791,
+    "rewards": [
+      0.8550358196375896,
+      0.8746312684365781,
+      0.9782975136957437,
+      0.9346818373367045
+    ],
+    "mean_reward": 0.910661609776654,
+    "mean_CR": 0.48798988621997474,
+    "mean_entropy": 17.19392204284668,
+    "best_A_c": "40",
+    "best_R": 0.9782975136957437,
+    "loss": -0.7455095648765564,
+    "pg_loss": -0.40163111686706543
+  },
+  {
+    "epoch": 1,
+    "question": "Between Greyia and Calibanus, which genus contains more species?",
+    "Q_o": 1.0,
+    "T_o": 485,
+    "rewards": [
+      1.2412371134020619,
+      -2.0,
+      1.290721649484536,
+      -2.0
+    ],
+    "mean_reward": -0.36701030927835054,
+    "mean_CR": 0.5438144329896907,
+    "mean_entropy": 10.49713134765625,
+    "best_A_c": "Greyia",
+    "best_R": 1.290721649484536,
+    "loss": -0.4103880524635315,
+    "pg_loss": -0.20044541358947754
+  },
+  {
+    "epoch": 1,
+    "question": "Did John Updike and Tom Clancy both publish more than 15 bestselling novels?",
+    "Q_o": 1.0,
+    "T_o": 1764,
+    "rewards": [
+      -2.0,
+      -2.0,
+      1.3835034013605443,
+      -2.0
+    ],
+    "mean_reward": -1.154124149659864,
+    "mean_CR": 0.7679988662131519,
+    "mean_entropy": 11.90918254852295,
+    "best_A_c": "yes",
+    "best_R": 1.3835034013605443,
+    "loss": 0.42856571078300476,
+    "pg_loss": 0.6667493581771851
+  },
+  {
+    "epoch": 1,
+    "question": "Who was hung for assisting the attempted surrender of a defector from the American Continental Army to the British Army?",
+    "Q_o": 1.0,
+    "T_o": 4558,
+    "rewards": [
+      1.3587099605089952,
+      -2.0,
+      1.3093462044756472,
+      -2.0
+    ],
+    "mean_reward": -0.3329859587538394,
+    "mean_CR": 0.7358490566037735,
+    "mean_entropy": 24.653106689453125,
+    "best_A_c": "John André",
+    "best_R": 1.3587099605089952,
+    "loss": 2.214682102203369,
+    "pg_loss": 2.7077441215515137
+  },
+  {
+    "epoch": 1,
+    "question": "which Mexican and American film actress is Ethel Houbiers  French voice of ",
+    "Q_o": 0.8,
+    "T_o": 1325,
+    "rewards": [
+      -1.6,
+      1.1988679245283018,
+      1.2132075471698114,
+      1.4018867924528302
+    ],
+    "mean_reward": 0.5534905660377358,
+    "mean_CR": 0.8016981132075471,
+    "mean_entropy": 9.358579635620117,
+    "best_A_c": "Salma Hayek Pinault",
+    "best_R": 1.4018867924528302,
+    "loss": 1.967251181602478,
+    "pg_loss": 2.1544227600097656
+  },
+  {
+    "epoch": 1,
+    "question": "Which major international airport in south-east England ranks as the 8th busiest airport in Europe and replaced Croydon Airport?",
+    "Q_o": 1.0,
+    "T_o": 2528,
+    "rewards": [
+      1.392009493670886,
+      1.3477056962025316,
+      -0.5,
+      1.2774920886075949
+    ],
+    "mean_reward": 0.8793018196202531,
+    "mean_CR": 0.6831487341772152,
+    "mean_entropy": 24.110668182373047,
+    "best_A_c": "Gatwick Airport",
+    "best_R": 1.392009493670886,
+    "loss": 0.8357349634170532,
+    "pg_loss": 1.317948341369629
+  },
+  {
+    "epoch": 1,
+    "question": "Isabella Kelly was born at a ruined castle characterized as one of the most isolated fortifications in Britain by who?",
+    "Q_o": 1.0,
+    "T_o": 1886,
+    "rewards": [
+      -2.0,
+      1.2948038176033934,
+      -2.0,
+      1.4098621420996817
+    ],
+    "mean_reward": -0.3238335100742312,
+    "mean_CR": 0.5682661717921527,
+    "mean_entropy": 19.15203857421875,
+    "best_A_c": "The Changing Scottish Landscape",
+    "best_R": 1.4098621420996817,
+    "loss": -1.6516560316085815,
+    "pg_loss": -1.2686152458190918
+  },
+  {
+    "epoch": 1,
+    "question": "The facility where Robert Croft worked as a navy instructor was also known as?",
+    "Q_o": 0.16666666666666666,
+    "T_o": 1282,
+    "rewards": [
+      1.173166926677067,
+      1.3471138845553823,
+      0.4018460738429537,
+      1.2246489859594383
+    ],
+    "mean_reward": 1.0366939677587101,
+    "mean_CR": 0.49005460218408736,
+    "mean_entropy": 15.967516899108887,
+    "best_A_c": "Home of the Submarine Force",
+    "best_R": 1.3471138845553823,
+    "loss": -0.23557516932487488,
+    "pg_loss": 0.08377516269683838
+  },
+  {
+    "epoch": 1,
+    "question": "Who released the song \"With or Without You\" first, Jai McDowall or U2?",
+    "Q_o": 1.0,
+    "T_o": 1518,
+    "rewards": [
+      -2.0,
+      1.2694334650856391,
+      1.1716073781291172,
+      1.2971014492753623
+    ],
+    "mean_reward": 0.43453557312252966,
+    "mean_CR": 0.5602766798418972,
+    "mean_entropy": 18.03070068359375,
+    "best_A_c": "U2",
+    "best_R": 1.2971014492753623,
+    "loss": 0.3855753540992737,
+    "pg_loss": 0.7461893558502197
+  },
+  {
+    "epoch": 1,
+    "question": "Which \"Roseanne\" star is in Scream 2?",
+    "Q_o": 0.0,
+    "T_o": 3029,
+    "rewards": [
+      1.1804225817101353,
+      1.2502476064707824,
+      1.1691977550346648,
+      1.242159128425223
+    ],
+    "mean_reward": 1.2105067679102013,
+    "mean_CR": 0.4210135358204028,
+    "mean_entropy": 22.04706573486328,
+    "best_A_c": "Laurie Metcalf",
+    "best_R": 1.2502476064707824,
+    "loss": -0.31799647212028503,
+    "pg_loss": 0.12294483184814453
+  },
+  {
+    "epoch": 1,
+    "question": "In what city is the company that Fastjet Tanzania was originally founded as a part of prior to rebranding based?",
+    "Q_o": 0.6666666666666666,
+    "T_o": 1519,
+    "rewards": [
+      0.9329602808865481,
+      -1.3333333333333333,
+      1.2231731402238315,
+      0.835856923414527
+    ],
+    "mean_reward": 0.4146642527978933,
+    "mean_CR": 0.4014154048716261,
+    "mean_entropy": 16.388492584228516,
+    "best_A_c": "Nairobi, Kenya",
+    "best_R": 1.2231731402238315,
+    "loss": -0.03075060248374939,
+    "pg_loss": 0.29701924324035645
+  },
+  {
+    "epoch": 1,
+    "question": "What is the name of the Australian specialist electronic music magazine that features avant-rock, experimental sound art, and experimental hip hop?",
+    "Q_o": 1.0,
+    "T_o": 1826,
+    "rewards": [
+      1.286144578313253,
+      1.1437568455640745,
+      1.1760679079956189,
+      1.1708652792990142
+    ],
+    "mean_reward": 1.19420865279299,
+    "mean_CR": 0.3884173055859803,
+    "mean_entropy": 17.948123931884766,
+    "best_A_c": "Cyclic Defrost",
+    "best_R": 1.286144578313253,
+    "loss": -0.3253921866416931,
+    "pg_loss": 0.033570289611816406
+  },
+  {
+    "epoch": 1,
+    "question": "What is the population of the city that Munsonville is in the northwest corner of?",
+    "Q_o": 0.4,
+    "T_o": 3428,
+    "rewards": [
+      0.7771878646441074,
+      0.4885355892648775,
+      0.6117852975495917,
+      0.6931738623103851
+    ],
+    "mean_reward": 0.6426706534422404,
+    "mean_CR": 0.48534130688448074,
+    "mean_entropy": 20.40272331237793,
+    "best_A_c": "729",
+    "best_R": 0.7771878646441074,
+    "loss": -0.06328988075256348,
+    "pg_loss": 0.3447645902633667
+  },
+  {
+    "epoch": 1,
+    "question": "A Pair of Brown Eyes and Wild Mountain Thyme is based from what artists song?",
+    "Q_o": 0.0,
+    "T_o": 2165,
+    "rewards": [
+      0.21685912240184757,
+      0.29145496535796767,
+      0.1228637413394919,
+      0.26905311778290997
+    ],
+    "mean_reward": 0.22505773672055426,
+    "mean_CR": 0.4501154734411085,
+    "mean_entropy": 19.10934066772461,
+    "best_A_c": "Will Ye Go Lassie Go",
+    "best_R": 0.29145496535796767,
+    "loss": -0.6163207292556763,
+    "pg_loss": -0.23413395881652832
+  },
+  {
+    "epoch": 1,
+    "question": "Armageddon in Retrospect was written by the author who was best known for what 1969 satire novel?",
+    "Q_o": 1.0,
+    "T_o": 2369,
+    "rewards": [
+      1.322498944702406,
+      1.2169691853102576,
+      1.2399746728577459,
+      1.2093710426340227
+    ],
+    "mean_reward": 1.247203461376108,
+    "mean_CR": 0.4944069227522161,
+    "mean_entropy": 22.038923263549805,
+    "best_A_c": "Slaughterhouse-Five",
+    "best_R": 1.322498944702406,
+    "loss": -0.4196126163005829,
+    "pg_loss": 0.021165847778320312
+  },
+  {
+    "epoch": 1,
+    "question": "What class of instrument does Apatim Majumdar play?",
+    "Q_o": 0.0,
+    "T_o": 3170,
+    "rewards": [
+      0.1906940063091483,
+      0.30078864353312307,
+      0.28075709779179814,
+      0.38470031545741323
+    ],
+    "mean_reward": 0.2892350157728707,
+    "mean_CR": 0.5784700315457414,
+    "mean_entropy": 20.80571937561035,
+    "best_A_c": "Sarod",
+    "best_R": 0.38470031545741323,
+    "loss": 0.5776752829551697,
+    "pg_loss": 0.9937896728515625
+  },
+  {
+    "epoch": 1,
+    "question": " Which movie did Disney produce first,  The Many Adventures of Winnie the Pooh or Ride a Wild Pony?",
+    "Q_o": 1.0,
+    "T_o": 2237,
+    "rewards": [
+      1.4535091640590077,
+      1.3093428699150649,
+      1.3285650424675906,
+      1.363209655789003
+    ],
+    "mean_reward": 1.3636566830576666,
+    "mean_CR": 0.727313366115333,
+    "mean_entropy": 13.577469825744629,
+    "best_A_c": "Ride a Wild Pony",
+    "best_R": 1.4535091640590077,
+    "loss": -0.163763165473938,
+    "pg_loss": 0.10778624564409256
+  },
+  {
+    "epoch": 2,
+    "question": "In what year was the university where Sergei Aleksandrovich Tokarev was a professor founded?",
+    "Q_o": 1.0,
+    "T_o": 1009,
+    "rewards": [
+      1.362735381565907,
+      1.3820614469772052,
+      -2.0,
+      1.3820614469772052
+    ],
+    "mean_reward": 0.5317145688800794,
+    "mean_CR": 0.8126858275520317,
+    "mean_entropy": 3.526409149169922,
+    "best_A_c": "1755",
+    "best_R": 1.3820614469772052,
+    "loss": 1.3374334573745728,
+    "pg_loss": 1.4079616069793701
+  },
+  {
+    "epoch": 2,
+    "question": "Black Book starred the actress and writer of what heritage?",
+    "Q_o": 1.0,
+    "T_o": 1858,
+    "rewards": [
+      1.366254036598493,
+      -2.0,
+      1.4071582346609257,
+      -2.0
+    ],
+    "mean_reward": -0.3066469321851453,
+    "mean_CR": 0.8179494079655543,
+    "mean_entropy": 9.93918514251709,
+    "best_A_c": "Dutch",
+    "best_R": 1.4071582346609257,
+    "loss": 2.980799913406372,
+    "pg_loss": 3.1795835494995117
+  },
+  {
+    "epoch": 2,
+    "question": "Which actor does American Beauty and American Beauty have in common?",
+    "Q_o": 1.0,
+    "T_o": 1399,
+    "rewards": [
+      -2.0,
+      -2.0,
+      1.1390278770550393,
+      1.087205146533238
+    ],
+    "mean_reward": -0.4434417441029307,
+    "mean_CR": 0.31361686919228016,
+    "mean_entropy": 19.0771484375,
+    "best_A_c": "Kevin Spacey",
+    "best_R": 1.1390278770550393,
+    "loss": -0.2524726688861847,
+    "pg_loss": 0.12907028198242188
+  },
+  {
+    "epoch": 2,
+    "question": "Ken Pruitt  was a Republican member of an upper house of the legislature with how many members ?",
+    "Q_o": 0.6666666666666666,
+    "T_o": 791,
+    "rewards": [
+      1.0099030762747576,
+      1.1116729877791824,
+      0.9782975136957437,
+      -1.3333333333333333
+    ],
+    "mean_reward": 0.4416350611040876,
+    "mean_CR": 0.7528445006321113,
+    "mean_entropy": 10.734277725219727,
+    "best_A_c": "40",
+    "best_R": 1.1116729877791824,
+    "loss": 0.16876067221164703,
+    "pg_loss": 0.38344621658325195
+  },
+  {
+    "epoch": 2,
+    "question": "Between Greyia and Calibanus, which genus contains more species?",
+    "Q_o": 1.0,
+    "T_o": 485,
+    "rewards": [
+      1.3257731958762886,
+      1.265979381443299,
+      1.1649484536082475,
+      1.320618556701031
+    ],
+    "mean_reward": 1.2693298969072164,
+    "mean_CR": 0.538659793814433,
+    "mean_entropy": 10.536611557006836,
+    "best_A_c": "Greyia",
+    "best_R": 1.3257731958762886,
+    "loss": -1.018477201461792,
+    "pg_loss": -0.8077449798583984
+  },
+  {
+    "epoch": 2,
+    "question": "Did John Updike and Tom Clancy both publish more than 15 bestselling novels?",
+    "Q_o": 1.0,
+    "T_o": 1764,
+    "rewards": [
+      1.2298752834467122,
+      1.248299319727891,
+      -2.0,
+      -2.0
+    ],
+    "mean_reward": -0.3804563492063492,
+    "mean_CR": 0.4665532879818594,
+    "mean_entropy": 17.935562133789062,
+    "best_A_c": "yes",
+    "best_R": 1.248299319727891,
+    "loss": -0.15651273727416992,
+    "pg_loss": 0.20219850540161133
+  },
+  {
+    "epoch": 2,
+    "question": "Who was hung for assisting the attempted surrender of a defector from the American Continental Army to the British Army?",
+    "Q_o": 1.0,
+    "T_o": 4558,
+    "rewards": [
+      1.1589512944273803,
+      1.2280605528740676,
+      1.1642167617376042,
+      1.1715664765247915
+    ],
+    "mean_reward": 1.180698771390961,
+    "mean_CR": 0.3613975427819218,
+    "mean_entropy": 36.23722839355469,
+    "best_A_c": "John André",
+    "best_R": 1.2280605528740676,
+    "loss": 0.33199119567871094,
+    "pg_loss": 1.0567357540130615
+  },
+  {
+    "epoch": 2,
+    "question": "which Mexican and American film actress is Ethel Houbiers  French voice of ",
+    "Q_o": 0.8,
+    "T_o": 1325,
+    "rewards": [
+      1.0252830188679245,
+      1.0339622641509434,
+      0.8430188679245283,
+      1.0535849056603774
+    ],
+    "mean_reward": 0.9889622641509435,
+    "mean_CR": 0.2779245283018868,
+    "mean_entropy": 14.762993812561035,
+    "best_A_c": "Salma Hayek",
+    "best_R": 1.0535849056603774,
+    "loss": -0.46025148034095764,
+    "pg_loss": -0.1649916172027588
+  },
+  {
+    "epoch": 2,
+    "question": "Which major international airport in south-east England ranks as the 8th busiest airport in Europe and replaced Croydon Airport?",
+    "Q_o": 1.0,
+    "T_o": 2528,
+    "rewards": [
+      1.1965981012658227,
+      1.134493670886076,
+      1.1307357594936709,
+      1.1837420886075949
+    ],
+    "mean_reward": 1.1613924050632911,
+    "mean_CR": 0.3227848101265823,
+    "mean_entropy": 27.37466049194336,
+    "best_A_c": "Gatwick Airport",
+    "best_R": 1.1965981012658227,
+    "loss": 0.824268102645874,
+    "pg_loss": 1.3717613220214844
+  },
+  {
+    "epoch": 2,
+    "question": "Isabella Kelly was born at a ruined castle characterized as one of the most isolated fortifications in Britain by who?",
+    "Q_o": 1.0,
+    "T_o": 1886,
+    "rewards": [
+      1.3544538706256628,
+      1.2579533404029692,
+      -2.0,
+      -2.0
+    ],
+    "mean_reward": -0.346898197242842,
+    "mean_CR": 0.4595705196182397,
+    "mean_entropy": 20.469274520874023,
+    "best_A_c": "The Changing Scottish Landscape",
+    "best_R": 1.3544538706256628,
+    "loss": -0.4629504978656769,
+    "pg_loss": -0.053565025329589844
+  },
+  {
+    "epoch": 2,
+    "question": "The facility where Robert Croft worked as a navy instructor was also known as?",
+    "Q_o": 0.16666666666666666,
+    "T_o": 1282,
+    "rewards": [
+      1.1485959438377535,
+      1.109594383775351,
+      1.1361154446177846,
+      1.156396255850234
+    ],
+    "mean_reward": 1.1376755070202809,
+    "mean_CR": 0.2753510140405616,
+    "mean_entropy": 16.98064613342285,
+    "best_A_c": "Home of the Submarine Force",
+    "best_R": 1.156396255850234,
+    "loss": 0.007753908634185791,
+    "pg_loss": 0.3473668098449707
+  },
+  {
+    "epoch": 2,
+    "question": "Who released the song \"With or Without You\" first, Jai McDowall or U2?",
+    "Q_o": 1.0,
+    "T_o": 1518,
+    "rewards": [
+      1.1663372859025034,
+      1.1162714097496707,
+      1.1063899868247695,
+      1.1238471673254282
+    ],
+    "mean_reward": 1.1282114624505928,
+    "mean_CR": 0.2564229249011858,
+    "mean_entropy": 17.838193893432617,
+    "best_A_c": "U2",
+    "best_R": 1.1663372859025034,
+    "loss": 0.27973881363868713,
+    "pg_loss": 0.6365026831626892
+  },
+  {
+    "epoch": 2,
+    "question": "Which \"Roseanne\" star is in Scream 2?",
+    "Q_o": 0.0,
+    "T_o": 3029,
+    "rewards": [
+      0.34516342027071645,
+      1.2220204688015848,
+      1.270221195113899,
+      1.2302740178276659
+    ],
+    "mean_reward": 1.0169197755034665,
+    "mean_CR": 0.5338395510069329,
+    "mean_entropy": 20.026052474975586,
+    "best_A_c": "Laurie Metcalf",
+    "best_R": 1.270221195113899,
+    "loss": 2.1641156673431396,
+    "pg_loss": 2.564636707305908
+  },
+  {
+    "epoch": 2,
+    "question": "In what city is the company that Fastjet Tanzania was originally founded as a part of prior to rebranding based?",
+    "Q_o": 0.6666666666666666,
+    "T_o": 1519,
+    "rewards": [
+      0.8783190695633092,
+      1.1882817643186308,
+      -1.3333333333333333,
+      0.9217687074829932
+    ],
+    "mean_reward": 0.4137590520078999,
+    "mean_CR": 0.4481566820276498,
+    "mean_entropy": 16.533498764038086,
+    "best_A_c": "Nairobi, Kenya",
+    "best_R": 1.1882817643186308,
+    "loss": -0.36620816588401794,
+    "pg_loss": -0.0355381965637207
+  },
+  {
+    "epoch": 2,
+    "question": "What is the name of the Australian specialist electronic music magazine that features avant-rock, experimental sound art, and experimental hip hop?",
+    "Q_o": 1.0,
+    "T_o": 1826,
+    "rewards": [
+      1.2579408543263964,
+      1.3302300109529024,
+      1.2349397590361446,
+      1.1347207009857612
+    ],
+    "mean_reward": 1.2394578313253013,
+    "mean_CR": 0.47891566265060237,
+    "mean_entropy": 16.01361083984375,
+    "best_A_c": "Cyclic Defrost",
+    "best_R": 1.3302300109529024,
+    "loss": -0.4505016803741455,
+    "pg_loss": -0.13022947311401367
+  },
+  {
+    "epoch": 2,
+    "question": "What is the population of the city that Munsonville is in the northwest corner of?",
+    "Q_o": 0.4,
+    "T_o": 3428,
+    "rewards": [
+      0.5369603267211203,
+      0.6329346557759628,
+      0.7906067677946325,
+      0.6072637106184364
+    ],
+    "mean_reward": 0.641941365227538,
+    "mean_CR": 0.48388273045507585,
+    "mean_entropy": 20.706684112548828,
+    "best_A_c": "729",
+    "best_R": 0.7906067677946325,
+    "loss": -0.3676884174346924,
+    "pg_loss": 0.046445250511169434
+  },
+  {
+    "epoch": 2,
+    "question": "A Pair of Brown Eyes and Wild Mountain Thyme is based from what artists song?",
+    "Q_o": 0.0,
+    "T_o": 2165,
+    "rewards": [
+      1.0732101616628176,
+      0.2586605080831409,
+      0.3110854503464203,
+      0.207621247113164
+    ],
+    "mean_reward": 0.46264434180138575,
+    "mean_CR": 0.4252886836027714,
+    "mean_entropy": 19.344614028930664,
+    "best_A_c": "Francis McPeake",
+    "best_R": 1.0732101616628176,
+    "loss": -0.6269287467002869,
+    "pg_loss": -0.2400364875793457
+  },
+  {
+    "epoch": 2,
+    "question": "Armageddon in Retrospect was written by the author who was best known for what 1969 satire novel?",
+    "Q_o": 1.0,
+    "T_o": 2369,
+    "rewards": [
+      1.1336006753904602,
+      1.1789784719290841,
+      1.1686365555086535,
+      1.2026171380329254
+    ],
+    "mean_reward": 1.170958210215281,
+    "mean_CR": 0.3419164204305614,
+    "mean_entropy": 24.10854148864746,
+    "best_A_c": "Slaughterhouse-Five",
+    "best_R": 1.2026171380329254,
+    "loss": -0.7201697826385498,
+    "pg_loss": -0.23799896240234375
+  },
+  {
+    "epoch": 2,
+    "question": "What class of instrument does Apatim Majumdar play?",
+    "Q_o": 0.0,
+    "T_o": 3170,
+    "rewards": [
+      0.16608832807570978,
+      0.08233438485804417,
+      0.2367507886435331,
+      0.14621451104100947
+    ],
+    "mean_reward": 0.15784700315457412,
+    "mean_CR": 0.31569400630914823,
+    "mean_entropy": 20.662273406982422,
+    "best_A_c": "Sarod",
+    "best_R": 0.2367507886435331,
+    "loss": -0.04942229390144348,
+    "pg_loss": 0.36382317543029785
+  },
+  {
+    "epoch": 2,
+    "question": " Which movie did Disney produce first,  The Many Adventures of Winnie the Pooh or Ride a Wild Pony?",
+    "Q_o": 1.0,
+    "T_o": 2237,
+    "rewards": [
+      1.14908359409924,
+      1.1631649530621369,
+      1.1781403665623604,
+      1.0572194903889138
+    ],
+    "mean_reward": 1.1369021010281628,
+    "mean_CR": 0.27380420205632544,
+    "mean_entropy": 14.607925415039062,
+    "best_A_c": "Ride a Wild Pony",
+    "best_R": 1.1781403665623604,
+    "loss": -0.8867067098617554,
+    "pg_loss": -0.594548225402832
+  },
+  {
+    "epoch": 3,
+    "question": "In what year was the university where Sergei Aleksandrovich Tokarev was a professor founded?",
+    "Q_o": 1.0,
+    "T_o": 1009,
+    "rewards": [
+      1.3518334985133795,
+      1.4236868186323093,
+      1.1025768087215064,
+      1.0991080277502479
+    ],
+    "mean_reward": 1.2443012884043607,
+    "mean_CR": 0.48860257680872154,
+    "mean_entropy": 6.143492698669434,
+    "best_A_c": "1755",
+    "best_R": 1.4236868186323093,
+    "loss": -0.07539963722229004,
+    "pg_loss": 0.04747021198272705
+  },
+  {
+    "epoch": 3,
+    "question": "Black Book starred the actress and writer of what heritage?",
+    "Q_o": 1.0,
+    "T_o": 1858,
+    "rewards": [
+      1.11248654467169,
+      1.1757265877287406,
+      1.2147470398277718,
+      1.2330462863293865
+    ],
+    "mean_reward": 1.1840016146393972,
+    "mean_CR": 0.3680032292787945,
+    "mean_entropy": 22.874223709106445,
+    "best_A_c": "Dutch",
+    "best_R": 1.2330462863293865,
+    "loss": 0.7108123302459717,
+    "pg_loss": 1.1682968139648438
+  },
+  {
+    "epoch": 3,
+    "question": "Which actor does American Beauty and American Beauty have in common?",
+    "Q_o": 1.0,
+    "T_o": 1399,
+    "rewards": [
+      -2.0,
+      -2.0,
+      -2.0,
+      1.0257326661901358
+    ],
+    "mean_reward": -1.243566833452466,
+    "mean_CR": 0.22516082916368835,
+    "mean_entropy": 13.166108131408691,
+    "best_A_c": "Kevin Spacey",
+    "best_R": 1.0257326661901358,
+    "loss": -2.6136629581451416,
+    "pg_loss": -2.3503408432006836
+  },
+  {
+    "epoch": 3,
+    "question": "Ken Pruitt  was a Republican member of an upper house of the legislature with how many members ?",
+    "Q_o": 0.6666666666666666,
+    "T_o": 791,
+    "rewards": [
+      0.9782975136957437,
+      0.8512431521281079,
+      0.876527602191319,
+      0.8626211546565529
+    ],
+    "mean_reward": 0.8921723556679308,
+    "mean_CR": 0.45101137800252844,
+    "mean_entropy": 17.18760871887207,
+    "best_A_c": "40",
+    "best_R": 0.9782975136957437,
+    "loss": -0.3656976521015167,
+    "pg_loss": -0.021945476531982422
+  },
+  {
+    "epoch": 3,
+    "question": "Between Greyia and Calibanus, which genus contains more species?",
+    "Q_o": 1.0,
+    "T_o": 485,
+    "rewards": [
+      1.3020618556701031,
+      1.2969072164948454,
+      1.1,
+      1.3257731958762886
+    ],
+    "mean_reward": 1.2561855670103093,
+    "mean_CR": 0.5123711340206186,
+    "mean_entropy": 10.949889183044434,
+    "best_A_c": "Greyia",
+    "best_R": 1.3257731958762886,
+    "loss": -0.0413547158241272,
+    "pg_loss": 0.1776430606842041
+  },
+  {
+    "epoch": 3,
+    "question": "Did John Updike and Tom Clancy both publish more than 15 bestselling novels?",
+    "Q_o": 1.0,
+    "T_o": 1764,
+    "rewards": [
+      -2.0,
+      -2.0,
+      -2.0,
+      1.0575396825396826
+    ],
+    "mean_reward": -1.2356150793650793,
+    "mean_CR": 0.4148242630385488,
+    "mean_entropy": 17.305124282836914,
+    "best_A_c": "yes",
+    "best_R": 1.0575396825396826,
+    "loss": -0.924116849899292,
+    "pg_loss": -0.5780143737792969
+  },
+  {
+    "epoch": 3,
+    "question": "Who was hung for assisting the attempted surrender of a defector from the American Continental Army to the British Army?",
+    "Q_o": 1.0,
+    "T_o": 4558,
+    "rewards": [
+      1.199648968845985,
+      1.179245283018868,
+      1.147652479157525,
+      1.2436375603334797
+    ],
+    "mean_reward": 1.1925460728389645,
+    "mean_CR": 0.38509214567792893,
+    "mean_entropy": 39.12884521484375,
+    "best_A_c": "John André",
+    "best_R": 1.2436375603334797,
+    "loss": -2.020648241043091,
+    "pg_loss": -1.2380714416503906
+  },
+  {
+    "epoch": 3,
+    "question": "which Mexican and American film actress is Ethel Houbiers  French voice of ",
+    "Q_o": 0.8,
+    "T_o": 1325,
+    "rewards": [
+      0.8664150943396227,
+      1.019622641509434,
+      -1.6,
+      1.0422641509433963
+    ],
+    "mean_reward": 0.33207547169811324,
+    "mean_CR": 0.22377358490566038,
+    "mean_entropy": 12.799074172973633,
+    "best_A_c": "Salma Hayek Pinault",
+    "best_R": 1.0422641509433963,
+    "loss": -1.122951626777649,
+    "pg_loss": -0.8669701814651489
+  },
+  {
+    "epoch": 3,
+    "question": "Which major international airport in south-east England ranks as the 8th busiest airport in Europe and replaced Croydon Airport?",
+    "Q_o": 1.0,
+    "T_o": 2528,
+    "rewards": [
+      1.3629351265822784,
+      1.2088607594936709,
+      1.2739319620253164,
+      1.2375395569620253
+    ],
+    "mean_reward": 1.2708168512658227,
+    "mean_CR": 0.5416337025316456,
+    "mean_entropy": 27.07406234741211,
+    "best_A_c": "Gatwick Airport",
+    "best_R": 1.3629351265822784,
+    "loss": -2.2460062503814697,
+    "pg_loss": -1.7045249938964844
+  },
+  {
+    "epoch": 3,
+    "question": "Isabella Kelly was born at a ruined castle characterized as one of the most isolated fortifications in Britain by who?",
+    "Q_o": 1.0,
+    "T_o": 1886,
+    "rewards": [
+      1.4048250265111346,
+      -2.0,
+      1.3555143160127252,
+      -2.0
+    ],
+    "mean_reward": -0.30991516436903505,
+    "mean_CR": 0.8158801696712619,
+    "mean_entropy": 11.310139656066895,
+    "best_A_c": "The Changing Scottish Landscape",
+    "best_R": 1.4048250265111346,
+    "loss": 2.5950372219085693,
+    "pg_loss": 2.821239948272705
+  },
+  {
+    "epoch": 3,
+    "question": "The facility where Robert Croft worked as a navy instructor was also known as?",
+    "Q_o": 0.16666666666666666,
+    "T_o": 1282,
+    "rewards": [
+      1.3475039001560063,
+      1.3194227769110765,
+      1.1641965678627146,
+      0.5241029641185648
+    ],
+    "mean_reward": 1.0888065522620904,
+    "mean_CR": 0.577613104524181,
+    "mean_entropy": 14.171396255493164,
+    "best_A_c": "Home of the Submarine Force",
+    "best_R": 1.3475039001560063,
+    "loss": 0.057071954011917114,
+    "pg_loss": 0.3404998779296875
+  },
+  {
+    "epoch": 3,
+    "question": "Who released the song \"With or Without You\" first, Jai McDowall or U2?",
+    "Q_o": 1.0,
+    "T_o": 1518,
+    "rewards": [
+      1.1001317523056653,
+      1.13866930171278,
+      1.188076416337286,
+      1.0991436100131753
+    ],
+    "mean_reward": 1.1315052700922266,
+    "mean_CR": 0.26301054018445325,
+    "mean_entropy": 18.36638641357422,
+    "best_A_c": "U2",
+    "best_R": 1.188076416337286,
+    "loss": -0.49651482701301575,
+    "pg_loss": -0.12918710708618164
+  },
+  {
+    "epoch": 3,
+    "question": "Which \"Roseanne\" star is in Scream 2?",
+    "Q_o": 0.0,
+    "T_o": 3029,
+    "rewards": [
+      1.1127434796962694,
+      1.092274678111588,
+      1.0411026741498843,
+      1.0534829976890063
+    ],
+    "mean_reward": 1.074900957411687,
+    "mean_CR": 0.14980191482337404,
+    "mean_entropy": 16.40572738647461,
+    "best_A_c": "Laurie Metcalf",
+    "best_R": 1.1127434796962694,
+    "loss": 0.8614366054534912,
+    "pg_loss": 1.1895511150360107
+  },
+  {
+    "epoch": 3,
+    "question": "In what city is the company that Fastjet Tanzania was originally founded as a part of prior to rebranding based?",
+    "Q_o": 0.6666666666666666,
+    "T_o": 1519,
+    "rewards": [
+      0.8904981347377661,
+      1.2830809743252138,
+      1.3222514812376565,
+      0.9247311827956989
+    ],
+    "mean_reward": 1.105140443274084,
+    "mean_CR": 0.543614219881501,
+    "mean_entropy": 15.799081802368164,
+    "best_A_c": "Nairobi, Kenya",
+    "best_R": 1.3222514812376565,
+    "loss": -0.2430875301361084,
+    "pg_loss": 0.07289409637451172
+  },
+  {
+    "epoch": 3,
+    "question": "What is the name of the Australian specialist electronic music magazine that features avant-rock, experimental sound art, and experimental hip hop?",
+    "Q_o": 1.0,
+    "T_o": 1826,
+    "rewards": [
+      1.3217415115005475,
+      -2.0,
+      -2.0,
+      1.3663745892661554
+    ],
+    "mean_reward": -0.32797097480832427,
+    "mean_CR": 0.7523274917853231,
+    "mean_entropy": 15.724833488464355,
+    "best_A_c": "Cyclic Defrost",
+    "best_R": 1.3663745892661554,
+    "loss": 2.1334753036499023,
+    "pg_loss": 2.447972059249878
+  },
+  {
+    "epoch": 3,
+    "question": "What is the population of the city that Munsonville is in the northwest corner of?",
+    "Q_o": 0.4,
+    "T_o": 3428,
+    "rewards": [
+      -0.8,
+      0.8200700116686115,
+      0.8210910151691949,
+      0.7439323220536757
+    ],
+    "mean_reward": 0.3962733372228705,
+    "mean_CR": 0.7103267211201868,
+    "mean_entropy": 14.270854949951172,
+    "best_A_c": "729",
+    "best_R": 0.8210910151691949,
+    "loss": -4.071589469909668,
+    "pg_loss": -3.786172389984131
+  },
+  {
+    "epoch": 3,
+    "question": "A Pair of Brown Eyes and Wild Mountain Thyme is based from what artists song?",
+    "Q_o": 0.0,
+    "T_o": 2165,
+    "rewards": [
+      0.1739030023094688,
+      0.04757505773672055,
+      0.1579676674364896,
+      0.08568129330254043
+    ],
+    "mean_reward": 0.11628175519630485,
+    "mean_CR": 0.2325635103926097,
+    "mean_entropy": 15.48386287689209,
+    "best_A_c": "Wild Mountain Thyme",
+    "best_R": 0.1739030023094688,
+    "loss": 0.5067175626754761,
+    "pg_loss": 0.8163948059082031
+  },
+  {
+    "epoch": 3,
+    "question": "Armageddon in Retrospect was written by the author who was best known for what 1969 satire novel?",
+    "Q_o": 1.0,
+    "T_o": 2369,
+    "rewards": [
+      1.164204305614183,
+      -2.0,
+      1.1783452933727312,
+      -2.0
+    ],
+    "mean_reward": -0.41436260025327143,
+    "mean_CR": 0.38360067539046006,
+    "mean_entropy": 23.70132064819336,
+    "best_A_c": "Slaughterhouse-Five",
+    "best_R": 1.1783452933727312,
+    "loss": -0.8123147487640381,
+    "pg_loss": -0.3382883071899414
+  },
+  {
+    "epoch": 3,
+    "question": "What class of instrument does Apatim Majumdar play?",
+    "Q_o": 0.0,
+    "T_o": 3170,
+    "rewards": [
+      0.32634069400630916,
+      0.27334384858044164,
+      0.16845425867507885,
+      0.3152996845425867
+    ],
+    "mean_reward": 0.2708596214511041,
+    "mean_CR": 0.5417192429022082,
+    "mean_entropy": 21.235177993774414,
+    "best_A_c": "Sarod",
+    "best_R": 0.32634069400630916,
+    "loss": 0.297962486743927,
+    "pg_loss": 0.7226660251617432
+  },
+  {
+    "epoch": 3,
+    "question": " Which movie did Disney produce first,  The Many Adventures of Winnie the Pooh or Ride a Wild Pony?",
+    "Q_o": 1.0,
+    "T_o": 2237,
+    "rewards": [
+      1.1122038444345104,
+      1.0706303084488153,
+      1.0163164953062136,
+      1.1341081805990165
+    ],
+    "mean_reward": 1.083314707197139,
+    "mean_CR": 0.16662941439427803,
+    "mean_entropy": 11.605795860290527,
+    "best_A_c": "Ride a Wild Pony",
+    "best_R": 1.1341081805990165,
+    "loss": 0.3098607659339905,
+    "pg_loss": 0.5419766902923584
+  }
+]

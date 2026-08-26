@@ -1,0 +1,630 @@
+[
+  {
+    "_id": "5ae143ed55429920d5234360",
+    "question": "In what year was the university where Sergei Aleksandrovich Tokarev was a professor founded?",
+    "answer": "1755",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Sergei Aleksandrovich Tokarev",
+        0
+      ],
+      [
+        "Moscow State University",
+        3
+      ]
+    ],
+    "context_titles": [
+      "Moscow State University",
+      "Sergei Roshchin",
+      "Sergei Kornilenko",
+      "Sergei Chikildin",
+      "Sergei Sholokhov",
+      "Sergei Panchin",
+      "Sergei Kosarev",
+      "Sergei Dmitrochenko",
+      "Sergei Aleksandrovich Tokarev",
+      "Sergei Aleksandrovich Kudryavtsev"
+    ]
+  },
+  {
+    "_id": "5abc19705542993a06baf86e",
+    "question": "Black Book starred the actress and writer of what heritage?",
+    "answer": "Dutch",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Black Book (film)",
+        0
+      ],
+      [
+        "Halina Reijn",
+        0
+      ]
+    ],
+    "context_titles": [
+      "Black Book of the Admiralty",
+      "Black Book (World War II)",
+      "Books of Clanranald",
+      "Black Book (novel)",
+      "Black Book (non-standard disc format)",
+      "Le Livre noir du capitalisme",
+      "Black Book (film)",
+      "Yazidi Book of Revelation",
+      "Halina Reijn",
+      "Neil Smith (writer)"
+    ]
+  },
+  {
+    "_id": "5ac3e0f7554299194317388b",
+    "question": "Which actor does American Beauty and American Beauty have in common?",
+    "answer": "Kevin Spacey",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "American Beauty (soundtrack)",
+        0
+      ],
+      [
+        "American Beauty (1999 film)",
+        1
+      ]
+    ],
+    "context_titles": [
+      "American Beauty (1927 film)",
+      "Miss American Beauty 1963",
+      "Coty, Inc.",
+      "La Belle Américaine",
+      "List of accolades received by American Beauty",
+      "American Beauty/American Psycho Tour",
+      "The Kids Aren't Alright (Fall Out Boy song)",
+      "Christopher Greenbury",
+      "American Beauty (1999 film)",
+      "American Beauty (soundtrack)"
+    ]
+  },
+  {
+    "_id": "5ae518655542993aec5ec139",
+    "question": "Ken Pruitt  was a Republican member of an upper house of the legislature with how many members ?",
+    "answer": "40 members",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Ken Pruitt",
+        0
+      ],
+      [
+        "Florida Senate",
+        0
+      ],
+      [
+        "Florida Senate",
+        2
+      ]
+    ],
+    "context_titles": [
+      "Florida Senate",
+      "Wisconsin Legislature",
+      "Ken Pruitt",
+      "Senate of Burkina Faso",
+      "Murtaza Ahmed Khan",
+      "New South Wales Legislative Council",
+      "Nevada Legislature",
+      "Upper house",
+      "Alaska Legislature",
+      "Icelandic parliamentary election, 1930"
+    ]
+  },
+  {
+    "_id": "5ab985eb554299131ca42360",
+    "question": "Between Greyia and Calibanus, which genus contains more species?",
+    "answer": "Greyia",
+    "type": "comparison",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Greyia",
+        0
+      ],
+      [
+        "Greyia",
+        1
+      ],
+      [
+        "Calibanus",
+        0
+      ]
+    ],
+    "context_titles": [
+      "List of Amanita species",
+      "Calyptocephalellidae",
+      "Leptofoenus",
+      "Banksiamyces",
+      "Megalurus",
+      "Greyia",
+      "Lophodermium",
+      "Pachyornis",
+      "Calibanus",
+      "Ceratozamia"
+    ]
+  },
+  {
+    "_id": "5a8753d95542994846c1cd63",
+    "question": "Did John Updike and Tom Clancy both publish more than 15 bestselling novels?",
+    "answer": "yes",
+    "type": "comparison",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "John Updike",
+        1
+      ],
+      [
+        "Tom Clancy",
+        1
+      ]
+    ],
+    "context_titles": [
+      "Tom Clancy's Net Force Explorers: Deathworld",
+      "Tom Clancy's Ghost Recon 2: Summit Strike",
+      "John Updike",
+      "Tom Clancy",
+      "Tom Clancy's Net Force Explorers: Safe House",
+      "Tom Clancy's Net Force Explorers: High Wire",
+      "Tom Clancy's Net Force Explorers: Gameprey",
+      "Tom Clancy's Rainbow 6: Patriots",
+      "Tom Clancy's Net Force Explorers: Duel Identity",
+      "Tom Clancy's Net Force Explorers: Death Match"
+    ]
+  },
+  {
+    "_id": "5ab97d0a5542996be202051e",
+    "question": "Who was hung for assisting the attempted surrender of a defector from the American Continental Army to the British Army?",
+    "answer": "John André",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "John André",
+        0
+      ],
+      [
+        "Benedict Arnold",
+        0
+      ]
+    ],
+    "context_titles": [
+      "Benjamin Lincoln",
+      "1st Virginia State Regiment",
+      "Siege of Yorktown",
+      "Benedict Arnold",
+      "Battle of Germantown",
+      "Board of War",
+      "John André",
+      "National Memorial Arch",
+      "List of Continental Army units",
+      "Pulaski's Legion"
+    ]
+  },
+  {
+    "_id": "5adef1b35542993a75d263af",
+    "question": "which Mexican and American film actress is Ethel Houbiers  French voice of ",
+    "answer": "Salma Hayek Pinault",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Ethel Houbiers",
+        1
+      ],
+      [
+        "Salma Hayek",
+        0
+      ]
+    ],
+    "context_titles": [
+      "Béatrice Picard",
+      "Emmanuel Curtil",
+      "Ethel Houbiers",
+      "Salma Hayek",
+      "Dorothée Jemma",
+      "Roger Carel",
+      "Lisette Dufour",
+      "Bernard Alane",
+      "Virginie Ledieu",
+      "Mary Forbes"
+    ]
+  },
+  {
+    "_id": "5a73b55855429978a71e9086",
+    "question": "Which major international airport in south-east England ranks as the 8th busiest airport in Europe and replaced Croydon Airport?",
+    "answer": "Gatwick Airport",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Croydon Airport",
+        0
+      ],
+      [
+        "Croydon Airport",
+        1
+      ],
+      [
+        "Gatwick Airport",
+        0
+      ],
+      [
+        "Gatwick Airport",
+        2
+      ]
+    ],
+    "context_titles": [
+      "Dubai International Airport",
+      "Gatwick Airport",
+      "Coimbatore International Airport",
+      "Vancouver International Airport",
+      "Grantley Adams International Airport",
+      "Croydon Airport",
+      "Chennai International Airport",
+      "Dublin Airport",
+      "Athens International Airport",
+      "Heathrow Airport"
+    ]
+  },
+  {
+    "_id": "5ae80919554299540e5a56f6",
+    "question": "Isabella Kelly was born at a ruined castle characterized as one of the most isolated fortifications in Britain by who?",
+    "answer": "The Changing Scottish Landscape",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Isabella Kelly",
+        0
+      ],
+      [
+        "Cairnburgh Castle",
+        0
+      ],
+      [
+        "Cairnburgh Castle",
+        2
+      ]
+    ],
+    "context_titles": [
+      "Scharfenstein Castle (Kiedrich)",
+      "Abergairn Castle",
+      "Château de Longwy",
+      "Clun Castle",
+      "Inch Castle",
+      "Castillo de Tabernas",
+      "Wegelnburg",
+      "Cairnburgh Castle",
+      "Isabella Kelly",
+      "Schauenberg"
+    ]
+  },
+  {
+    "_id": "5ae361605542994393b9e69b",
+    "question": "The facility where Robert Croft worked as a navy instructor was also known as?",
+    "answer": "\"Home of the Submarine Force\"",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Robert Croft (diver)",
+        1
+      ],
+      [
+        "Naval Submarine Base New London",
+        0
+      ]
+    ],
+    "context_titles": [
+      "Naval Consolidated Brig, Miramar",
+      "Music Instructor",
+      "Naval Submarine Base New London",
+      "Lara Croft: Tomb Raider",
+      "RAF Croft",
+      "John Ellis Roosevelt Estate",
+      "Bibhu Prasad Tripathy",
+      "Robert Croft (diver)",
+      "Tomb Raider",
+      "Jack Baer"
+    ]
+  },
+  {
+    "_id": "5ac3a76e554299741d48a2be",
+    "question": "Who released the song \"With or Without You\" first, Jai McDowall or U2?",
+    "answer": "U2",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Believe (Jai McDowall album)",
+        0
+      ],
+      [
+        "Believe (Jai McDowall album)",
+        1
+      ],
+      [
+        "Believe (Jai McDowall album)",
+        2
+      ],
+      [
+        "With or Without You",
+        0
+      ],
+      [
+        "With or Without You",
+        1
+      ]
+    ],
+    "context_titles": [
+      "The Fly (song)",
+      "Win (film)",
+      "Govinda Jaya Jaya",
+      "U218 Singles",
+      "Jai Ho! (You Are My Destiny)",
+      "Heartbeat (The Fray song)",
+      "With or Without You",
+      "Believe (Jai McDowall album)",
+      "Brothers of the Road",
+      "Bill Grainer"
+    ]
+  },
+  {
+    "_id": "5a7557d75542992d0ec05f68",
+    "question": "Which \"Roseanne\" star is in Scream 2?",
+    "answer": "Laurie Metcalf",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Scream 2",
+        0
+      ],
+      [
+        "Scream 2",
+        1
+      ],
+      [
+        "Laurie Metcalf",
+        1
+      ],
+      [
+        "Laurie Metcalf",
+        3
+      ]
+    ],
+    "context_titles": [
+      "Rebecca Gayheart",
+      "Scream 2 (Markus Schulz album)",
+      "Timothy Olyphant",
+      "Laurie Metcalf",
+      "Bobby Gaylor",
+      "Sidney Prescott",
+      "Scream 2",
+      "Scream (franchise)",
+      "Gale Weathers",
+      "List of Scream characters"
+    ]
+  },
+  {
+    "_id": "5a8d12ca5542994ba4e3dbe2",
+    "question": "In what city is the company that Fastjet Tanzania was originally founded as a part of prior to rebranding based?",
+    "answer": "Nairobi, Kenya",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Fastjet Tanzania",
+        1
+      ],
+      [
+        "Fly540",
+        0
+      ]
+    ],
+    "context_titles": [
+      "Fly540",
+      "National Convention Party (Gambia)",
+      "Fastjet Tanzania",
+      "Christian Brothers College, St Kilda",
+      "Goldie &amp; McCulloch",
+      "Genius (website)",
+      "Artillerie-Inrichtingen",
+      "Teletrol",
+      "Totally Games",
+      "SemGroup"
+    ]
+  },
+  {
+    "_id": "5ab7f6d35542993667794070",
+    "question": "What is the name of the Australian specialist electronic music magazine that features avant-rock, experimental sound art, and experimental hip hop?",
+    "answer": "Cyclic Defrost",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Cyclic Defrost",
+        0
+      ],
+      [
+        "Cyclic Defrost",
+        2
+      ],
+      [
+        "Experimental hip hop",
+        0
+      ]
+    ],
+    "context_titles": [
+      "Inéz",
+      "Sixtoo",
+      "List of sound artists",
+      "Beautiful Eulogy",
+      "Experimental hip hop",
+      "Hip hop",
+      "Cyclic Defrost",
+      "Petri Kuljuntausta",
+      "And/oar",
+      "Lloyd Dunn"
+    ]
+  },
+  {
+    "_id": "5ac3d9135542995c82c4ac4c",
+    "question": "What is the population of the city that Munsonville is in the northwest corner of?",
+    "answer": "729 at the 2010 census",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Munsonville, New Hampshire",
+        1
+      ],
+      [
+        "Nelson, New Hampshire",
+        1
+      ]
+    ],
+    "context_titles": [
+      "George H. Williams Townhouses",
+      "Buchanan Township, Atchison County, Missouri",
+      "Dade County, Georgia",
+      "Franklin Street Presbyterian Church and Parsonage",
+      "Nelson, New Hampshire",
+      "Bennetts Bayou",
+      "Lobster Lake (Maine)",
+      "Sullivan's Corner Historic District",
+      "Fairhope, Fayette County, Pennsylvania",
+      "Munsonville, New Hampshire"
+    ]
+  },
+  {
+    "_id": "5ae129115542990adbacf722",
+    "question": "A Pair of Brown Eyes and Wild Mountain Thyme is based from what artists song?",
+    "answer": "Francis McPeake",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "A Pair of Brown Eyes",
+        2
+      ],
+      [
+        "Wild Mountain Thyme",
+        1
+      ]
+    ],
+    "context_titles": [
+      "Wild Mountain Thyme",
+      "A Pair of Brown Eyes",
+      "Bakhmull",
+      "A Spanner in the Works",
+      "Crystal Gayle singles discography",
+      "Brown Eyes (band)",
+      "Brown Eyes (song)",
+      "Rugged Maniac Twin Cities",
+      "Caramel (City High song)",
+      "Beautiful Brown Eyes"
+    ]
+  },
+  {
+    "_id": "5a86769c5542994775f60776",
+    "question": "Armageddon in Retrospect was written by the author who was best known for what 1969 satire novel?",
+    "answer": "Slaughterhouse-Five",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Armageddon in Retrospect",
+        0
+      ],
+      [
+        "Kurt Vonnegut",
+        2
+      ]
+    ],
+    "context_titles": [
+      "Kurt Vonnegut",
+      "José María Gironella",
+      "Little Big Man (novel)",
+      "Hugh Gallagher (humorist)",
+      "The Magic Christian (novel)",
+      "Joanna Russ",
+      "Satyricon",
+      "Jaroslav Hašek",
+      "Claudia Durst Johnson",
+      "Armageddon in Retrospect"
+    ]
+  },
+  {
+    "_id": "5ab31864554299233954ff06",
+    "question": "What class of instrument does Apatim Majumdar play?",
+    "answer": "strings",
+    "type": "bridge",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Apratim Majumdar",
+        0
+      ],
+      [
+        "Apratim Majumdar",
+        1
+      ],
+      [
+        "Sarod",
+        2
+      ]
+    ],
+    "context_titles": [
+      "Apratim Majumdar",
+      "Sarod",
+      "Chander Bari",
+      "Sousaphone",
+      "Bukkehorn",
+      "Experimental musical instrument",
+      "Udaka vadya",
+      "Keyboard glockenspiel",
+      "Asset classes",
+      "Accompaniment"
+    ]
+  },
+  {
+    "_id": "5a7b1023554299042af8f6c2",
+    "question": " Which movie did Disney produce first,  The Many Adventures of Winnie the Pooh or Ride a Wild Pony?",
+    "answer": "Ride a Wild Pony",
+    "type": "comparison",
+    "level": "hard",
+    "supporting_facts": [
+      [
+        "Ride a Wild Pony",
+        0
+      ],
+      [
+        "The Many Adventures of Winnie the Pooh",
+        0
+      ]
+    ],
+    "context_titles": [
+      "The Wild Pony",
+      "Up, Down and Touch the Ground",
+      "Little Black Rain Cloud",
+      "Winnie the Pooh (song)",
+      "Pony Penning",
+      "The Many Adventures of Winnie the Pooh",
+      "Winnie the Pooh and the Blustery Day",
+      "A Valentine for You",
+      "Ride a Wild Pony",
+      "The Wonderful Thing About Tiggers"
+    ]
+  }
+]

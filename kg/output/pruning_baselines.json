@@ -1,0 +1,602 @@
+[
+  {
+    "question": "In what year was the university where Sergei Aleksandrovich Tokarev was a professor founded?",
+    "ground_truth": "1755",
+    "T_o": 1009,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 9,
+    "similarity": {
+      "method": "similarity",
+      "A": "1755",
+      "T": 313,
+      "CR": 0.6897918731417245,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 5
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "1755",
+      "T": 411,
+      "CR": 0.5926660059464817,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 6
+    }
+  },
+  {
+    "question": "Black Book starred the actress and writer of what heritage?",
+    "ground_truth": "Dutch",
+    "T_o": 1858,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 35,
+    "similarity": {
+      "method": "similarity",
+      "A": "Dutch",
+      "T": 949,
+      "CR": 0.48923573735199144,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 18
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Dutch",
+      "T": 1257,
+      "CR": 0.3234660925726588,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 18
+    }
+  },
+  {
+    "question": "Which actor does American Beauty and American Beauty have in common?",
+    "ground_truth": "Kevin Spacey",
+    "T_o": 1399,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 28,
+    "similarity": {
+      "method": "similarity",
+      "A": "Kevin Spacey",
+      "T": 988,
+      "CR": 0.2937812723373838,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 14
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Kevin Spacey",
+      "T": 846,
+      "CR": 0.39528234453180844,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 11
+    }
+  },
+  {
+    "question": "Ken Pruitt  was a Republican member of an upper house of the legislature with how many members ?",
+    "ground_truth": "40 members",
+    "T_o": 791,
+    "EM_o": false,
+    "F1_o": 0.6666666666666666,
+    "gq_nodes": 25,
+    "similarity": {
+      "method": "similarity",
+      "A": "40",
+      "T": 493,
+      "CR": 0.37673830594184576,
+      "EM": false,
+      "F1": 0.6666666666666666,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 13
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "40",
+      "T": 556,
+      "CR": 0.2970922882427307,
+      "EM": false,
+      "F1": 0.6666666666666666,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 13
+    }
+  },
+  {
+    "question": "Between Greyia and Calibanus, which genus contains more species?",
+    "ground_truth": "Greyia",
+    "T_o": 485,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 16,
+    "similarity": {
+      "method": "similarity",
+      "A": "Greyia",
+      "T": 246,
+      "CR": 0.4927835051546392,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 8
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Greyia",
+      "T": 465,
+      "CR": 0.04123711340206182,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 15
+    }
+  },
+  {
+    "question": "Did John Updike and Tom Clancy both publish more than 15 bestselling novels?",
+    "ground_truth": "yes",
+    "T_o": 1764,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 26,
+    "similarity": {
+      "method": "similarity",
+      "A": "no",
+      "T": 1428,
+      "CR": 0.19047619047619047,
+      "EM": false,
+      "F1": 0.0,
+      "delta_em": 1,
+      "delta_f1": 1.0,
+      "n_nodes": 13
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Yes",
+      "T": 1312,
+      "CR": 0.2562358276643991,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 18
+    }
+  },
+  {
+    "question": "Who was hung for assisting the attempted surrender of a defector from the American Continental Army to the British Army?",
+    "ground_truth": "John André",
+    "T_o": 4558,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 58,
+    "similarity": {
+      "method": "similarity",
+      "A": "John André",
+      "T": 2361,
+      "CR": 0.4820096533567354,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 29
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "John André",
+      "T": 3437,
+      "CR": 0.24594120228170246,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 26
+    }
+  },
+  {
+    "question": "which Mexican and American film actress is Ethel Houbiers  French voice of ",
+    "ground_truth": "Salma Hayek Pinault",
+    "T_o": 1325,
+    "EM_o": false,
+    "F1_o": 0.8,
+    "gq_nodes": 23,
+    "similarity": {
+      "method": "similarity",
+      "A": "Salma Hayek Pinault",
+      "T": 494,
+      "CR": 0.6271698113207547,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": -1,
+      "delta_f1": -0.19999999999999996,
+      "n_nodes": 12
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Salma Hayek",
+      "T": 689,
+      "CR": 0.48,
+      "EM": false,
+      "F1": 0.8,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 13
+    }
+  },
+  {
+    "question": "Which major international airport in south-east England ranks as the 8th busiest airport in Europe and replaced Croydon Airport?",
+    "ground_truth": "Gatwick Airport",
+    "T_o": 2528,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 43,
+    "similarity": {
+      "method": "similarity",
+      "A": "Gatwick Airport",
+      "T": 1693,
+      "CR": 0.33030063291139244,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 22
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Gatwick Airport",
+      "T": 1823,
+      "CR": 0.278876582278481,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 22
+    }
+  },
+  {
+    "question": "Isabella Kelly was born at a ruined castle characterized as one of the most isolated fortifications in Britain by who?",
+    "ground_truth": "The Changing Scottish Landscape",
+    "T_o": 1886,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 31,
+    "similarity": {
+      "method": "similarity",
+      "A": "1991",
+      "T": 1139,
+      "CR": 0.3960763520678685,
+      "EM": false,
+      "F1": 0.0,
+      "delta_em": 1,
+      "delta_f1": 1.0,
+      "n_nodes": 16
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "1991's \"The Changing Scottish Landscape.\"",
+      "T": 1604,
+      "CR": 0.14952279957582182,
+      "EM": false,
+      "F1": 0.8571428571428571,
+      "delta_em": 1,
+      "delta_f1": 0.1428571428571429,
+      "n_nodes": 27
+    }
+  },
+  {
+    "question": "The facility where Robert Croft worked as a navy instructor was also known as?",
+    "ground_truth": "\"Home of the Submarine Force\"",
+    "T_o": 1282,
+    "EM_o": false,
+    "F1_o": 0.16666666666666666,
+    "gq_nodes": 25,
+    "similarity": {
+      "method": "similarity",
+      "A": "US Naval Submarine Base New London",
+      "T": 697,
+      "CR": 0.4563182527301092,
+      "EM": false,
+      "F1": 0.2,
+      "delta_em": 0,
+      "delta_f1": -0.033333333333333354,
+      "n_nodes": 13
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Home of the Submarine Force",
+      "T": 1042,
+      "CR": 0.18720748829953193,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": -1,
+      "delta_f1": -0.8333333333333334,
+      "n_nodes": 15
+    }
+  },
+  {
+    "question": "Who released the song \"With or Without You\" first, Jai McDowall or U2?",
+    "ground_truth": "U2",
+    "T_o": 1518,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 27,
+    "similarity": {
+      "method": "similarity",
+      "A": "U2",
+      "T": 784,
+      "CR": 0.4835309617918313,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 14
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "U2",
+      "T": 1232,
+      "CR": 0.18840579710144922,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 15
+    }
+  },
+  {
+    "question": "Which \"Roseanne\" star is in Scream 2?",
+    "ground_truth": "Laurie Metcalf",
+    "T_o": 3029,
+    "EM_o": false,
+    "F1_o": 0.0,
+    "gq_nodes": 32,
+    "similarity": {
+      "method": "similarity",
+      "A": "Laurie Metcalf",
+      "T": 2072,
+      "CR": 0.31594585671838893,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": -1,
+      "delta_f1": -1.0,
+      "n_nodes": 16
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Laurie Metcalf",
+      "T": 2732,
+      "CR": 0.09805216242984482,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": -1,
+      "delta_f1": -1.0,
+      "n_nodes": 20
+    }
+  },
+  {
+    "question": "In what city is the company that Fastjet Tanzania was originally founded as a part of prior to rebranding based?",
+    "ground_truth": "Nairobi, Kenya",
+    "T_o": 1519,
+    "EM_o": false,
+    "F1_o": 0.6666666666666666,
+    "gq_nodes": 24,
+    "similarity": {
+      "method": "similarity",
+      "A": "Dar es Salaam",
+      "T": 984,
+      "CR": 0.3522053982883476,
+      "EM": false,
+      "F1": 0.0,
+      "delta_em": 0,
+      "delta_f1": 0.6666666666666666,
+      "n_nodes": 12
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Dar es Salaam",
+      "T": 960,
+      "CR": 0.3680052666227781,
+      "EM": false,
+      "F1": 0.0,
+      "delta_em": 0,
+      "delta_f1": 0.6666666666666666,
+      "n_nodes": 11
+    }
+  },
+  {
+    "question": "What is the name of the Australian specialist electronic music magazine that features avant-rock, experimental sound art, and experimental hip hop?",
+    "ground_truth": "Cyclic Defrost",
+    "T_o": 1826,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 26,
+    "similarity": {
+      "method": "similarity",
+      "A": "Cyclic Defrost",
+      "T": 773,
+      "CR": 0.576670317634173,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 13
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Cyclic Defrost",
+      "T": 1381,
+      "CR": 0.24370208105147861,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 12
+    }
+  },
+  {
+    "question": "What is the population of the city that Munsonville is in the northwest corner of?",
+    "ground_truth": "729 at the 2010 census",
+    "T_o": 3428,
+    "EM_o": false,
+    "F1_o": 0.4,
+    "gq_nodes": 30,
+    "similarity": {
+      "method": "similarity",
+      "A": "729",
+      "T": 2160,
+      "CR": 0.36989498249708286,
+      "EM": false,
+      "F1": 0.4,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 15
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "729",
+      "T": 1127,
+      "CR": 0.6712368728121354,
+      "EM": false,
+      "F1": 0.4,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 11
+    }
+  },
+  {
+    "question": "A Pair of Brown Eyes and Wild Mountain Thyme is based from what artists song?",
+    "ground_truth": "Francis McPeake",
+    "T_o": 2165,
+    "EM_o": false,
+    "F1_o": 0.0,
+    "gq_nodes": 28,
+    "similarity": {
+      "method": "similarity",
+      "A": "Wild Mountain Thyme",
+      "T": 936,
+      "CR": 0.5676674364896074,
+      "EM": false,
+      "F1": 0.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 14
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Wild Mountain Thyme",
+      "T": 973,
+      "CR": 0.5505773672055427,
+      "EM": false,
+      "F1": 0.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 14
+    }
+  },
+  {
+    "question": "Armageddon in Retrospect was written by the author who was best known for what 1969 satire novel?",
+    "ground_truth": "Slaughterhouse-Five",
+    "T_o": 2369,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 35,
+    "similarity": {
+      "method": "similarity",
+      "A": "Slaughterhouse-Five",
+      "T": 1561,
+      "CR": 0.34107218235542425,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 18
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Slaughterhouse-Five",
+      "T": 1628,
+      "CR": 0.31279020683832837,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 12
+    }
+  },
+  {
+    "question": "What class of instrument does Apatim Majumdar play?",
+    "ground_truth": "strings",
+    "T_o": 3170,
+    "EM_o": false,
+    "F1_o": 0.0,
+    "gq_nodes": 32,
+    "similarity": {
+      "method": "similarity",
+      "A": "Sarod",
+      "T": 952,
+      "CR": 0.6996845425867508,
+      "EM": false,
+      "F1": 0.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 16
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "Sarod",
+      "T": 1293,
+      "CR": 0.5921135646687697,
+      "EM": false,
+      "F1": 0.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 13
+    }
+  },
+  {
+    "question": " Which movie did Disney produce first,  The Many Adventures of Winnie the Pooh or Ride a Wild Pony?",
+    "ground_truth": "Ride a Wild Pony",
+    "T_o": 2237,
+    "EM_o": true,
+    "F1_o": 1.0,
+    "gq_nodes": 22,
+    "similarity": {
+      "method": "similarity",
+      "A": "Ride a Wild Pony",
+      "T": 1676,
+      "CR": 0.2507822977201609,
+      "EM": true,
+      "F1": 1.0,
+      "delta_em": 0,
+      "delta_f1": 0.0,
+      "n_nodes": 11
+    },
+    "heuristic": {
+      "method": "heuristic",
+      "A": "The Many Adventures of Winnie the Pooh",
+      "T": 1390,
+      "CR": 0.37863209655789,
+      "EM": false,
+      "F1": 0.0,
+      "delta_em": 1,
+      "delta_f1": 1.0,
+      "n_nodes": 16
+    }
+  }
+]
