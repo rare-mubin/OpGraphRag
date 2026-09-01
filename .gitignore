@@ -9,3 +9,6 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Derived analysis cache -- regenerated in ~60s by kg/ablate_features.py
+kg/output/ablation_features.npz

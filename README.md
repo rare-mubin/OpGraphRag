@@ -8,8 +8,8 @@ browser while extraction is still running**.
 
 **Stage 2** embeds every graph node with BGE-M3 and retrieves a query-specific
 candidate subgraph $G_q$ via top-k semantic seeds + k-hop graph expansion —
-validated at 97.5% average recall against HotpotQA's own `supporting_facts`
-on the current subset.
+validated at 93.2% average recall (87.5% full recall) against HotpotQA's own
+`supporting_facts` on the current 200-question subset.
 
 **Stage 3** (methodology Section III-C) generates the uncompressed baseline
 answer $A_o$ for each question from $G_q$ via Qwen2.5-7B-Instruct, and
@@ -21,9 +21,12 @@ contribution: a GRPO-trained policy that learns to prune $G_q$ down to a
 compressed $G_c$ per query, trading context size against answer quality. The
 training loop (`train_compression_policy.py`) and its own inference/eval
 script (`generate_compressed_answers.py`) are built and trained end-to-end on
-the current ~20-question subset — mechanically sound (a reward-shaping
-exploit that once collapsed it to "remove everything" is fixed, see the
-Stage 4 section below) but not yet trained on enough data to generalize.
+the current 200-question subset. Three separate causes once collapsed it to
+"remove everything" (a gradient-scale bug, a credit-assignment gap, and a
+degenerate reward optimum) — **all three are diagnosed and fixed**, and it now
+trains stably and generalizes to held-out questions. It does **not** yet beat
+the non-adaptive pruning baselines; see the Stage 4 and Stage 6 sections below
+for the current numbers and the diagnosed reason.
 
 **Stage 6** (methodology Section III-F) evaluates the trained policy two
 ways: against the mandatory non-adaptive baselines (fixed similarity-
@@ -64,8 +67,11 @@ code/
     ├── compression_policy.py      # stage 4: state features + per-node MLP policy network
     ├── train_compression_policy.py   # stage 4: GRPO training loop
     ├── generate_compressed_answers.py  # stage 4: run a trained policy, compare vs. Stage 3 baseline
+    ├── retry_failed_extractions.py     # recovery: re-verify empty extractions at a nonzero temperature
     ├── generate_pruning_baselines.py   # stage 6: non-adaptive similarity/heuristic pruning baselines
     ├── evaluate_policy_classification.py  # stage 6: node-level confusion matrix / ROC / AUC
+    ├── ablate_features.py         # analysis: which state features actually matter (no LLM calls)
+    ├── analyze_hop_shells.py      # analysis: where relevant nodes live by hop distance (no LLM calls)
     ├── generate_report.py         # stage 6: consolidates everything into ../result/
     ├── ollama_models/             # local Ollama model storage (moved off C:, see below)
     └── output/                    # generated files (created by the scripts)
@@ -80,12 +86,15 @@ code/
         ├── retrieval_eval.json            # per-question retrieval recall results
         ├── baseline_answers.json          # per-question A_o, T_o, EM/F1, and full context used
         ├── compression_policy.pt          # trained policy weights + the args it was trained with
+        ├── no_context_answers.json        # per-question Q_empty control (cached, reused across runs)
         ├── compression_training_log.json  # per-question-per-step training log (rewards, loss, entropy)
         ├── compressed_answers.json        # per-question A_c, T_c, CR, Delta_EM/Delta_F1 vs. baseline
         ├── pruning_baselines.json         # per-question similarity/heuristic pruning results
         ├── policy_classification_eval.json  # node-level accuracy/precision/recall/F1/AUC + confusion matrix
         ├── confusion_matrix.png           # node-level KEEP/REMOVE confusion matrix heatmap
-        └── roc_curve.png                  # node-level KEEP-decision ROC curve
+        ├── roc_curve.png                  # node-level KEEP-decision ROC curve
+        ├── keepset_comparison.json        # policy vs. heuristic KEEP sets, per question
+        └── ablation_features.npz          # cached features/labels for the two analysis scripts
 ```
 
 ## Prerequisites
@@ -103,7 +112,7 @@ code/
 ### 1. Install Python dependencies
 
 ```bash
-pip install networkx requests pyvis sentence-transformers
+pip install networkx requests pyvis sentence-transformers numpy matplotlib scikit-learn
 ```
 
 (`pyvis` isn't used for static HTML generation here — `live_server.py` just
@@ -112,7 +121,10 @@ offline. `sentence-transformers` is Stage 2 only — it downloads the BGE-M3
 model, ~2.2 GB, the first time `embed_nodes.py` or `retrieve.py` runs. It
 also pulls in `torch`, which Stage 4's policy network uses directly — no
 separate install needed. A CUDA-enabled `torch` build is recommended if you
-have a GPU (see Troubleshooting) but not required.)
+have a GPU (see Troubleshooting) but not required. `matplotlib` and
+`scikit-learn` are Stage 6 only — `evaluate_policy_classification.py` needs
+`sklearn.metrics` for the confusion matrix/ROC/AUC, and both it and
+`generate_report.py` need `matplotlib` to render the plots.)
 
 ### 2. Install Ollama (runs the local LLM)
 
@@ -229,10 +241,27 @@ takes several minutes; 200 passages takes on the order of 15–30 minutes).
 Use `--max-passages` in step 1 to control the run length, or just stop and
 resume across multiple sessions with Ctrl+C.
 
+**Optional GPU temperature guard** (useful for long unattended runs on a
+laptop GPU):
+
+```bash
+python extract_kg.py --gpu-temp-guard --gpu-temp-high 80 --gpu-temp-low 70
+```
+
+Reads the GPU temperature via `nvidia-smi` before every passage. Once it
+reaches `--gpu-temp-high` (°C), extraction pauses (polling every 5s, printing
+the current temp) until it drops to `--gpu-temp-low`, then resumes — the
+in-flight passage before the pause is unaffected since the check happens
+*between* passages, not mid-call. Off by default (no flag = old behavior,
+unthrottled). If `nvidia-smi` isn't found (no NVIDIA GPU, driver/PATH issue),
+it warns once and disables itself for the rest of the run rather than
+blocking extraction forever on a system with no readable sensor. Pause/resume
+events are also written to `output/extraction.log`.
+
 ### Step 3 — Build the knowledge graph (with entity resolution)
 
 ```bash
-python build_graph.py
+python build_graph.py --workers 4
 ```
 
 Merges all extracted triples into a single graph (via the shared logic in
@@ -249,9 +278,13 @@ ways: it misses real aliases with different wording (`"Ed Wood"` vs
 to share an exact title (several real, unrelated works in this dataset are
 all literally titled `"Black Book"`). `entity_resolution.py` fixes both,
 using Ollama for verification:
-- **Free, no LLM needed**: pairs already linked by an alias-indicating
-  relation extracted from the source text itself (e.g. `"was known as"`,
-  `"formerly named"`) are merged directly — it's already a stated fact.
+- **Free, no LLM needed** (two mechanisms): pairs already linked by an
+  alias-indicating relation extracted from the source text itself (e.g.
+  `"was known as"`, `"formerly named"`) are merged directly; separately, an
+  entity whose own *description* states an alias relationship (e.g.
+  `"Original name of X"`) but has no matching relation edge is merged with
+  the entity in the same source passage matching that passage's own title.
+  Both are already stated fact, not a judgment call.
 - **LLM-verified**: same-name entities from different passages, and
   fuzzy-matched candidates (same type, sharing a distinctive name token),
   are each checked with one LLM call asking it to classify the relationship
@@ -266,7 +299,13 @@ using Ollama for verification:
   already checked. Delete this file to force a full fresh re-verification
   (e.g. after a prompt/logic change to `entity_resolution.py`).
 - Skip this pass entirely with `python build_graph.py --no-resolve` for a
-  faster iteration cycle (falls back to name-normalization merging only).
+  faster iteration cycle (falls back to name-normalization merging only) —
+  see `CLAUDE.md` for what this actually costs you before using it on a real run.
+- `--workers N` (default 4): concurrent LLM verification calls against
+  Ollama, since each call is a small, cheap generation that doesn't need to
+  run one-at-a-time. Tune based on your GPU's headroom (watch `nvidia-smi`
+  while it runs) — raise if requests aren't queueing up, lower if they are
+  or Ollama errors under load.
 
 Output:
 - `output/knowledge_graph.json` — full merged graph, NetworkX node-link
@@ -275,7 +314,12 @@ Output:
   extraction to refresh it.
 - Console summary: node/edge counts, average degree, isolated nodes,
   connected components, and entity-resolution stats (candidate pairs
-  checked, cache hits vs. new LLM calls, groups merged).
+  checked, cache hits vs. new LLM calls, groups merged). **Always check for
+  a `WARNING: abnormally large merge group(s)` block** — any group above 10
+  members is printed in full regardless of the normal 20-example cap, since
+  every such group found in this project's own builds turned out to be
+  genuine transitive-bridging damage (see `CLAUDE.md`'s entity-resolution
+  notes for the full story and how to audit one).
 
 ### Step 4 — Visualize the graph (live view)
 
@@ -405,17 +449,15 @@ Output:
 The research contribution: a policy that learns to prune $G_q$ down to a
 compressed $G_c$ per query (Section III-D), trading context size against
 answer quality via a trained reward (Section III-E) rather than a fixed
-heuristic. **Trained end-to-end, not yet trained on enough data to
-generalize** — the current subset is only ~20 questions/3 epochs, which is
-enough to validate the whole mechanism (including finding and fixing a real
-reward-shaping exploit, see Step 1 below) but not enough to learn real
-node-level discrimination; see the note at the end of this section and the
-Stage 6 evaluation further down for exactly how that shows up in the numbers.
+heuristic. **Trains stably and generalizes, but does not yet beat the
+non-adaptive baselines.** Run on 200 questions with a 160/40 train/val split;
+see the note at the end of this section and the Stage 6 evaluation for the
+current numbers and the diagnosed reason.
 
 ### Step 1 — Train the policy
 
 ```bash
-python train_compression_policy.py --group-size 4 --epochs 3
+python train_compression_policy.py --group-size 4 --epochs 3 --workers 4
 ```
 
 For each question: retrieves $G_q$, builds a per-node state vector (node
@@ -438,6 +480,10 @@ policy-gradient (`-mean(advantage * log_prob)`, plus a small entropy bonus
 the default `--group-size 4 --epochs 3` over the current ~19-question subset
 is roughly 45-55 minutes. Use `--n-questions 2 --group-size 2 --epochs 1`
 for a ~1 minute mechanism smoke test before committing to a real run.
+`--workers N` (default 4) runs a question's `--group-size` trajectories'
+LLM calls concurrently instead of one at a time — real speedup (not a full
+Nx, since each trajectory's own generate+shorten calls stay sequential), same
+GPU-headroom tuning advice as `build_graph.py`'s `--workers`.
 
 **Three real bugs were found and fixed here** — two initialization bugs and
 one reward-shaping exploit, all of which mattered far more than the RL logic
@@ -499,20 +545,23 @@ compression preserved or improved quality while shrinking context.
 
 Output: `output/compressed_answers.json` (per-question $A_o$/$A_c$, $T_o$/$T_c$,
 $CR$, $EM_o$/$EM_c$, $F1_o$/$F1_c$, $\Delta EM$/$\Delta F1$) plus a console summary.
+`--n-questions N` limits to the first N questions — useful for a quick
+spot-check of a freshly trained policy without waiting on the full subset.
 
-**Current numbers, and why they're not the paper's headline result yet**: a
-full run (`--group-size 4 --epochs 3` over all ~20 questions) gives
-EM 60.0%→30.0%, F1 73.5%→37.0% at 52.9% average compression — i.e. the
-policy compresses meaningfully but still costs real quality. Stage 6's
-node-level classification (below) shows why: 51.7% node-decision accuracy
-and 0.521 AUC, barely above chance at picking *which* nodes actually matter.
-That's consistent with 20 questions/3 epochs being enough to validate the
-mechanism (see Step 1's bug 3 above — it no longer collapses to emptying
-every graph) but not enough signal to learn real discrimination; there's
-also no train/val split at this data scale to check generalization even if
-it had learned something. Treat these numbers as a mechanism-correctness
-result, not a paper-reportable finding — scale up the dataset (more subset
-questions) before trusting $\Delta EM$/$\Delta F1$ as a real comparison.
+**Current numbers** (200 questions, `--group-size 4 --epochs 3`, evaluated on
+the 40 held-out val questions): EM 25.0%→40.0%, F1 29.7%→49.2% at **72.6%
+average compression** — the policy compresses heavily *and* substantially
+improves answer quality over the uncompressed baseline. Training is stable
+(entropy settles at ~0.50 instead of collapsing to 0, per-question CR spans
+0.00–0.98, i.e. genuinely query-adaptive) and it generalizes: node-level AUC
+on held-out questions is 0.871, up from 0.517.
+
+**It still does not beat the non-adaptive baselines**, though — `heuristic_prune`
+strictly dominates it (EM 47.5%, F1 60.4%, at 74.0% compression). See Stage 6
+below for the full table and the diagnosed reason. Also note both pruners beat
+the uncompressed baseline by a wide margin, so "pruning irrelevant retrieved
+context helps this generator focus" is the robust finding here, independent of
+any learning.
 
 ## Stage 6: Non-adaptive baselines, classification metrics & the results report
 
@@ -554,9 +603,20 @@ Reframes each KEEP/REMOVE decision as binary classification: ground truth
 KEEP probability is the classifier score. No LLM calls — pure local
 inference over the already-trained policy.
 
+Defaults to `--split val` (the held-out questions recorded in the policy
+checkpoint). This is **not optional bookkeeping**: `train_compression_policy.py`'s
+auxiliary loss trains on these exact `supporting_facts` labels, so scoring on
+trained-on questions is circular. Pass `--split all` only if you know why you want it.
+
 Output: `output/policy_classification_eval.json` (accuracy, precision,
 recall, classification F1, confusion matrix, ROC points, AUC) plus
 `output/confusion_matrix.png` and `output/roc_curve.png`.
+
+**Do not quote AUC as the headline.** At a 6.6% relevant base rate it is dominated
+by correctly ranking the mass of obviously irrelevant nodes, which is easy — the
+current 0.871 coexists with the policy losing to a fixed 1-hop rule at every
+operating point on its precision-recall curve. Report precision/recall at a stated
+KEEP-rate against `heuristic_prune`'s operating point instead.
 
 ### Step 3 — Build the consolidated results report
 
@@ -585,26 +645,39 @@ cd kg
 python select_subset.py --n 20 --seed 42 --max-passages 50
 python live_server.py            # in one terminal, leave running -- open http://localhost:8765
 python extract_kg.py             # in another terminal
-python build_graph.py            # whenever you want a resolved knowledge_graph.json snapshot
+python build_graph.py --workers 4   # whenever you want a resolved knowledge_graph.json snapshot
 python embed_nodes.py            # stage 2: embed the graph
 python retrieve.py "your question here"
 python evaluate_retrieval.py     # check retrieval recall across the whole subset
 python generate_baseline_answers.py   # stage 3: uncompressed baseline A_o, T_o, EM/F1
-python train_compression_policy.py --group-size 4 --epochs 3   # stage 4: GRPO training (~25-30 min)
-python generate_compressed_answers.py   # stage 4: A_c, T_c, Delta_EM/Delta_F1 vs. baseline
+python train_compression_policy.py --group-size 4 --epochs 3 --workers 4   # stage 4: GRPO training
+    # (holds out --val-frac 0.2 of questions; first run also measures the Q_empty
+    #  no-context control, ~2 LLM calls/question, cached in output/no_context_answers.json)
+python generate_compressed_answers.py   # stage 4: A_c, T_c, Delta_EM/Delta_F1 (val split by default)
 python generate_pruning_baselines.py    # stage 6: non-adaptive similarity/heuristic baselines
-python evaluate_policy_classification.py  # stage 6: confusion matrix / ROC / AUC (fast, no LLM calls)
+python evaluate_policy_classification.py  # stage 6: confusion matrix / ROC / AUC (val split, fast)
 python generate_report.py               # stage 6: consolidates everything into ../result/
+python ablate_features.py               # analysis: state-feature ablation (fast, no LLM calls)
+python analyze_hop_shells.py            # analysis: relevance by hop distance (fast, no LLM calls)
 ```
 
 ## Troubleshooting
 
 - **`ConnectionError` / extraction all fails**: Ollama isn't running (it does
   not survive closing the terminal that started it). Run `ollama serve` and
-  check `ollama list` shows the model. If `extract_kg.py` already wrote empty
-  entries for passages that failed this way, remove those entries from
-  `output/extractions.json` before rerunning so they get retried (an
-  all-`[]` entities+relations entry is the tell).
+  check `ollama list` shows the model.
+- **A handful of passages have empty extractions (`0 entities, 0 relations`)
+  after a full run**: run `python retry_failed_extractions.py`. `extract_kg.py`
+  retries at temperature 0.0 (deterministic), so if the model gets stuck in a
+  degenerate/repetitive generation for a specific passage, every retry hangs
+  identically and a same-temperature retry can never fix it — this happened
+  for real on a 200-question run (5 passages, all recovered on the first
+  attempt at a nonzero temperature). This script targets only the empty
+  entries, retries at temperature 0.3 then 0.7, and checkpoints
+  `extractions.json` after each recovery. If any are still empty afterward,
+  rerun `build_graph.py`/`embed_nodes.py` to pick up the recovered ones —
+  nothing downstream regenerates automatically (see the pipeline-propagation
+  note below).
 - **Out of memory / very slow**: switch to a smaller model in
   `extract_kg.py` (change `MODEL = "qwen2.5:7b-instruct"` to
   `"qwen2.5:3b-instruct"` or `"qwen2.5:1.5b-instruct"` and `ollama pull` it first).
@@ -672,12 +745,33 @@ python generate_report.py               # stage 6: consolidates everything into 
   incorporate the fix — don't trust an isolated pass as confirmation without
   checking the graph itself changed.
 
+## Current results (200 questions, 40 held-out val)
+
+| method | EM | F1 | compression |
+|---|---|---|---|
+| Uncompressed baseline | 25.0% | 29.7% | 0% |
+| **RL policy (GRPO + auxiliary loss)** | **40.0%** | **49.2%** | **72.6%** |
+| Similarity pruning (non-adaptive) | 45.0% | 52.0% | 60.6% |
+| Heuristic pruning (non-adaptive, 1-hop) | **47.5%** | **60.4%** | **74.0%** |
+
+The learned policy beats the uncompressed baseline by a wide margin but is still
+strictly dominated by a fixed 1-hop rule. `ablate_features.py` and
+`analyze_hop_shells.py` diagnose why — see `CLAUDE.md` for the full write-up.
+
 ## What's next (not in this README)
 
-- Scaling up the dataset (more than ~20 questions) — needed before Stage 4
-  training can produce a genuinely generalizing policy that beats the
-  non-adaptive baselines (currently it doesn't — see Stage 6), not just a
-  mechanism smoke test
-- A larger Stage 4 training run and honest $\Delta EM$/$\Delta F1$ /
-  node-classification results from it, ideally with a train/val split once
-  the dataset is large enough to support one
+- **Drop the raw node/query embeddings from the state vector.** The ablation shows
+  they are actively harmful, not merely diluting: a 4-feature structural model scores
+  0.606 node-F1 vs 0.401 for the full 2052-feature one, and is the only variant that
+  clears the heuristic. Projecting them to 64 or 16 dims does not help — they have to
+  go entirely.
+- **Target the 2-hop shell.** 30% of all relevant nodes sit 2 hops from a retrieval
+  seed, which the 1-hop heuristic discards wholesale — that is the only headroom a
+  learned policy has. They are recoverable (query-node cosine similarity alone scores
+  AUC 0.867 there, 14x chance precision), so this is where a genuine contribution has
+  to come from.
+- Stratify the train/val split by graph size (the current random split is 3.1 sigma
+  skewed — `G_q` sizes are heavy-tailed and val drew the big graphs) and stop at the
+  best val epoch rather than a fixed 3 (val node-F1 peaked at epoch 1).
+- Judge any retrain on the answer-level table, **not** node-F1: a missing supporting
+  fact costs far more than an extra node's tokens.

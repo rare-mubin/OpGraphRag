@@ -109,16 +109,35 @@ class CompressionPolicy(nn.Module):
 
 def sample_trajectory(policy: CompressionPolicy, features: torch.Tensor):
     """Samples one KEEP/REMOVE action per node. Returns (actions [N] bool-ish
-    float tensor, log_prob of the whole trajectory (sum over nodes, scalar),
-    entropy of the per-node action distribution (sum over nodes, scalar) --
+    float tensor, log_prob of the whole trajectory (MEAN over nodes, scalar),
+    entropy of the per-node action distribution (MEAN over nodes, scalar) --
     an entropy bonus in the training loss discourages the policy from
-    collapsing to an always-keep/always-remove degenerate strategy)."""
+    collapsing to an always-keep/always-remove degenerate strategy).
+
+    Both are the MEAN over nodes, not the sum, and that distinction is what
+    killed a whole 600-step training run once. Summed, a trajectory's log_prob
+    scales with |G_q| (~114 nodes on average here, but ranging into the
+    hundreds), so `-advantage * log_prob` produced pg_loss magnitudes up to
+    ~15 for an advantage of ~1 -- with Adam at lr 1e-3 that drove the final
+    logits to saturation within ~30 steps. Once sigmoid saturates, every
+    trajectory in a GRPO group samples identically, the group's reward std
+    goes to 0, the advantage goes to 0, and 92% of the remaining steps
+    produced literally no policy gradient at all. The entropy bonus can't
+    rescue it either: at saturated logits its own gradient
+    (dH/dlogit = log((1-p)/p) * p(1-p)) vanishes too. Averaging makes the
+    gradient scale independent of graph size, which is the property that
+    actually matters here since |G_q| varies by an order of magnitude
+    across questions.
+
+    Bernoulli is constructed from `logits=` rather than `probs=sigmoid(...)`
+    for the same reason: it keeps log_prob finite in the saturated regime
+    instead of going to -inf/NaN.
+    """
     logits = policy(features)
-    probs = torch.sigmoid(logits)
-    dist = Bernoulli(probs=probs)
+    dist = Bernoulli(logits=logits)
     actions = dist.sample()
-    log_prob = dist.log_prob(actions).sum()
-    entropy = dist.entropy().sum()
+    log_prob = dist.log_prob(actions).mean()
+    entropy = dist.entropy().mean()
     return actions, log_prob, entropy
 
 

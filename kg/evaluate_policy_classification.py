@@ -48,6 +48,13 @@ def main():
     ap.add_argument("--hops", type=int, default=2)
     ap.add_argument("--policy", default=str(POLICY_PATH))
     ap.add_argument("--device", default=None, help="cuda or cpu for the embedding model")
+    ap.add_argument("--split", choices=["val", "train", "all"], default="val",
+                     help="which questions to evaluate on (default: val). Since "
+                          "train_compression_policy.py's auxiliary loss now trains on these exact "
+                          "supporting_facts labels, scoring on trained-on questions is circular -- "
+                          "'val' uses only the held-out questions recorded in the policy "
+                          "checkpoint. Falls back to all questions for a checkpoint trained before "
+                          "the split existed (with a warning).")
     args = ap.parse_args()
     if args.device is None:
         args.device = default_device()
@@ -62,6 +69,19 @@ def main():
     policy = CompressionPolicy(input_dim=checkpoint["input_dim"])
     policy.load_state_dict(checkpoint["state_dict"])
     policy.eval()
+
+    split_names = checkpoint.get(f"{args.split}_questions")
+    if args.split == "all":
+        print(f"Evaluating on ALL {len(questions)} questions (includes questions the auxiliary "
+              f"loss trained on -- not a generalization measure).")
+    elif split_names is None:
+        print(f"[WARN] This checkpoint has no '{args.split}' split recorded (trained before the "
+              f"train/val split existed) -- falling back to all {len(questions)} questions. "
+              f"These numbers are NOT a generalization measure if --aux-coef was > 0.")
+    else:
+        wanted = set(split_names)
+        questions = [q for q in questions if q["question"] in wanted]
+        print(f"Evaluating on the {args.split} split: {len(questions)} held-out question(s).")
 
     G = load_graph()
     node_emb_lookup = load_node_embedding_lookup()
@@ -161,6 +181,7 @@ def main():
         plt.close(fig)
 
     result = {
+        "split": args.split,
         "n_questions": len(per_question), "n_nodes": len(all_labels),
         "n_relevant": int(all_labels.sum()), "accuracy": acc,
         "precision": prec, "recall": rec, "f1": f1,

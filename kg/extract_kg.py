@@ -12,9 +12,14 @@ Requires Ollama running locally with the model pulled:
 
 Usage:
     python extract_kg.py
+    python extract_kg.py --gpu-temp-guard --gpu-temp-high 80 --gpu-temp-low 70
+        # pauses before the next passage whenever the GPU hits --gpu-temp-high,
+        # resumes once it cools to --gpu-temp-low (needs `nvidia-smi` on PATH)
 """
+import argparse
 import json
 import os
+import subprocess
 import sys
 import time
 import requests
@@ -92,6 +97,66 @@ def extract_one(title: str, sentences: list[str], retries: int = 2) -> dict:
             time.sleep(1)
     print(f"  [WARN] extraction failed for '{title}': {last_err}")
     return {"entities": [], "relations": []}
+
+
+def get_gpu_temp_celsius() -> int | None:
+    """Current GPU temperature via `nvidia-smi`, or None if it can't be read
+    (no NVIDIA GPU, driver not installed, nvidia-smi not on PATH, etc.)."""
+    try:
+        out = subprocess.run(
+            ["nvidia-smi", "--query-gpu=temperature.gpu", "--format=csv,noheader,nounits"],
+            capture_output=True, text=True, timeout=5, check=True,
+        )
+        return int(out.stdout.strip().splitlines()[0])
+    except Exception:  # noqa: BLE001
+        return None
+
+
+class GpuTempGuard:
+    """Pauses extraction between passages when the GPU is running hot, resuming
+    once it's cooled back down to a lower threshold -- for unattended runs on a
+    laptop GPU where you'd rather extraction pause than the machine overheat.
+
+    Fails open: if the temperature can't be read at all, the guard warns once
+    and disables itself for the rest of the run rather than blocking
+    extraction indefinitely on a system with no readable GPU sensor.
+    """
+
+    def __init__(self, enabled: bool, high_c: int, low_c: int, poll_seconds: float = 5.0):
+        self.enabled = enabled
+        self.high_c = high_c
+        self.low_c = low_c
+        self.poll_seconds = poll_seconds
+        self._warned_unavailable = False
+
+    def wait_if_hot(self) -> None:
+        """Call once before each passage. Blocks (sleeping, polling) until the
+        GPU is at or below `low_c`, only if it was at/above `high_c`."""
+        if not self.enabled:
+            return
+
+        temp = get_gpu_temp_celsius()
+        if temp is None:
+            if not self._warned_unavailable:
+                print("\n[WARN] --gpu-temp-guard is on but GPU temperature couldn't be read "
+                      "(nvidia-smi not found, or no NVIDIA GPU) -- disabling the guard for this run.")
+                self._warned_unavailable = True
+                self.enabled = False
+            return
+
+        if temp < self.high_c:
+            return
+
+        print(f"\n[GPU GUARD] {temp}°C >= {self.high_c}°C threshold -- "
+              f"pausing before the next passage until it cools to {self.low_c}°C...")
+        append_log(f"[GPU GUARD] paused at {temp}C (threshold {self.high_c}C)")
+        while temp is not None and temp > self.low_c:
+            time.sleep(self.poll_seconds)
+            temp = get_gpu_temp_celsius()
+            if temp is not None:
+                print(f"[GPU GUARD] {temp}°C, waiting for <= {self.low_c}°C...")
+        print("[GPU GUARD] Cooled down -- resuming extraction.\n")
+        append_log(f"[GPU GUARD] resumed at {temp if temp is not None else '?'}C")
 
 
 def load_existing(subset_titles: set) -> list:
@@ -211,8 +276,29 @@ def print_stats(results: list, run_passage_times: list, run_warn_count: int,
     print(f"Log    -> {LOG_PATH}")
 
 
+def parse_args():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--gpu-temp-guard", action="store_true",
+                     help="pause extraction between passages when the GPU gets too hot, "
+                          "resuming once it cools down (requires nvidia-smi)")
+    ap.add_argument("--gpu-temp-high", type=int, default=80,
+                     help="pause when GPU temp (Celsius) reaches this (default: 80)")
+    ap.add_argument("--gpu-temp-low", type=int, default=70,
+                     help="resume once GPU temp (Celsius) drops to this (default: 70)")
+    args = ap.parse_args()
+    if args.gpu_temp_guard and args.gpu_temp_low >= args.gpu_temp_high:
+        ap.error(f"--gpu-temp-low ({args.gpu_temp_low}) must be lower than "
+                  f"--gpu-temp-high ({args.gpu_temp_high})")
+    return args
+
+
 def main():
     enable_windows_ansi()
+    args = parse_args()
+    gpu_guard = GpuTempGuard(args.gpu_temp_guard, args.gpu_temp_high, args.gpu_temp_low)
+    if args.gpu_temp_guard:
+        print(f"GPU temperature guard enabled: pause at >={args.gpu_temp_high}°C, "
+              f"resume at <={args.gpu_temp_low}°C.\n")
 
     with open(PASSAGES_PATH, encoding="utf-8") as f:
         passages = json.load(f)
@@ -246,6 +332,8 @@ def main():
 
     try:
         for i, p in enumerate(remaining, 1):
+            gpu_guard.wait_if_hot()
+
             t_start = time.time()
             extracted = extract_one(p["title"], p["sentences"])
             t_this = time.time() - t_start

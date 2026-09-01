@@ -11,6 +11,7 @@ LLM calls on cheaply-blocked candidate pairs and cached to disk. Use
 Usage:
     python build_graph.py
     python build_graph.py --no-resolve
+    python build_graph.py --workers 8   # more concurrent entity-resolution LLM calls (default: 4)
 """
 import argparse
 import json
@@ -29,6 +30,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-resolve", action="store_true",
                      help="skip the LLM-based entity resolution pass (faster, string-normalization merge only)")
+    ap.add_argument("--workers", type=int, default=4,
+                     help="concurrent entity-resolution LLM calls against Ollama (default: 4). "
+                          "Each call is a small, cheap generation -- raise this if your GPU has "
+                          "headroom (nvidia-smi while it runs), lower it if requests start "
+                          "queueing up with no speedup or Ollama errors under load.")
     args = ap.parse_args()
 
     with open(OUT_DIR / "extractions.json", encoding="utf-8") as f:
@@ -42,7 +48,7 @@ def main():
     resolution_stats = None
     if not args.no_resolve:
         print("Running entity resolution (blocking + LLM verification, cached)...")
-        G, resolution_stats = resolve_entities(G, RESOLUTION_CACHE_PATH)
+        G, resolution_stats = resolve_entities(G, RESOLUTION_CACHE_PATH, workers=args.workers)
 
     # --- Save ---
     # node-link JSON (easy to reload / inspect / feed into later phases)

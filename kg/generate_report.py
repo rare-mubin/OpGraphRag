@@ -72,6 +72,22 @@ def main():
     avg_f1_c = sum(r["F1_c"] for r in compressed) / n
     avg_cr_c = sum(r["CR"] for r in compressed) / n
 
+    # Restrict the non-adaptive baselines to the SAME questions the policy was evaluated on.
+    # generate_compressed_answers.py now defaults to the held-out val split, while
+    # generate_pruning_baselines.py has no policy to hold out from and so covers every question.
+    # Averaging those two scopes into one comparison table silently compares a 40-question policy
+    # result against a 200-question baseline result -- which flattered the pruning rows by several
+    # points and is exactly the kind of apples-to-oranges row this table exists to prevent.
+    eval_qs = {r["question"] for r in compressed}
+    scoped = [r for r in pruning if r["question"] in eval_qs]
+    if len(scoped) < len(pruning):
+        print(f"Scoping pruning baselines to the {len(scoped)} question(s) the policy was "
+              f"evaluated on (of {len(pruning)} in pruning_baselines.json).")
+    if not scoped:
+        raise SystemExit("No overlap between pruning_baselines.json and compressed_answers.json -- "
+                         "rerun generate_pruning_baselines.py.")
+    pruning = scoped
+
     pn = len(pruning)
     sim_em = sum(r["similarity"]["EM"] for r in pruning) / pn
     sim_f1 = sum(r["similarity"]["F1"] for r in pruning) / pn

@@ -36,6 +36,16 @@ def main():
     ap.add_argument("--hops", type=int, default=2)
     ap.add_argument("--device", default=None, help="cuda or cpu for the embedding model")
     ap.add_argument("--policy", default=str(POLICY_PATH), help="path to a trained policy .pt file")
+    ap.add_argument("--n-questions", type=int, default=None,
+                     help="limit to the first N questions (default: all) -- for a quick spot-check "
+                          "of a policy without waiting on the full subset")
+    ap.add_argument("--split", choices=["val", "train", "all"], default="val",
+                     help="which questions to answer (default: val). train_compression_policy.py's "
+                          "auxiliary loss trains on the supporting_facts labels for its train "
+                          "split, so Delta_EM/Delta_F1 measured on those questions is optimistic; "
+                          "'val' uses only the held-out questions recorded in the checkpoint. "
+                          "Falls back to all questions (with a warning) for a checkpoint trained "
+                          "before the split existed.")
     args = ap.parse_args()
     if args.device is None:
         args.device = default_device()
@@ -52,6 +62,20 @@ def main():
         baseline = {r["question"]: r for r in json.load(f)}
 
     checkpoint = torch.load(args.policy, weights_only=False)
+
+    split_names = checkpoint.get(f"{args.split}_questions")
+    if args.split == "all":
+        print(f"Answering ALL {len(questions)} questions (includes the policy's own training "
+              f"questions -- not a generalization measure).")
+    elif split_names is None:
+        print(f"[WARN] This checkpoint has no '{args.split}' split recorded (trained before the "
+              f"train/val split existed) -- falling back to all {len(questions)} questions.")
+    else:
+        wanted = set(split_names)
+        questions = [q for q in questions if q["question"] in wanted]
+        print(f"Answering the {args.split} split: {len(questions)} held-out question(s).")
+    if args.n_questions:
+        questions = questions[: args.n_questions]
     policy = CompressionPolicy(input_dim=checkpoint["input_dim"])
     policy.load_state_dict(checkpoint["state_dict"])
     policy.eval()

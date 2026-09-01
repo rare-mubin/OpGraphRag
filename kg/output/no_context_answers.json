@@ -1,0 +1,802 @@
+{
+  "In what year was the university where Sergei Aleksandrovich Tokarev was a professor founded?": {
+    "A_empty": "No year",
+    "Q_empty": 0.0
+  },
+  "Black Book starred the actress and writer of what heritage?": {
+    "A_empty": "No specific heritage provided",
+    "Q_empty": 0.0
+  },
+  "Which actor does American Beauty and American Beauty have in common?": {
+    "A_empty": "Kevin Spacey",
+    "Q_empty": 1.0
+  },
+  "Ken Pruitt  was a Republican member of an upper house of the legislature with how many members ?": {
+    "A_empty": "40",
+    "Q_empty": 0.6666666666666666
+  },
+  "Between Greyia and Calibanus, which genus contains more species?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "Did John Updike and Tom Clancy both publish more than 15 bestselling novels?": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "Who was hung for assisting the attempted surrender of a defector from the American Continental Army to the British Army?": {
+    "A_empty": "Nathan Hale",
+    "Q_empty": 0.0
+  },
+  "which Mexican and American film actress is Ethel Houbiers  French voice of ": {
+    "A_empty": "Jennifer Jones",
+    "Q_empty": 0.0
+  },
+  "Which major international airport in south-east England ranks as the 8th busiest airport in Europe and replaced Croydon Airport?": {
+    "A_empty": "London Heathrow Airport",
+    "Q_empty": 0.4
+  },
+  "Isabella Kelly was born at a ruined castle characterized as one of the most isolated fortifications in Britain by who?": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "The facility where Robert Croft worked as a navy instructor was also known as?": {
+    "A_empty": "U.S. Naval Station Great Lakes",
+    "Q_empty": 0.0
+  },
+  "Who released the song \"With or Without You\" first, Jai McDowall or U2?": {
+    "A_empty": "U2",
+    "Q_empty": 1.0
+  },
+  "Which \"Roseanne\" star is in Scream 2?": {
+    "A_empty": "Roseanne Barr",
+    "Q_empty": 0.0
+  },
+  "In what city is the company that Fastjet Tanzania was originally founded as a part of prior to rebranding based?": {
+    "A_empty": "Edinburgh",
+    "Q_empty": 0.0
+  },
+  "What is the name of the Australian specialist electronic music magazine that features avant-rock, experimental sound art, and experimental hip hop?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "What is the population of the city that Munsonville is in the northwest corner of?": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "A Pair of Brown Eyes and Wild Mountain Thyme is based from what artists song?": {
+    "A_empty": "The Corrs",
+    "Q_empty": 0.0
+  },
+  "Armageddon in Retrospect was written by the author who was best known for what 1969 satire novel?": {
+    "A_empty": "Slaughterhouse-Five",
+    "Q_empty": 1.0
+  },
+  "What class of instrument does Apatim Majumdar play?": {
+    "A_empty": "No information available",
+    "Q_empty": 0.0
+  },
+  " Which movie did Disney produce first,  The Many Adventures of Winnie the Pooh or Ride a Wild Pony?": {
+    "A_empty": "The Many Adventures of Winnie the Pooh",
+    "Q_empty": 0.0
+  },
+  "Pandikona and Berger Blanc Suisse are both what kinds of animals?": {
+    "A_empty": "dogs",
+    "Q_empty": 1.0
+  },
+  "The Prussian General Carl von Clausewitz is associated with what type of realism?": {
+    "A_empty": "political realism",
+    "Q_empty": 0.16666666666666669
+  },
+  "What where both Hawker Hurricane and No. 1455 Flight apart of?": {
+    "A_empty": "Royal New Zealand Air Force",
+    "Q_empty": 0.7499999999999999
+  },
+  "what language did the ethnic group which Torstein Ellingsen was its drumer  speaks ": {
+    "A_empty": "Norwegian",
+    "Q_empty": 0.6666666666666666
+  },
+  "From March 631 to April 631, Farrukhzad Khosrau V was the king of an empire that succeeded which empire?": {
+    "A_empty": "Parthian Empire",
+    "Q_empty": 1.0
+  },
+  "Beer Wars covers the differences between large corporate breweries, and small breweries, such as what brewery that is headquartered in Escondido, california?": {
+    "A_empty": "Stone Brewing",
+    "Q_empty": 1.0
+  },
+  "Which head coach has led their team for a longer period of time, Tim Cluess or Steve Prohm?": {
+    "A_empty": "Steve Prohm",
+    "Q_empty": 0.0
+  },
+  "During what war were the Russia-United Kingdom relations in a state of rivalry after the abdication of Emperor Nicholas II? ": {
+    "A_empty": "World War I",
+    "Q_empty": 0.3333333333333333
+  },
+  "How far from Sacramento is the flight school in Atwater?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "Baraki Barak District is situated in the western part of a province whose capital is what?": {
+    "A_empty": "Jalalabad",
+    "Q_empty": 0.0
+  },
+  "What was the 2010 population of the town where Black Crescent Mountain was located? ": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "In the NASA mission where Moon trees were taken into space, what was the nickname of the Command Module?": {
+    "A_empty": "Kitty Hawk",
+    "Q_empty": 1.0
+  },
+  "Which comic series involves characters such as Nick Fury and Baron von Strucker?": {
+    "A_empty": "Marvel Comics",
+    "Q_empty": 0.6666666666666666
+  },
+  "College Humor is a 1933 American pre-Code musical comedy film that starred what American singer and actor who has a trademark warm bass-baritone voice?": {
+    "A_empty": "Bing Crosby",
+    "Q_empty": 0.5714285714285715
+  },
+  "Who is writing a book about the Koch family who control the second-largest privately owned company in the United States?": {
+    "A_empty": "David G. Savage",
+    "Q_empty": 0.0
+  },
+  "New York State Route 9R rejoins its parent in a hamlet located  in what New York County?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "12 Years a Slave starred what British actor born 10 July 1977)": {
+    "A_empty": "Chiwetel Ejiofor",
+    "Q_empty": 1.0
+  },
+  "What was the capital of India when the Taj Mahal was commissioned?": {
+    "A_empty": "Agra",
+    "Q_empty": 1.0
+  },
+  "In what city did the \"Prince of tenors\" star in a film based on an opera by Giacomo Puccini?": {
+    "A_empty": "Rome",
+    "Q_empty": 1.0
+  },
+  "What river can a  large African bovine be seen bathing in in the Mwabvi Wildlife Reserve?": {
+    "A_empty": "Luangwa River",
+    "Q_empty": 0.0
+  },
+  "Jalen Jones plays basketball for an NBA team that plays their home games in what arena?": {
+    "A_empty": "State Farm Arena",
+    "Q_empty": 0.0
+  },
+  "The On Tour Forever album gave Blues Traveler the opportunity to display what musical trademark?": {
+    "A_empty": "blues scale",
+    "Q_empty": 0.0
+  },
+  "Which Victorian poet was born in a 15th-century castle home to the Earl of Southesk?": {
+    "A_empty": "Sir Walter Scott",
+    "Q_empty": 0.0
+  },
+  "Alexander Petrovich Nikolayev received the title Hero of the Soviet Union and the Order of Lenin for his actions during the   the final major offensive of the European theatre of what war?": {
+    "A_empty": "World War II",
+    "Q_empty": 1.0
+  },
+  "Where did Cale Gundy's brother play football in college?": {
+    "A_empty": "University of Oklahoma",
+    "Q_empty": 0.6666666666666666
+  },
+  "Who has released more solo albums, Nick Carter or Brady Seals?": {
+    "A_empty": "Brady Seals",
+    "Q_empty": 1.0
+  },
+  "Which Istanbul mosque is unique for retaining a Baroque style of architecture, the Bayezid II Mosque or the Nusretiye Mosque?": {
+    "A_empty": "Nusretiye Mosque",
+    "Q_empty": 1.0
+  },
+  "What university did the last Detroit Pistons player to wear the number retired in honor of a player nicknamed \"The Worm\" attend?": {
+    "A_empty": "University of Michigan",
+    "Q_empty": 0.4
+  },
+  "The Atik Valide Mosque and Valens Aqueduct are found in what country?": {
+    "A_empty": "Turkey",
+    "Q_empty": 1.0
+  },
+  "Which of the four US Presidents who have been assinated was shot on the grounds of the Pan-American Exposition at the Temple of Music in Buffalo, New York?": {
+    "A_empty": "William McKinley",
+    "Q_empty": 1.0
+  },
+  "Who created the NBC sitcom that Johnny Pemberton appears in as the character Bo Thompson?": {
+    "A_empty": "Dan Fogelman",
+    "Q_empty": 0.0
+  },
+  "Were Halldór Laxness and Timothy Leary from the same country?": {
+    "A_empty": "No",
+    "Q_empty": 1.0
+  },
+  "Do both Korematsu v. United States and Chaplinsky v. New Hampshire cases regard the rights of U. S. citizens?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  " What is the title of the memoir written by the honoree of the Black and White Ball?": {
+    "A_empty": "No information provided",
+    "Q_empty": 0.0
+  },
+  "What country is the theme park served by the Huis Ten Bosch train service themed on?": {
+    "A_empty": "Netherlands",
+    "Q_empty": 1.0
+  },
+  "The Distribution of Industry act was passed by a man who was prime minister when? ": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "What Cantonese slang term can mean both \"ghost man\" and to refer to Westerners?": {
+    "A_empty": "maan gwai",
+    "Q_empty": 0.0
+  },
+  "In what year was the most famous statute at Po Lin Monastery built?": {
+    "A_empty": "1993",
+    "Q_empty": 0.0
+  },
+  " The Nike Hoop Summit has had many current NBA players as former participants, including what German player from the Dallas Mavericks?": {
+    "A_empty": "Luka Dončić",
+    "Q_empty": 0.0
+  },
+  "Which actor from the South Korean-Thai drama film Final Recipe debuted as a member of Super Junior-M in 2008?": {
+    "A_empty": "Kim Jong-hyun",
+    "Q_empty": 0.0
+  },
+  "Are Phlebodium and Pieris both species of ferns?": {
+    "A_empty": "No",
+    "Q_empty": 1.0
+  },
+  "Who was the great grandfather of Franklin Seaver Pratt's wife?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "At what age did Cieli di Toscana's singer become blind?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "Which late 1980s and 1990s English super model was featured in the song nasty girl by The Notorious B.I.G.?": {
+    "A_empty": "Naomi Campbell",
+    "Q_empty": 0.8
+  },
+  "What is the name of the film directed by Alex Cox  adapted from a 1606 play starring Diana Quick as the Dutchess?": {
+    "A_empty": "LifeMultiplicity",
+    "Q_empty": 0.0
+  },
+  "Josh Trank and Mike Valerio both work in what industry?": {
+    "A_empty": "film",
+    "Q_empty": 0.0
+  },
+  "Which American comedian born on March 21, 1962, appeared in the movie \"Sleepless in Seattle?\"": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "Any Questions for Ben? was directed by which Australian producer and actor?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "What American indie rock group first had Jesse Sandoval as the drummer and now has Jon Sortland on drums?": {
+    "A_empty": "The Polyphonic Spree",
+    "Q_empty": 0.0
+  },
+  "What 3 countries are part of the legal name of the airline that merged with Braathens in 2004?": {
+    "A_empty": "Sweden, Denmark, Norway",
+    "Q_empty": 0.0
+  },
+  "What is the ratio of flow velocity past a boundary to the local speed of sound for a Saab JAS 39 Gripen?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "SWX Right Now airs on the station that broadcasts on what channel in Billings, Montana?": {
+    "A_empty": "37",
+    "Q_empty": 0.0
+  },
+  "Which player, who also played for the New Jersey Nets and the Golden State Warriors, finished third in the league with 231 three-point field goals during the 1995-96 Atlanta Hawks season?": {
+    "A_empty": "Mario Elie",
+    "Q_empty": 0.0
+  },
+  "Saltillo Engine is an engine plant in Ramos Arizpe that belongs to the American subsidiary of what company?": {
+    "A_empty": "Ford Motor Company",
+    "Q_empty": 0.0
+  },
+  " What type of television show did Dylan Everett star in, in 2015?": {
+    "A_empty": "superhero drama",
+    "Q_empty": 0.0
+  },
+  "Which plant, the Chaerophyllum or the Cryptanthus, can be found in various places across the world?": {
+    "A_empty": "Cryptanthus",
+    "Q_empty": 0.0
+  },
+  "Johnny Mathis: Wonderful Wonderful aired at what luxury hotel, casino and spa resort located in Atlantic City, New Jersey?": {
+    "A_empty": "Trump Taj Mahal",
+    "Q_empty": 0.0
+  },
+  "Who wrote the lyrics for Linda Eder's Broadway debut?": {
+    "A_empty": "unknown",
+    "Q_empty": 0.0
+  },
+  "The Company They Keep is a book written by Diana Pavlac Glyer, who is a professor at a university in Azusa, California, that was founded in 1899, and is under the auspices of what religion?": {
+    "A_empty": "Assemblies of God",
+    "Q_empty": 0.0
+  },
+  "For One Night Only was hosted by the man most well-known for hosting what show from 1962 until 1999?": {
+    "A_empty": "The Ed Sullivan Show",
+    "Q_empty": 0.3333333333333333
+  },
+  "What was the slogan  that came about from the idea of Lebensraum which had its most extreme form supported by the Nazi Party until the end of World War II?": {
+    "A_empty": "Lebensraum für das Deutsche Volk",
+    "Q_empty": 0.0
+  },
+  "Olivia DeJonge starred in an American horror film directed by Shyamalan called what": {
+    "A_empty": "Split",
+    "Q_empty": 0.0
+  },
+  "Who conducted the negotiations  with the owners and the longest serving commandant of Auschwitz concentration and extermination camp?": {
+    "A_empty": "Rudolf Höss",
+    "Q_empty": 1.0
+  },
+  "What genre is the novel from which the fast-food restaurant specializing in seafood derives its name?": {
+    "A_empty": "short fiction",
+    "Q_empty": 0.0
+  },
+  "What kind of musicians are Mark Gaudet and Jan Axel Blomberg?": {
+    "A_empty": "black metal",
+    "Q_empty": 0.0
+  },
+  "A Wind in the Door is part of a series written by who?": {
+    "A_empty": "C.S. Lewis",
+    "Q_empty": 0.0
+  },
+  "The Airport located next to the A13 handled how many passengers in 2016 ?": {
+    "A_empty": "No specific number",
+    "Q_empty": 0.0
+  },
+  "The town of Sinclair, West Virginia, is named after the founder of the local oil drilling company. What is on Sinclair Oil's famous logo?": {
+    "A_empty": "a black and yellow chevron symbol",
+    "Q_empty": 0.0
+  },
+  "Jihad: A Story of the Others is a documentary by the director who is of what descent?": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "Minor league baseball games that were played between the rivalling teams of the Sooners and the Cowboys were played at the stadium formerly known as what?": {
+    "A_empty": "Kelly Field",
+    "Q_empty": 0.0
+  },
+  "Cooperative Living Organization is located in a city that is the county seat of what county in Florida?": {
+    "A_empty": "Polk County",
+    "Q_empty": 0.0
+  },
+  "What is the pen name of author Carolyn Janice Cherry, who wrote the Fortress Series?": {
+    "A_empty": "J.A. Cherry",
+    "Q_empty": 0.23529411764705882
+  },
+  "Which dog is believed to dispel ghosts and evil spirits, Segugio Italiano or Sapsali?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "Which French aristocrat and military officer who fought in the American Revolutionary War visited this historic home located at Enfield, Halifax County, North Carolina, known as The Cellar?": {
+    "A_empty": "Marquis de Lafayette",
+    "Q_empty": 1.0
+  },
+  "What sports team included both of the brothers Case McCoy and Colt McCoy during different years?": {
+    "A_empty": "Texas Longhorns",
+    "Q_empty": 0.6666666666666666
+  },
+  "Which member of The New Russian School was both a doctor and a chemist besides being a composer?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "Susanna Thompson appeared in the courtroom drama film Ghosts of Mississippi, directed by who?": {
+    "A_empty": "Alan Parker",
+    "Q_empty": 0.0
+  },
+  "Live Wire Radio will possibly be considered as a replacement for a variety show created in what year?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "Luke Rockhold defeated the MMA fighter who was the first to earn a win against which champion in the UFC?": {
+    "A_empty": "Chris Weidman",
+    "Q_empty": 0.0
+  },
+  "What type of art does The Consul and Arlecchino have in common?": {
+    "A_empty": "opera",
+    "Q_empty": 0.0
+  },
+  "Who is a Brazilian mixed martial artist in the UFC who Namsaknoi Yudthagarngamtorn coached?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "Which has more species, Lysiloma or Hydrocotyle umbellata?": {
+    "A_empty": "cannot determine",
+    "Q_empty": 0.0
+  },
+  "Are the films Gasland from 2010 and Pumping Iron from 1977 both documentaries?": {
+    "A_empty": "yes",
+    "Q_empty": 1.0
+  },
+  "Rosemary Willis was seen in the grass in what Texas town, where John F. Kennedy was assassinated?": {
+    "A_empty": "Dallas",
+    "Q_empty": 1.0
+  },
+  "Which king of Northumbria did The \"Historia\" gives the abbot central place in his election as king": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "Mooreville, Mississippi is located on which Interstate highway that follows US Route 78?": {
+    "A_empty": "Interstate Highway 22",
+    "Q_empty": 0.8
+  },
+  "Where is the casino that Summer Nights takes place in?": {
+    "A_empty": "The Mirage",
+    "Q_empty": 0.0
+  },
+  "who was the anthropologist who thought that the plaster casts that were discovered by Paul Freeman were a critical piece of evidence?": {
+    "A_empty": "Paul Freeman",
+    "Q_empty": 0.0
+  },
+  "What type of license is the open source roguelike video game video released 2012, in which a subset of it's pricing model is a called free-to-play, licensed under?": {
+    "A_empty": "GNU General Public License (GPL)",
+    "Q_empty": 0.28571428571428575
+  },
+  "Mía Maestro had a role in the 2002 biopic directed by whom?": {
+    "A_empty": "Gregory Nava",
+    "Q_empty": 0.0
+  },
+  "UFO Magazine covers what subject named for Charles Hoy Fort?": {
+    "A_empty": "Fortean phenomena",
+    "Q_empty": 0.6666666666666666
+  },
+  "Are both The Straight Story and Frozen films of the same genre?": {
+    "A_empty": "No",
+    "Q_empty": 1.0
+  },
+  "What 1876 battle featured the Other Magpie?": {
+    "A_empty": "Battle of the Little Bighorn",
+    "Q_empty": 0.5714285714285715
+  },
+  "What Disney movie was the wrestler with the real name of John William Minton in?": {
+    "A_empty": "The Fox and the Hound",
+    "Q_empty": 0.0
+  },
+  "Who covered the song I Love You by Chris Write?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "Who was born first, Javier Frana or Sherwood Stewart?": {
+    "A_empty": "Sherwood Stewart",
+    "Q_empty": 1.0
+  },
+  "Are Dogo Cubano and the Dutch Shepherd both breeds of dog?": {
+    "A_empty": "Yes",
+    "Q_empty": 1.0
+  },
+  "Spawn, a fictional character who Mustafa Shakir has expressed interest in playing, was created by?": {
+    "A_empty": "Todd McFarlane",
+    "Q_empty": 1.0
+  },
+  "To where did the war criminal who is the fictional defendant in the film After the Truth flee in real life ?": {
+    "A_empty": "No specific location",
+    "Q_empty": 0.0
+  },
+  "What company did Rex Maughan aquire?": {
+    "A_empty": "Rexall Sundown",
+    "Q_empty": 0.0
+  },
+  "The 249th episode of \"The Simpsons\" was aired on what date?": {
+    "A_empty": "March 29, 2009",
+    "Q_empty": 0.0
+  },
+  "Which was built first Woolworth Building or 1 New York Plaza?": {
+    "A_empty": "Woolworth Building",
+    "Q_empty": 1.0
+  },
+  "Where is the concert venue which hosted the first US performance of \"Libuše\" located?": {
+    "A_empty": "Washington, D.C.",
+    "Q_empty": 0.0
+  },
+  "When was the advisor of Alpher–Bethe–Gamow paper died?": {
+    "A_empty": "No information available",
+    "Q_empty": 0.0
+  },
+  "What competition held in Kathmandu, Nepal did Julian Bolling compete in 1984?": {
+    "A_empty": "Asian Games",
+    "Q_empty": 0.6666666666666666
+  },
+  "The Nike Mercurial Vapor is endorsed by a Stoke City football player who also plays for what national team?": {
+    "A_empty": "England",
+    "Q_empty": 0.0
+  },
+  "Which aired first, Life After People or Werner Herzog Eats His Shoe?": {
+    "A_empty": "Life After People",
+    "Q_empty": 0.0
+  },
+  "What NIFL Premier Intermediate League team did Sean Connor play for?": {
+    "A_empty": "No information available",
+    "Q_empty": 0.0
+  },
+  "The first female correspondent for Inside the NFL was replaced by who on the show American Ninja Warrior?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "Bridgewater Triangle is an area where the phenomenon associated with what type of tradition has been seen?": {
+    "A_empty": "paranormal or supernatural",
+    "Q_empty": 0.0
+  },
+  "The band who released the debut album \"Tinted Windows\" had their first performance in what city?": {
+    "A_empty": "No information provided",
+    "Q_empty": 0.0
+  },
+  "In the 1970s, which group acquired this department store group in the United Kingdom whose co-founding director is the father of Lieutenant Colonel Donald Swain Lewis?": {
+    "A_empty": "J. Sainsbury plc",
+    "Q_empty": 0.0
+  },
+  "The Dogwoman telemovies were created by an actress born in what year?": {
+    "A_empty": "No answer",
+    "Q_empty": 0.0
+  },
+  "Who fills in occasionally for the meteorologist who replaced  Ginger Zee ?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "In Ancient Egyptian religion how would a citizen be weighted to decide if they where worthy of damnation and would face the torment in the lake of fire ?": {
+    "A_empty": "Weighing of the Heart ceremony",
+    "Q_empty": 0.25
+  },
+  "Which town near the county border with North Yorkshire was this Lancashire mill (closed in 1979 and demolished) located?": {
+    "A_empty": "Haslingden",
+    "Q_empty": 0.0
+  },
+  "The Prodigal Daughter, though a book about an American, is by a novelist of what nationality?": {
+    "A_empty": "unknown",
+    "Q_empty": 0.0
+  },
+  "At what height does State Route 160 start?": {
+    "A_empty": "No specific height",
+    "Q_empty": 0.0
+  },
+  "The alcoholic drink that shares a name with Quintessentially Unreal's 1996 album is commonly reffered to in historical literature as what?": {
+    "A_empty": "Absinthe",
+    "Q_empty": 0.0
+  },
+  "What actor replaced the Welch actor born in 1978 who played Robin Hood in the first season of \"Once upon a Time\"?": {
+    "A_empty": "Colin O'Donoghue",
+    "Q_empty": 0.0
+  },
+  "Which year was the more recent engine series, the Honda K or Honda H, introduced?": {
+    "A_empty": "H",
+    "Q_empty": 0.0
+  },
+  "Who is the film dedicated to that Paramount Classics and MTV Films co-purchased the rights to?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "What are some foods that may have been served at the Hawaiin Cottage?": {
+    "A_empty": "Pineapple, Spam, Lau lau, Poi, Kalua pig",
+    "Q_empty": 0.39999999999999997
+  },
+  "In what year was the coach who led the 2007 South Carolina Gamecocks football team in his third season as USC head coach born?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "What team did Travis Cortez Mays play on which currently compete in the Big 12 Conference.?": {
+    "A_empty": "Oklahoma Sooners",
+    "Q_empty": 0.0
+  },
+  "Which film does \"Naked Weapon\" follow in the \"Naked\" series?": {
+    "A_empty": "Naked Lunch",
+    "Q_empty": 0.5
+  },
+  "Which award David Hersey had got for Equus a play by Peter Shaffer ?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "What mine was operated by Royal Oak Mines at at earlier date, Kemess Mine or Colomac Mine?": {
+    "A_empty": "Colomac Mine",
+    "Q_empty": 1.0
+  },
+  "Are The Man from Snowy River II and Miracle of the White Stallions filmed in different countries?": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "Do Lush and P.O.D. both consist of four band members?": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "What actor from the show Murphy Brown also had a role in a show with fellow actor Steve Howey? ": {
+    "A_empty": "Gwyneth O'Neal",
+    "Q_empty": 0.0
+  },
+  "What year was Playford B Power Station permanently closed in by its Australian operator?": {
+    "A_empty": "2016",
+    "Q_empty": 0.0
+  },
+  "Which English actor starred in the 1995 american romantic drama film The Scarlet Letter alongside Demi Moore and Robert Duvall?": {
+    "A_empty": "Daniel Day-Lewis",
+    "Q_empty": 0.0
+  },
+  "Which tennis player is older, Emilio Sánchez or Andrei Olhovskiy?": {
+    "A_empty": "Emilio Sánchez",
+    "Q_empty": 0.6666666666666666
+  },
+  "Henderson Executive Airport got its name in 1996 when it was purchased by Clark County to be used as a reliever airport for an airport named after what politican?": {
+    "A_empty": "Hugh O. McCarran",
+    "Q_empty": 0.28571428571428575
+  },
+  "Where is the county seat for people living in Henderson Point, Mississippi?": {
+    "A_empty": "Laurel",
+    "Q_empty": 0.0
+  },
+  "Carrie Coon plays Margo Dunne in a 2014 film set in what state?": {
+    "A_empty": "Louisiana",
+    "Q_empty": 0.0
+  },
+  "What do both Spider-Man and Spider-Man in film have in comman": {
+    "A_empty": "Peter Parker",
+    "Q_empty": 0.0
+  },
+  "Which has more species, Sonerila or Scaevola?": {
+    "A_empty": "Sonerila",
+    "Q_empty": 1.0
+  },
+  "What party was Johan Henrik Deuntzer a part of before the party that translates to the \"Radical Left?\"": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "What other film did the star of 127 Hours act in?": {
+    "A_empty": "Spider-Man (2002)",
+    "Q_empty": 0.0
+  },
+  "What school was the actress who appeared with Michelle Williams in the last play by Russian playwright Anton Chekhov attending when she was signed on for a talent holding deal?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "What is the capacity of the stadium that is the home ground of the Lahore Eagles?": {
+    "A_empty": "unknown",
+    "Q_empty": 0.0
+  },
+  "St Dionis Backchurch was rebuilt after a major conflagration that consumed how many parish churches?": {
+    "A_empty": "50",
+    "Q_empty": 0.0
+  },
+  "What career did the British actor born in 1965  and star of Lock, Stock and Two Smoking Barrels have before acting?": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "Curt Menefee is the host of the Fox network's NFL show with co-host Michael Anthony Strahan who spent his entire 15-year career with what team?": {
+    "A_empty": "New York Giants",
+    "Q_empty": 1.0
+  },
+  "Lake Wales Ridge National Wildlife Refuge is on the US route that runs between a city in what Florida county?": {
+    "A_empty": "Polk",
+    "Q_empty": 1.0
+  },
+  "Which film director is younger, Robert Z. Leonard or Sinclair Hill?": {
+    "A_empty": "Sinclair Hill",
+    "Q_empty": 1.0
+  },
+  "What city is between Normanby le Wold and the A46 Junction between Lincoln and Grimsby?": {
+    "A_empty": "No specific city",
+    "Q_empty": 0.0
+  },
+  "Milo Parker starred in which 2014 movie alongside Gillian Anderson?": {
+    "A_empty": "Prisoners",
+    "Q_empty": 0.0
+  },
+  "The Lady Craved Excitement was a film that featured the British character actor originally of what nationality?": {
+    "A_empty": "British",
+    "Q_empty": 0.0
+  },
+  "...Ready for It? is a Taylor Swift song from the album scheduled to be released on what date?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "Jal Pari, which translated in another language refers to which legendary creature which are sometimes associated with perilous events such as floods, storm,s shipwrecks, and drownings?": {
+    "A_empty": "Nixie",
+    "Q_empty": 0.0
+  },
+  "What is the brand who makes canned meats that had its own cook off in Austin until 2007?": {
+    "A_empty": "Campbell's",
+    "Q_empty": 0.0
+  },
+  "Multiculturalism in the Netherlands reached new heights following the murder in 2002, in part, with what Dutch politician, civil servant, socialogist and professor who formed his own party?": {
+    "A_empty": "Pim Fortuyn",
+    "Q_empty": 0.4
+  },
+  "Which movie directed by James Gunn portrayed the fictional character, Ego the Living Planet?": {
+    "A_empty": "Guardians of the Galaxy Vol. 2",
+    "Q_empty": 1.0
+  },
+  "Which film was not a 3D computer-animation Cars 3 or Smith!?": {
+    "A_empty": "Smith!",
+    "Q_empty": 1.0
+  },
+  "The city that hosted the Olympics where Taiwan competed as Chinese Taipei is situated at the confluence of what two rivers?": {
+    "A_empty": "Haihe River and Yongding River",
+    "Q_empty": 0.6
+  },
+  "Penny Rae Bridges starred in a television sitcom with what other actor?": {
+    "A_empty": "Fred Willard",
+    "Q_empty": 0.0
+  },
+  "Were Ulrich Walter and Léopold Eyharts both from Germany?": {
+    "A_empty": "No",
+    "Q_empty": 1.0
+  },
+  "Who has a wider scope of profession, Christopher Guest or  Roman Karmen?": {
+    "A_empty": "Christopher Guest",
+    "Q_empty": 0.5
+  },
+  "Giovanna d'Arco is an opera that was created by the composer of what nationality?": {
+    "A_empty": "German",
+    "Q_empty": 0.0
+  },
+  "Kim Dong-won's directorial debut film was a sequal to what 2001 film?": {
+    "A_empty": "Train to Busan",
+    "Q_empty": 0.0
+  },
+  "Millennium Greens were funded in part by a what type of lottery?": {
+    "A_empty": "state",
+    "Q_empty": 0.0
+  },
+  "In what month is the annual documentary film festival, that is presented by the fortnightly published British journal of literary essays, held? ": {
+    "A_empty": "No month specified",
+    "Q_empty": 0.0
+  },
+  "Palm Springs lies in Palm Beach County, the third most populated county in its state. Which major U.S. city is it near?": {
+    "A_empty": "Los Angeles",
+    "Q_empty": 0.0
+  },
+  "Candace Flynn was voiced by the actress who achieved mainstream success on what show?": {
+    "A_empty": "Without a Trace",
+    "Q_empty": 0.0
+  },
+  "In regards to Value premium an expert argued that no value premium exisits, what did this expert found?": {
+    "A_empty": "evidence or conducted analysis that contradicts the existence of a value premium",
+    "Q_empty": 0.0
+  },
+  "Professor A. Selvanathan is a professor at a university that is public or private ?": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "Fighting Cock is produced in what Kentucky county?": {
+    "A_empty": "Mason County",
+    "Q_empty": 0.5
+  },
+  "What was the official religion of the lands of the husband of Dorothea of Denmark, Duchess of Prussia?": {
+    "A_empty": "Lutheranism",
+    "Q_empty": 0.0
+  },
+  "Frank Blake's longtime protégé was also the chairman and CEO of what company in addition to The Home Depot?": {
+    "A_empty": "Home Depot Inc.",
+    "Q_empty": 0.0
+  },
+  "Armie Hammer stars as Oliver in a film directed by who ?": {
+    "A_empty": "No",
+    "Q_empty": 0.0
+  },
+  "In what city did the 23rd overall pick of the 2015 NHL Entry Draft helped the United States national junior team win a bronze medal?": {
+    "A_empty": "Montreal",
+    "Q_empty": 0.0
+  },
+  "Mariana Kovacevic used horse placenta treatment to heal the captian of what team?": {
+    "A_empty": "Boca Juniors",
+    "Q_empty": 0.0
+  },
+  "What instrument of war was only used by the President of the United States who was born in Lamar, Missouri?": {
+    "A_empty": "no",
+    "Q_empty": 0.0
+  },
+  "Brian Olsen was the lst WEC heavyweight champion before the promotion company founded in what month purchased the organization?": {
+    "A_empty": "October",
+    "Q_empty": 0.0
+  },
+  "Mr. & Mrs. Mxyzptlk is an episode of the superhero TV series that originally aired on what network?": {
+    "A_empty": "unknown",
+    "Q_empty": 0.0
+  },
+  "When was the singer of Miss Emily's Picture born?": {
+    "A_empty": "No date provided",
+    "Q_empty": 0.0
+  },
+  "Kete Krachi is a town in what region?": {
+    "A_empty": "Brong-Ahafo Region",
+    "Q_empty": 0.0
+  }
+}
