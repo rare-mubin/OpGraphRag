@@ -46,7 +46,8 @@ from generate_baseline_answers import (
     build_context, generate_answer, shorten_answer, f1_score, load_token_counter,
 )
 from compression_policy import (
-    build_state_features, CompressionPolicy, sample_trajectory, compress_graph, EXTRA_FEATURES,
+    build_state_features, CompressionPolicy, sample_trajectory, compress_graph,
+    EXTRA_FEATURES, state_dim,
 )
 
 OUT_DIR = Path(__file__).resolve().parent / "output"
@@ -186,6 +187,13 @@ def main():
                           "labels evaluate_policy_classification.py scores against, so metrics on "
                           "trained-on questions are circular. The split is saved into the policy "
                           "checkpoint so downstream eval can restrict to held-out questions.")
+    ap.add_argument("--features", choices=["struct4", "full"], default="struct4",
+                     help="state representation. 'struct4' (default) = the 4 engineered scalars "
+                          "only [similarity, degree, hop, is_seed]; 'full' also concatenates the "
+                          "raw 2048-dim node+query embeddings (the old behaviour). The default "
+                          "changed on ablation evidence, not preference -- see "
+                          "build_state_features()'s docstring: node-F1 0.401 (full) vs 0.606 "
+                          "(struct4), against a 0.599 heuristic_prune baseline.")
     ap.add_argument("--top-k", type=int, default=5)
     ap.add_argument("--hops", type=int, default=2)
     ap.add_argument("--device", default=None, help="cuda or cpu for the embedding model")
@@ -220,20 +228,6 @@ def main():
               f"Rerun generate_baseline_answers.py if this is unexpected.")
         questions = [q for q in questions if q["question"] not in missing]
 
-    # --- train/val split (before any training touches the labels) ---
-    shuffled = list(questions)
-    random.Random(args.seed).shuffle(shuffled)
-    n_val = int(round(len(shuffled) * args.val_frac))
-    val_questions = shuffled[:n_val]
-    train_questions = shuffled[n_val:]
-    val_set = {q["question"] for q in val_questions}
-    print(f"Split: {len(train_questions)} train / {len(val_questions)} val "
-          f"(--val-frac {args.val_frac}, seed {args.seed})")
-
-    n_calls = len(train_questions) * args.group_size * args.epochs * 2
-    print(f"Training: {len(train_questions)} questions x {args.group_size} trajectories x {args.epochs} epoch(s) "
-          f"= {len(train_questions) * args.group_size * args.epochs} trajectories (~{n_calls} LLM calls)\n")
-
     no_context = load_or_build_no_context_baseline(questions, NO_CONTEXT_PATH)
 
     G = load_graph()
@@ -245,14 +239,10 @@ def main():
     count_tokens = load_token_counter()
 
     emb_dim = embeddings.shape[1]
-    input_dim = 2 * emb_dim + EXTRA_FEATURES
+    use_emb = args.features == "full"
+    input_dim = state_dim(emb_dim, use_emb)
     policy = CompressionPolicy(input_dim=input_dim)
     optimizer = torch.optim.Adam(policy.parameters(), lr=args.lr)
-
-    history = []
-    t0 = time.time()
-    step = 0
-    total_steps = len(train_questions) * args.epochs
 
     executor = ThreadPoolExecutor(max_workers=args.workers)
 
@@ -264,18 +254,32 @@ def main():
                                       Q_empty)
         return reward_info, A_c
 
+    _state_cache = {}
+
     def node_states(q):
         """Shared by training and validation: (Gq, node_ids, features tensor, labels tensor).
-        Returns None when retrieval comes back empty."""
-        query_emb = embed_model.encode([q["question"]], normalize_embeddings=True)[0]
-        Gq, seeds = retrieve(q["question"], G, embeddings, ids, embed_model,
+        Returns None when retrieval comes back empty.
+
+        Cached per question: retrieval is deterministic, so recomputing it every epoch (and
+        again for each end-of-epoch validation pass) was pure waste. Under the struct4 default
+        the whole cache is ~4 floats per node, well under a megabyte for the full 200-question
+        set, so there is no reason not to hold it."""
+        key = q["question"]
+        if key in _state_cache:
+            return _state_cache[key]
+        query_emb = embed_model.encode([key], normalize_embeddings=True)[0]
+        Gq, seeds = retrieve(key, G, embeddings, ids, embed_model,
                               top_k=args.top_k, hops=args.hops)
         if Gq.number_of_nodes() == 0:
+            _state_cache[key] = None
             return None
         seed_ids = {s for s, _ in seeds}
-        node_ids, features = build_state_features(Gq, query_emb, node_emb_lookup, seed_ids)
+        node_ids, features = build_state_features(Gq, query_emb, node_emb_lookup, seed_ids,
+                                                   include_embeddings=use_emb)
         labels = relevance_labels(Gq, node_ids, q.get("supporting_facts"))
-        return Gq, node_ids, torch.tensor(features), torch.tensor(labels)
+        out = (Gq, node_ids, torch.tensor(features), torch.tensor(labels))
+        _state_cache[key] = out
+        return out
 
     @torch.no_grad()
     def evaluate_split(split_questions, name):
@@ -306,7 +310,45 @@ def main():
         return {"split": name, "n_nodes": total, "accuracy": acc, "precision": prec,
                 "recall": rec, "keep_rate": keep_rate, "tp": tp, "fp": fp, "fn": fn, "tn": tn}
 
+    # --- stratified train/val split, AFTER the retrieval pre-pass that gives us |G_q| ---
+    # A plain random split was 3.1 sigma skewed on the previous run: |G_q| is heavily
+    # heavy-tailed here (median 48, mean 99, max 610), so a 40-question val draw landed on
+    # the big graphs and got a materially different relevant base rate (6.6% vs 11.6%) --
+    # which makes train and val metrics incomparable. Stratifying by graph size fixes that:
+    # sort by |G_q|, then take every (1/val_frac)-th question so both splits span the same
+    # size range. The pre-pass also warms _state_cache, so it is not extra work.
+    print(f"Retrieval pre-pass over {len(questions)} questions "
+          f"(feature mode: {args.features}, dim {input_dim})...")
+    sized = []
+    for i, q in enumerate(questions, 1):
+        st = node_states(q)
+        if st is not None:
+            sized.append((len(st[1]), q))
+        if i % 50 == 0:
+            print(f"  [{i}/{len(questions)}]")
+    sized.sort(key=lambda x: x[0])
+    stride = max(int(round(1 / args.val_frac)), 2) if args.val_frac > 0 else 0
+    val_questions = [q for i, (_, q) in enumerate(sized) if stride and i % stride == 0]
+    val_set = {q["question"] for q in val_questions}
+    train_questions = [q for _, q in sized if q["question"] not in val_set]
+    tr_sz = [n for n, q in sized if q["question"] not in val_set]
+    va_sz = [n for n, q in sized if q["question"] in val_set]
+    print(f"Split: {len(train_questions)} train / {len(val_questions)} val (stratified by |G_q|)")
+    if tr_sz and va_sz:
+        print(f"  mean |G_q|: train={np.mean(tr_sz):.1f}  val={np.mean(va_sz):.1f} "
+              f"(was 98.6 vs 175.5 under the old random split)")
+
+    n_calls = len(train_questions) * args.group_size * args.epochs * 2
+    print(f"Training: {len(train_questions)} questions x {args.group_size} trajectories x "
+          f"{args.epochs} epoch(s) (~{n_calls} LLM calls)")
+    print()
+
+    history = []
     val_history = []
+    best = {"epoch": None, "score": -1.0, "state": None}
+    t0 = time.time()
+    step = 0
+    total_steps = len(train_questions) * args.epochs
 
     for epoch in range(1, args.epochs + 1):
         for qi, q in enumerate(train_questions, 1):
@@ -400,10 +442,27 @@ def main():
         ep_train = evaluate_split(train_questions, f"epoch{epoch} train")
         ep_val = evaluate_split(val_questions, f"epoch{epoch} val")
         val_history.append({"epoch": epoch, "train": ep_train, "val": ep_val})
+        # Keep the best-by-val-F1 epoch, not just the last. On the previous run val node-F1
+        # peaked at epoch 1 (0.494) and was WORSE by epoch 3 (0.482) while train kept
+        # improving -- i.e. a fixed epoch count silently shipped an overfit policy.
+        if ep_val:
+            pr_, rc_ = ep_val["precision"], ep_val["recall"]
+            f1_ = 2 * pr_ * rc_ / (pr_ + rc_) if (pr_ + rc_) else 0.0
+            if f1_ > best["score"]:
+                best = {"epoch": epoch, "score": f1_,
+                        "state": {k: v.clone() for k, v in policy.state_dict().items()}}
+            print(f"    val node-F1={f1_:.3f} (best so far: epoch {best['epoch']}, {best['score']:.3f})")
 
     executor.shutdown(wait=True)
 
+    if best["state"] is not None and best["epoch"] != args.epochs:
+        print()
+        print(f"Restoring best-by-val-F1 weights from epoch {best['epoch']} "
+              f"(node-F1 {best['score']:.3f}) instead of the final epoch.")
+        policy.load_state_dict(best["state"])
+
     torch.save({"state_dict": policy.state_dict(), "input_dim": input_dim,
+                "features": args.features, "best_epoch": best["epoch"],
                 "args": vars(args),
                 # Saved so downstream eval can restrict to questions the auxiliary loss never
                 # trained on -- without this, evaluate_policy_classification.py scores the policy

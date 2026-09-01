@@ -26,9 +26,37 @@ EXTRA_FEATURES = 4  # similarity, degree_norm, hop_norm, is_seed
 
 
 def build_state_features(Gq: nx.MultiDiGraph, query_emb: np.ndarray,
-                          node_emb_lookup: dict, seed_ids: set) -> tuple:
+                          node_emb_lookup: dict, seed_ids: set,
+                          include_embeddings: bool = False) -> tuple:
     """Returns (node_ids: list[str], features: np.ndarray [N, D]) for every
-    node in Gq, in a fixed deterministic order (sorted node id)."""
+    node in Gq, in a fixed deterministic order (sorted node id).
+
+    `include_embeddings=False` (the default) emits ONLY the 4 engineered scalars
+    [similarity, degree_norm, hop_norm, is_seed] and drops the raw node/query
+    embeddings. That default is backed by a measured ablation (`ablate_features.py`),
+    not a guess: the raw embeddings are actively HARMFUL here, not merely diluting.
+    Scored on held-out questions at the heuristic's own KEEP-rate --
+
+        full 2052 dims  -> node-F1 0.401
+        emb->64 + 4     -> node-F1 0.414
+        emb->16 + 4     -> node-F1 0.400
+        4 scalars only  -> node-F1 0.606   (heuristic_prune target: 0.599)
+
+    -- so the 4-feature model beats the 2052-feature one by +0.205 and is the only
+    variant that clears the fixed 1-hop baseline. Note this is NOT a scale/dilution
+    problem that normalization or a projection layer fixes: projecting the embeddings
+    down to 64 or even 16 dims barely moves it. With ~15.7k training nodes against
+    2048 embedding dims the model just overfits them. The trained full-feature policy
+    put 99.2% of its first-layer weight energy on embedding dims and 0.8% on these
+    four scalars, which is exactly backwards.
+
+    The striking part, from `analyze_hop_shells.py`: inside the 2-hop shell (where 30%
+    of all relevant nodes live and where the heuristic keeps nothing), the single
+    `similarity` scalar below scores AUC 0.867, while the 2048 raw dims it is COMPUTED
+    FROM score 0.604 -- barely above chance. The derived feature carries the signal;
+    the representation it came from carries noise. Pass include_embeddings=True only to
+    reproduce the old behaviour.
+    """
     node_ids = sorted(Gq.nodes())
     degrees = dict(Gq.degree())
     max_degree = max(degrees.values()) if degrees else 1
@@ -55,7 +83,8 @@ def build_state_features(Gq: nx.MultiDiGraph, query_emb: np.ndarray,
     fallback_hop = max_hop + 1  # for any node somehow unreachable from a seed
 
     emb_dim = len(query_emb)
-    features = np.zeros((len(node_ids), 2 * emb_dim + EXTRA_FEATURES), dtype=np.float32)
+    width = (2 * emb_dim if include_embeddings else 0) + EXTRA_FEATURES
+    features = np.zeros((len(node_ids), width), dtype=np.float32)
     for i, nid in enumerate(node_ids):
         node_vec = node_emb_lookup.get(nid)
         if node_vec is None:
@@ -64,11 +93,17 @@ def build_state_features(Gq: nx.MultiDiGraph, query_emb: np.ndarray,
         deg_norm = degrees.get(nid, 0) / max(max_degree, 1)
         hop_norm = hop_dist.get(nid, fallback_hop) / max(max_hop, 1)
         is_seed = 1.0 if nid in seed_ids else 0.0
-        features[i, :emb_dim] = node_vec
-        features[i, emb_dim:2 * emb_dim] = query_emb
-        features[i, 2 * emb_dim:] = [sim, deg_norm, hop_norm, is_seed]
+        if include_embeddings:
+            features[i, :emb_dim] = node_vec
+            features[i, emb_dim:2 * emb_dim] = query_emb
+        features[i, -EXTRA_FEATURES:] = [sim, deg_norm, hop_norm, is_seed]
 
     return node_ids, features
+
+
+def state_dim(emb_dim: int, include_embeddings: bool = False) -> int:
+    """Input width for CompressionPolicy under a given feature mode."""
+    return (2 * emb_dim if include_embeddings else 0) + EXTRA_FEATURES
 
 
 class CompressionPolicy(nn.Module):

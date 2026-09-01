@@ -103,9 +103,53 @@ code/
 - ~5 GB free disk space (for the model)
 - A GPU with 8 GB+ VRAM is recommended (used: RTX 3070 Laptop, 8 GB). CPU-only
   works but extraction will be much slower.
-- `Dataset/formatted_output.json` already present (a HotpotQA-formatted JSON:
-  a list of records with `_id`, `question`, `answer`, `context`,
-  `supporting_facts`, `type`, `level`).
+- `Dataset/formatted_output.json` present -- see **Getting the dataset** below
+  (it is not in the repo; it is ~52 MB and gitignored).
+
+## Getting the dataset
+
+`Dataset/` is **gitignored** -- the two files are ~97 MB combined and are freely
+redownloadable, so they are not tracked. You need `Dataset/formatted_output.json`
+before running anything in `kg/`.
+
+### 1. Download the HotpotQA dev (distractor) set
+
+The official links on [hotpotqa.github.io](https://hotpotqa.github.io/) point at
+`curtis.ml.cmu.edu`, which **is currently unreachable** -- don't waste time on them.
+Working mirrors:
+
+- Kaggle (used for this project):
+  <https://www.kaggle.com/datasets/jeromeblanchet/hotpotqa-question-answering-dataset>
+- Hugging Face: <https://huggingface.co/datasets/hotpotqa/hotpot_qa> (config
+  `distractor`, split `validation` -- note this is Parquet, and its schema differs
+  slightly: `id` rather than `_id`, and `supporting_facts`/`context` are
+  dicts-of-lists rather than lists-of-pairs, so it needs converting)
+
+You want `hotpot_dev_distractor_v1.json` (7,405 questions, ~45 MB). Put it in
+`Dataset/`.
+
+### 2. Produce `formatted_output.json`
+
+The pipeline reads `Dataset/formatted_output.json`. On Windows (PowerShell):
+
+```powershell
+Get-Content -Raw -Path "Dataset\hotpot_dev_distractor_v1.json" | ConvertFrom-Json | ConvertTo-Json -Depth 100 | Out-File -FilePath "Dataset\formatted_output.json" -Encoding utf8
+```
+
+`-Depth 100` matters -- PowerShell's default depth of 2 will silently truncate the
+nested `context` arrays into type names and produce a useless file.
+
+**This step is purely cosmetic re-indentation.** The two files are content-identical:
+same 7,405 records in the same order, with every field equal (verified by comparing
+a canonical re-dump of each). Only whitespace differs, which is why one is 52 MB and
+the other 45 MB. So on any platform you can skip PowerShell entirely and just copy it:
+
+```bash
+cp Dataset/hotpot_dev_distractor_v1.json Dataset/formatted_output.json
+```
+
+Nothing reads `hotpot_dev_distractor_v1.json` directly -- `select_subset.py` only
+ever opens `formatted_output.json`.
 
 ## Setup from scratch
 
@@ -745,33 +789,43 @@ python analyze_hop_shells.py            # analysis: relevance by hop distance (f
   incorporate the fix — don't trust an isolated pass as confirmation without
   checking the graph itself changed.
 
-## Current results (200 questions, 40 held-out val)
+## Current results (200 questions, 40 held-out val, stratified split)
+
+**Node-level KEEP/REMOVE**, against the fixed 1-hop rule:
+
+| | precision | recall | node-F1 | AUC |
+|---|---|---|---|---|
+| Heuristic pruning (1-hop) | 0.521 | 0.704 | 0.599 | — |
+| **RL policy** | **0.534** | **0.820** | **0.647** | **0.932** |
+
+**Answer-level:**
 
 | method | EM | F1 | compression |
 |---|---|---|---|
-| Uncompressed baseline | 25.0% | 29.7% | 0% |
-| **RL policy (GRPO + auxiliary loss)** | **40.0%** | **49.2%** | **72.6%** |
-| Similarity pruning (non-adaptive) | 45.0% | 52.0% | 60.6% |
-| Heuristic pruning (non-adaptive, 1-hop) | **47.5%** | **60.4%** | **74.0%** |
+| Uncompressed baseline | 32.5% | 36.7% | 0% |
+| **RL policy (GRPO + auxiliary loss)** | 42.5% | **53.5%** | 59.1% |
+| Similarity pruning (non-adaptive) | **45.0%** | 51.9% | 59.8% |
+| Heuristic pruning (non-adaptive, 1-hop) | **45.0%** | 51.1% | 61.7% |
 
-The learned policy beats the uncompressed baseline by a wide margin but is still
-strictly dominated by a fixed 1-hop rule. `ablate_features.py` and
-`analyze_hop_shells.py` diagnose why — see `CLAUDE.md` for the full write-up.
+The policy clearly wins at the node level. **At the answer level the margin is not
+statistically significant and should not be reported as a win**: paired per-question
+against heuristic pruning it is +0.023 F1 (0.6 sigma) and −0.025 EM (−0.6 sigma),
+with 35 of 40 questions tied. The honest claim is that the policy is *no longer
+dominated* by the non-adaptive baselines, not that it beats them. See `CLAUDE.md`
+for the full write-up, including why node-level gains are not reaching the answers.
 
 ## What's next (not in this README)
 
-- **Drop the raw node/query embeddings from the state vector.** The ablation shows
-  they are actively harmful, not merely diluting: a 4-feature structural model scores
-  0.606 node-F1 vs 0.401 for the full 2052-feature one, and is the only variant that
-  clears the heuristic. Projecting them to 64 or 16 dims does not help — they have to
-  go entirely.
-- **Target the 2-hop shell.** 30% of all relevant nodes sit 2 hops from a retrieval
-  seed, which the 1-hop heuristic discards wholesale — that is the only headroom a
-  learned policy has. They are recoverable (query-node cosine similarity alone scores
-  AUC 0.867 there, 14x chance precision), so this is where a genuine contribution has
-  to come from.
-- Stratify the train/val split by graph size (the current random split is 3.1 sigma
-  skewed — `G_q` sizes are heavy-tailed and val drew the big graphs) and stop at the
-  best val epoch rather than a fixed 3 (val node-F1 peaked at epoch 1).
-- Judge any retrain on the answer-level table, **not** node-F1: a missing supporting
-  fact costs far more than an extra node's tokens.
+*(Dropping the raw embeddings, stratifying the split, and stopping at the best val
+epoch are all **done** — see Current results above.)*
+
+- **Scale past 40 evaluation questions.** This is now the blocker: at n=40 the paired
+  standard error is ~0.04 F1, so only a ~8pp+ gap would register as significant, and
+  the policy's real margin is ~2pp. No amount of further tuning will produce a
+  reportable answer-level result at this evaluation size.
+- **Or find a harder question subset.** 35 of 40 questions produce the same answer
+  regardless of which node set the generator receives, so the methods cannot separate.
+  Restricting evaluation to questions where context actually decides the answer would
+  make the comparison informative at the current scale.
+- Judge any retrain on the answer-level table with a paired significance check, **not**
+  on node-F1 — the node-level win is already large and is not translating.

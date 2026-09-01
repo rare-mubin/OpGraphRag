@@ -78,6 +78,9 @@ def main():
         questions = questions[: args.n_questions]
     policy = CompressionPolicy(input_dim=checkpoint["input_dim"])
     policy.load_state_dict(checkpoint["state_dict"])
+    # Feature mode must match how the policy was TRAINED. Checkpoints written before
+    # --features existed have no key and were all trained with embeddings.
+    use_emb = checkpoint.get("features", "full") == "full"
     policy.eval()
     print(f"Loaded policy from {args.policy} (trained with: {checkpoint.get('args', {})})\n")
 
@@ -109,7 +112,8 @@ def main():
             print(f"  [{i}/{n}] '{question[:45]}' -> empty G_q, skipping")
             continue
 
-        node_ids, features = build_state_features(Gq, query_emb, node_emb_lookup, seed_ids)
+        node_ids, features = build_state_features(Gq, query_emb, node_emb_lookup, seed_ids,
+                                                   include_embeddings=use_emb)
         with torch.no_grad():
             logits = policy(torch.tensor(features))
             keep_mask = torch.sigmoid(logits) >= 0.5  # deterministic inference, no sampling

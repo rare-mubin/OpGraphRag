@@ -21,9 +21,17 @@ compression stages get compared against. Stage 4 is the GRPO-trained RL graph-co
 retrieved `G_q` and baseline. (Community detection, mentioned in `main.tex`'s Related Work only as
 part of Edge et al.'s GraphRAG, is not part of this paper's own methodology and isn't planned here.)
 
-All active code lives under `kg/`. `Dataset/formatted_output.json` is the cleaned, validated dataset
-in use; `Dataset/hotpot_dev_distractor_v1.json` is the original unformatted source and isn't read by
-any script — don't confuse the two.
+All active code lives under `kg/`. **`Dataset/` is gitignored** (~97MB, freely redownloadable) --
+see README's "Getting the dataset" for the Kaggle/HF links and the prepare step.
+
+`Dataset/formatted_output.json` is what `select_subset.py` reads;
+`Dataset/hotpot_dev_distractor_v1.json` is the download and isn't read by any script. **They are
+content-identical** -- same 7,405 records in the same order, every field equal (verified by
+comparing a canonical re-dump of each). `formatted_output.json` was produced by a PowerShell
+`ConvertFrom-Json | ConvertTo-Json -Depth 100` round-trip, which only re-indents; the 52MB vs 45MB
+difference is entirely whitespace. So despite the name, there is no cleaning or validation step
+here and nothing is lost by just copying the raw file to that name. (An earlier version of this
+file described `formatted_output.json` as "the cleaned, validated dataset" -- that was wrong.)
 
 **Full setup/run/troubleshooting instructions are in [README.md](README.md) — read that before
 making changes to the pipeline.** This file covers architecture and gotchas that aren't obvious from
@@ -397,6 +405,10 @@ the third of them.** Retraining with `Q_c > 0` in place still produced `CR=99.9%
    full context" is true only per-question, not in aggregate. **This is a real deviation from
    main.tex's stated reward equation (Section III-E) and needs reflecting there.**
 
+**SUPERSEDED by the struct4 retrain below -- the numbers in this section were measured with the
+old full-2052-feature state vector and a skewed random split. Kept because the stability evidence
+(entropy, CR spread) is what confirmed the three collapse fixes worked.**
+
 **Post-fix results (200q, group-size 4, 3 epochs, 160 train / 40 val).** Training is stable: mean
 entropy settles at 0.61 -> 0.53 -> 0.50 per epoch (and is flat WITHIN epoch 3), `mean_CR` holds at
 0.45 -> 0.48 -> 0.51 instead of running to 1.0, and per-question CR spans 0.00-0.98 (stdev 0.218)
@@ -559,3 +571,57 @@ when loaded into the same process as `torch`'s CUDA DLLs. `pip uninstall dataset
 Diagnosed via Windows Event Viewer → Application log → "Application Error" (shows the faulting module
 name directly) — worth checking there first for any similar unexplained silent-exit crash rather than
 guessing at OpenMP/MKL conflicts, which looked plausible but was a red herring here.
+
+## Struct4 retrain: current state of Stage 4 (supersedes the tables above)
+
+**Acting on the ablation worked.** `build_state_features()` now defaults to
+`include_embeddings=False` (the 4 engineered scalars only); `--features full`
+reproduces the old behaviour. The feature mode is stored in the checkpoint and both
+eval scripts read it back, defaulting to `"full"` for pre-flag checkpoints.
+
+Two supporting changes landed with it, and both immediately earned their place:
+- **Stratified train/val split by `|G_q|`** (sort by size, take every 5th). The old
+  random split was 3.1 sigma skewed; val is now 4,154 nodes rather than 7,019, i.e.
+  the giant graphs are spread across both splits instead of piling into val.
+- **Best-by-val-F1 checkpointing.** Val node-F1 peaked at epoch 1 in *both* runs
+  (0.647 -> 0.618 -> 0.586 here) while train kept improving, so a fixed 3 epochs was
+  shipping an overfit policy. The saved checkpoint is now epoch 1.
+- Retrieval is also cached per question now (it was recomputed every epoch plus twice
+  more per epoch for validation). Under struct4 the cache is ~4 floats per node.
+
+**Node level, held-out split -- a clear win, and the recall gap is closed and reversed:**
+
+| | precision | recall | node-F1 | AUC | KEEP-rate |
+|---|---|---|---|---|---|
+| heuristic_prune | 0.521 | 0.704 | 0.599 | -- | 0.090 |
+| old policy (2052 feat) | 0.501 | 0.464 | 0.482 | 0.871 | 0.061 |
+| **new policy (struct4)** | **0.534** | **0.820** | **0.647** | **0.932** | 0.170 |
+
+Recall went 0.464 -> 0.820, past the heuristic, and precision rose at the same time
+despite keeping ~2x as many nodes. That is genuine dominance, not a threshold slide.
+
+**Answer level -- competitive, but the margin is NOT significant. Do not report it as a win:**
+
+| method | EM | F1 | CR |
+|---|---|---|---|
+| Uncompressed baseline | 32.5% | 36.7% | 0% |
+| RL policy (struct4) | 42.5% | **53.5%** | 59.1% |
+| Similarity pruning | **45.0%** | 51.9% | 59.8% |
+| Heuristic pruning | **45.0%** | 51.1% | 61.7% |
+
+Paired per-question against the heuristic: **+0.023 F1 (SE 0.041, 0.6 sigma)** and
+**-0.025 EM (-0.6 sigma)**, with **35 of 40 questions tied**. Against similarity
+pruning: 0.3 sigma and -0.4 sigma. None of this is distinguishable from noise at
+n=40. The defensible claim is that the policy is **no longer strictly dominated** by
+the non-adaptive baselines (last run `heuristic_prune` beat it on all three axes at
+once); it is not evidence that it beats them.
+
+**Why node-level gains are not reaching the answers**: on 35/40 questions the
+generator returns the same answer from either node set, so a large node-level
+improvement compresses into a tie. Separating the methods needs more questions
+(n=40 gives SE ~0.04, so only a ~8pp+ gap would register) or a subset where the
+retrieved context actually decides the answer.
+
+**Do not compare these numbers to the section above.** Stratification changed the val
+split, so the uncompressed baseline itself moved (F1 29.7% -> 36.7%). Only within-run
+comparisons are valid.

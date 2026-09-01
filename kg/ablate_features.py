@@ -40,7 +40,7 @@ else:
         Gq, seeds = retrieve(q["question"], G, emb, ids, model, top_k=5, hops=2)
         if Gq.number_of_nodes() == 0: continue
         sids = {s for s, _ in seeds}
-        nids, feats = build_state_features(Gq, qe, lookup, sids)
+        nids, feats = build_state_features(Gq, qe, lookup, sids, include_embeddings=True)
         hk = set(heuristic_prune(Gq, sids, 1).nodes())
         Xs.append(feats.astype(np.float32))
         Ys.append(np.array([1 if set(Gq.nodes[n].get("sources", [])) & needed else 0 for n in nids], np.float32))
