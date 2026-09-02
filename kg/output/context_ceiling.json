@@ -1,0 +1,34 @@
+{
+  "n_questions": 200,
+  "baseline_f1": 0.575078898225957,
+  "mean_recall": 0.92,
+  "refusal_rate": 0.08,
+  "refusals_with_full_recall": 12,
+  "shorten_answer_losses": 4,
+  "by_quartile": [
+    {
+      "quartile": 1,
+      "mean_T_o": 2245.98,
+      "refusal_rate": 0.08,
+      "mean_f1": 0.5758571428571428
+    },
+    {
+      "quartile": 2,
+      "mean_T_o": 8659.06,
+      "refusal_rate": 0.02,
+      "mean_f1": 0.6137777777777778
+    },
+    {
+      "quartile": 3,
+      "mean_T_o": 25829.68,
+      "refusal_rate": 0.02,
+      "mean_f1": 0.6933949579831933
+    },
+    {
+      "quartile": 4,
+      "mean_T_o": 84671.64,
+      "refusal_rate": 0.2,
+      "mean_f1": 0.41728571428571426
+    }
+  ]
+}

@@ -48,7 +48,10 @@ rather than refusing."""
 # easier task than "answer tersely from scratch", and reliably works.
 SHORTEN_SYSTEM_PROMPT = """Extract the short, direct answer from a longer response -- just the \
 name/number/date/yes-or-no/short phrase that directly answers the question, nothing else, exactly as \
-it would appear filled into a blank. Output ONLY a JSON object: {"answer": "..."}"""
+it would appear filled into a blank. Only answer "Yes" or "No" when the QUESTION itself is a \
+yes/no question -- if it asks which/who/what/where/when, always extract the specific entity, \
+even when the longer response phrases it with a negation or a correction (e.g. "X did not do \
+it, instead Y did" -> answer Y). Output ONLY a JSON object: {"answer": "..."}"""
 
 
 def build_context(Gq, passages_by_title: dict) -> str:
@@ -77,6 +80,29 @@ def build_context(Gq, passages_by_title: dict) -> str:
     return "\n".join(lines)
 
 
+# Ollama's default num_ctx is 4096 and it SILENTLY TRUNCATES anything longer, keeping the
+# END of the message. Our context sits at the start of the user message and the question at
+# the end, so the question survived and the evidence was thrown away -- with no error,
+# warning, or signal in the response. This was verified, not assumed: with a unique fact
+# placed at the START of a ~34k-token context, the model returned "The information provided
+# in the given text does not contain any detail..." on the default and answered correctly
+# with num_ctx set, on identical input. Since T_o averages ~30k tokens here, most runs were
+# scoring a model that had never seen the supporting passages -- which is what produced a
+# 26.5% refusal rate of which 87% had FULL retrieval recall.
+#
+# VRAM cost, since this is an 8GB card: KV cache for Qwen2.5-7B (28 layers, 4 KV heads,
+# head_dim 128) is ~56 KB/token -- 0.45 GB at 8k, 0.88 GB at 16k, 1.75 GB at 32k, on top of
+# ~4.7 GB for the Q4_K_M weights. 32k fits in 8 GB only if BGE-M3 (~2.2 GB) is NOT also on
+# the GPU, so keep embed_nodes.py / retrieve.py on their default --device cpu while
+# generating answers. 32768 is also this model's maximum trained context (`ollama show`);
+# asking for more degrades quality rather than extending it.
+ANSWER_NUM_CTX = 32768
+
+# The shortening pass only ever sees one question plus one already-short answer, so it does
+# not need -- and should not pay the KV-cache cost of -- a large window.
+SHORTEN_NUM_CTX = 4096
+
+
 def generate_answer(question: str, context: str, retries: int = 2) -> str:
     payload = {
         "model": LLM_MODEL,
@@ -85,7 +111,7 @@ def generate_answer(question: str, context: str, retries: int = 2) -> str:
             {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}\n\nAnswer:"},
         ],
         "stream": False,
-        "options": {"temperature": 0.0},
+        "options": {"temperature": 0.0, "num_ctx": ANSWER_NUM_CTX},
     }
     last_err = None
     for _ in range(retries + 1):
@@ -113,7 +139,7 @@ def shorten_answer(question: str, verbose_answer: str, retries: int = 2) -> str:
         ],
         "format": "json",
         "stream": False,
-        "options": {"temperature": 0.0},
+        "options": {"temperature": 0.0, "num_ctx": SHORTEN_NUM_CTX},
     }
     for _ in range(retries + 1):
         try:

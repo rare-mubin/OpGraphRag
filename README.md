@@ -70,6 +70,7 @@ code/
     ├── retry_failed_extractions.py     # recovery: re-verify empty extractions at a nonzero temperature
     ├── generate_pruning_baselines.py   # stage 6: non-adaptive similarity/heuristic pruning baselines
     ├── evaluate_policy_classification.py  # stage 6: node-level confusion matrix / ROC / AUC
+    ├── analyze_context_ceiling.py # analysis: refusal rate vs. context size (no LLM calls)
     ├── ablate_features.py         # analysis: which state features actually matter (no LLM calls)
     ├── analyze_hop_shells.py      # analysis: where relevant nodes live by hop distance (no LLM calls)
     ├── generate_report.py         # stage 6: consolidates everything into ../result/
@@ -701,6 +702,7 @@ python generate_compressed_answers.py   # stage 4: A_c, T_c, Delta_EM/Delta_F1 (
 python generate_pruning_baselines.py    # stage 6: non-adaptive similarity/heuristic baselines
 python evaluate_policy_classification.py  # stage 6: confusion matrix / ROC / AUC (val split, fast)
 python generate_report.py               # stage 6: consolidates everything into ../result/
+python analyze_context_ceiling.py       # analysis: why the baseline is weak (fast, no LLM calls)
 python ablate_features.py               # analysis: state-feature ablation (fast, no LLM calls)
 python analyze_hop_shells.py            # analysis: relevance by hop distance (fast, no LLM calls)
 ```
@@ -802,27 +804,50 @@ python analyze_hop_shells.py            # analysis: relevance by hop distance (f
 
 | method | EM | F1 | compression |
 |---|---|---|---|
-| Uncompressed baseline | 32.5% | 36.7% | 0% |
-| **RL policy (GRPO + auxiliary loss)** | 42.5% | **53.5%** | 59.1% |
-| Similarity pruning (non-adaptive) | **45.0%** | 51.9% | 59.8% |
-| Heuristic pruning (non-adaptive, 1-hop) | **45.0%** | 51.1% | 61.7% |
+| Uncompressed baseline | 57.5% | 63.8% | 0% |
+| **RL policy (GRPO + auxiliary loss)** | 57.5% | **68.8%** | **58.6%** |
+| Heuristic pruning (non-adaptive, 1-hop) | 55.0% | 63.1% | 61.7% |
+| Similarity pruning (non-adaptive) | 50.0% | 56.9% | 59.8% |
 
-The policy clearly wins at the node level. **At the answer level the margin is not
-statistically significant and should not be reported as a win**: paired per-question
-against heuristic pruning it is +0.023 F1 (0.6 sigma) and −0.025 EM (−0.6 sigma),
-with 35 of 40 questions tied. The honest claim is that the policy is *no longer
-dominated* by the non-adaptive baselines, not that it beats them. See `CLAUDE.md`
-for the full write-up, including why node-level gains are not reaching the answers.
+The policy is the only method that beats the uncompressed baseline, while cutting
+context 77.3% (26,134 → 5,942 tokens), and it never loses a question to either
+pruner. **State this carefully**: paired significance is 1.1 sigma vs uncompressed
+(F1 +0.050, EM exactly 0.0), 1.7 sigma vs heuristic, 2.3 sigma vs similarity, with
+33/40 questions tied against uncompressed. The supportable claim is that the policy
+*preserves* answer quality while removing 77% of context — not that it improves it.
+
+**Where compression actually earns its keep**, split by whether the full context
+fits in the model's 32k window:
+
+| | n | baseline F1 | policy F1 | ΔF1 |
+|---|---|---|---|---|
+| context fits | 31 | 0.681 | 0.681 | **−0.000** (0.0σ) |
+| context overflows | 9 | 0.489 | 0.710 | **+0.222** (2.0σ) |
+
+**26% of questions (51/200) physically cannot be answered uncompressed** — `T_o`
+reaches 159,344 tokens. For those, compression is a precondition for using the
+retrieved evidence at all. And on questions that *don't* need compressing, the
+learned policy is exactly neutral while fixed heuristic pruning costs 5.5pp F1
+(−1.9σ) — that difference is query-adaptivity doing its job. See `CLAUDE.md`.
 
 ## What's next (not in this README)
 
 *(Dropping the raw embeddings, stratifying the split, and stopping at the best val
 epoch are all **done** — see Current results above.)*
 
-- **Scale past 40 evaluation questions.** This is now the blocker: at n=40 the paired
-  standard error is ~0.04 F1, so only a ~8pp+ gap would register as significant, and
-  the policy's real margin is ~2pp. No amount of further tuning will produce a
-  reportable answer-level result at this evaluation size.
+- **Handle the 26% of questions that still overflow the 32k window.** `T_o` reaches
+  159,344 tokens; those questions score F1 0.409 vs 0.632 for ones that fit, and it is not
+  a retrieval difference (their recall is *higher*). Closing that gap is worth ~6pp on the
+  overall baseline (0.575 → 0.632) and is the largest single remaining lever. Options:
+  cap the serialized context, or retrieve fewer/smaller passages for these queries.
+- **Scale past 40 evaluation questions.** 33 of 40 tie against uncompressed, so a ~5pp
+  effect cannot resolve at this size (paired SE ≈ 0.047). This is now the binding
+  constraint on making any answer-level claim.
+- **Scale past 40 evaluation questions.** At n=40 the paired standard error is ~0.04 F1
+  while the policy's real margin is ~2pp, so no amount of further tuning produces a
+  reportable answer-level result at this evaluation size. Note ~58% of current val
+  questions can't discriminate at all (answered identically by every method), so this
+  compounds with the ceiling problem above — fix that first.
 - **Or find a harder question subset.** 35 of 40 questions produce the same answer
   regardless of which node set the generator receives, so the methods cannot separate.
   Restricting evaluation to questions where context actually decides the answer would

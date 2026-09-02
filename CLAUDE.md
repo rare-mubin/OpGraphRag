@@ -625,3 +625,160 @@ retrieved context actually decides the answer.
 **Do not compare these numbers to the section above.** Stratification changed the val
 split, so the uncompressed baseline itself moved (F1 29.7% -> 36.7%). Only within-run
 comparisons are valid.
+
+## The real ceiling: Ollama was silently truncating every long context
+
+**READ THIS FIRST -- it invalidates the section below and most numbers recorded above.**
+
+`generate_baseline_answers.py` passed only `{"temperature": 0.0}` to Ollama and never set
+`num_ctx`. **Ollama 0.32's default is 4096 tokens and it silently truncates anything longer,
+keeping the END of the message.** The context sits at the start of the user message and the
+question at the end, so the question always survived and the evidence was discarded -- with
+no error, no warning, and nothing in the response to indicate it happened. `T_o` averages
+**30,352 tokens** here, so nearly every question was scored against a model that had never
+seen its supporting passages.
+
+Verified directly, not inferred: a unique fact placed at the START of a ~34k-token context
+returned *"The information provided in the given text does not contain any detail..."* under
+the default, and was answered correctly with `num_ctx=32768` on byte-identical input. Then,
+re-asking 6 real previously-refused questions with the fix: **5 of 6 improved**, several from
+F1 0.00 to 1.00 (`'No'` -> `'Sherwood Stewart'`, `'No year'` -> `'1961'`).
+
+**Fixed** by `ANSWER_NUM_CTX = 32768` (this model's max trained context) and
+`SHORTEN_NUM_CTX = 4096` in `generate_baseline_answers.py`. All other stages import
+`generate_answer`/`shorten_answer` from there, so the fix propagates to pruning baselines,
+GRPO training, and compressed-answer evaluation automatically.
+
+**VRAM interaction (8GB card):** KV cache for Qwen2.5-7B is ~56 KB/token -- 0.45 GB at 8k,
+0.88 GB at 16k, **1.75 GB at 32k** -- on top of ~4.7 GB of Q4_K_M weights. 32k fits in 8 GB
+only if BGE-M3 (~2.2 GB) is NOT also resident, so pass `--device cpu` to anything that
+embeds and calls Ollama in the same process. Raising `num_ctx` is not free.
+
+**What this invalidates.** Everything below in this section, and every EM/F1 number recorded
+anywhere above, was measured under truncation. In particular the "context size actively
+degrades the generator" claim was measuring Ollama's truncation, not the model -- and the
+6.4 sigma "pruning beats the uncompressed baseline" result is confounded, because pruning's
+main effect was getting contexts under 4096 so they survived truncation intact. **Re-run the
+full pipeline from `generate_baseline_answers.py` onward before trusting or reporting any
+comparison.** The observations below are kept only as the record of how this was found.
+
+---
+
+## (SUPERSEDED, kept for the diagnostic trail) Refusal-rate analysis that led to the above
+
+**This looked like the most reportable finding in the repo. It was an artifact.** Retrieval recall is 92.0% and the uncompressed baseline still only
+scores F1 0.336. The gap is not retrieval and not reasoning -- it is that the generator
+cannot LOCATE the supporting facts in a large context, and then honestly says they are
+absent:
+
+| context quartile | mean `T_o` | refusal rate | mean F1 |
+|---|---|---|---|
+| Q1 smallest | 2,246 | **12.0%** | **0.590** |
+| Q2 | 8,659 | 22.0% | 0.302 |
+| Q3 | 25,830 | 36.0% | 0.196 |
+| Q4 largest | 84,672 | 36.0% | 0.255 |
+
+- **53/200 (26.5%)** of raw answers contain a "the information provided does not
+  contain..." style refusal. Mean F1 on those is 0.176 vs 0.393 on the rest.
+- **46 of those 53 (87%) had FULL retrieval recall** -- every supporting passage was
+  present in the serialized context and the model still did not find it.
+- Refusal rate **triples** (12% -> 36%) and F1 falls from 0.590 to ~0.20 as context grows.
+
+This single mechanism explains a lot that was previously filed as separate puzzles:
+why both non-adaptive pruners beat the uncompressed baseline by ~15pp (pruning is
+repairing a generation failure, not just saving tokens); why `mean Q_empty` is a large
+0.247; and why 15 of 40 val questions are answered wrong by *every* method (they cluster
+in the big-context quartiles where the generator refuses regardless of pruning).
+
+**Implication for the paper**: "retrieved-context size actively degrades a 7B generator,
+and pruning recovers ~15pp F1" is a clean, well-evidenced claim on n=200 with a real
+mechanism. The RL-vs-heuristic answer-level margin is 0.6 sigma on n=40 and is not
+reportable no matter how much more the policy is tuned. Lead with the former.
+
+**Also found: `shorten_answer` discards a correct answer on 4/200 (2.0%)** -- the raw
+answer contains the gold string but the shortened form is a null token ("No"). Worth
+fixing, but small. **Do not measure this as "gold string appears in raw_answer" alone**:
+on comparison questions ("Between X and Y, which...") both candidate names appear in the
+raw text, so that test inflates the rate to ~7.5% by counting cases where the model
+simply chose the wrong candidate. The script's own check requires the shortened answer to
+be a null token.
+
+## Post-`num_ctx`-fix results (the first uncontaminated run)
+
+Everything from `generate_baseline_answers.py` onward was regenerated with
+`ANSWER_NUM_CTX = 32768`. **These supersede every EM/F1/CR number above.**
+
+**The truncation artifact is confirmed and gone.** Uncompressed baseline F1
+**0.336 -> 0.575**; refusal rate **26.5% -> 8.0%**. The refusal-vs-context-size
+trend that the superseded section treated as a real finding has vanished: by
+quartile it is now 8% / 2% / 2% / 20%, and Q3 (mean 25.8k tokens) scores the
+*highest* F1 (0.693). More context is now better, up to the window limit. Only Q4
+(mean 84.7k) still degrades, because it genuinely exceeds 32k.
+
+**Both non-adaptive pruners lost their advantage, exactly as predicted.** Paired
+against uncompressed over all 200 questions: heuristic **+0.004 (0.2 sigma)**,
+similarity **+0.010 (0.4 sigma)**, both with 23 better / 23 worse / 154 tied. The
+earlier 6.4 sigma "pruning beats the uncompressed baseline" result was measuring
+pruning's ability to get contexts under 4096 so they survived truncation. Do not
+revive it.
+
+**Answer level, 40 held-out val questions:**
+
+| method | EM | F1 | CR |
+|---|---|---|---|
+| Uncompressed baseline | 57.5% | 63.8% | 0% |
+| **RL policy (struct4)** | 57.5% | **68.8%** | **58.6%** |
+| Heuristic pruning | 55.0% | 63.1% | 61.7% |
+| Similarity pruning | 50.0% | 56.9% | 59.8% |
+
+The policy is now the only method that beats uncompressed, cutting context 77.3%
+(26,134 -> 5,942 tokens) while doing so, and it never loses a question to either
+pruner (3-0 vs heuristic, 7-2 vs similarity). Paired significance is still modest:
+vs similarity **2.3 sigma**, vs heuristic **1.7 sigma**, vs uncompressed **1.1
+sigma** (F1 +0.050, EM exactly 0.0), with 33/40 tied against uncompressed. State
+the supportable claim -- the policy *preserves* answer quality while removing 77%
+of context where the fixed rules do not -- rather than claiming it improves it.
+
+### The result worth leading with: compression matters where context OVERFLOWS
+
+Splitting by whether the full context fits in `num_ctx`:
+
+| | n | baseline F1 | policy F1 | dF1 | policy `T_c` |
+|---|---|---|---|---|---|
+| context fits | 31 | 0.681 | 0.681 | **-0.000 (0.0 sigma)** | 2,804 |
+| context overflows | 9 | 0.489 | 0.710 | **+0.222 (2.0 sigma)** | 16,752 |
+
+Same split for the pruners over all 200 (n=149 fits / 51 overflows):
+
+| method | fits | overflows |
+|---|---|---|
+| heuristic | **-0.055 (-1.9 sigma)** | +0.177 (3.2 sigma) |
+| similarity | -0.027 (-1.0 sigma) | +0.118 (1.8 sigma) |
+
+Two claims come out of this, and they are the strongest the project has:
+1. **The learned policy is harmless when compression is unnecessary; the fixed
+   rules are not.** On questions whose context already fits, `heuristic_prune`
+   costs 5.5pp F1 at -1.9 sigma while the policy is exactly neutral. It also keeps
+   ~6x more context on overflow questions (16,752 vs 2,804 tokens) -- i.e. it
+   modulates by need, which is the entire point of query-adaptive compression.
+2. **26% of questions (51/200) physically cannot be answered uncompressed** --
+   `T_o` reaches 159,344 tokens, with up to 79% discarded. Their mean F1 is 0.409
+   vs 0.632 for those that fit, and it is NOT retrieval (recall is *higher* on
+   them, 0.951 vs 0.909). For those queries compression is a precondition for using
+   the evidence at all, not an optimization.
+
+**Remaining headroom**: if the 51 still-truncated questions scored like the ones
+that fit, overall baseline F1 would be 0.632 rather than 0.575.
+
+### `shorten_answer`: diagnosed, mostly not worth fixing
+
+The 4/200 losses share one pattern -- when the raw answer leads with a negation
+("Naomi Campbell did not appear... instead, Rosie O'Donnell..."), the shortener
+collapses the whole thing to "No", because the prompt offers "yes-or-no" as an
+output type. A targeted prompt fix (only answer Yes/No when the QUESTION is a
+yes/no question) was tested on all four: **1 recovered, 12/12 regression check
+clean.** The fix is applied because it is free, but the other three are not
+extraction bugs -- the generator itself produced hedged or wrong raw answers
+("Neither dog breed is specifically known..."). At ~0.5pp this does **not** justify
+re-running the pipeline; it will take effect on the next full run. Same
+diminishing-returns pattern as the entity-resolution prompt work.

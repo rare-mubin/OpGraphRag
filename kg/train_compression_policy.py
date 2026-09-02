@@ -327,8 +327,21 @@ def main():
         if i % 50 == 0:
             print(f"  [{i}/{len(questions)}]")
     sized.sort(key=lambda x: x[0])
-    stride = max(int(round(1 / args.val_frac)), 2) if args.val_frac > 0 else 0
-    val_questions = [q for i, (_, q) in enumerate(sized) if stride and i % stride == 0]
+    # Walk the size-sorted list accumulating val_frac and taking a question whenever the
+    # accumulator crosses 1. This spreads the val picks evenly across the whole size range
+    # (so both splits span small and huge graphs alike) and, unlike a fixed stride, works
+    # for ANY fraction -- a stride of round(1/val_frac) silently caps val at 50%, which
+    # matters because the useful configuration here is val-heavy: the policy is only 4
+    # features under --features struct4 and needs few training questions, while the
+    # answer-level comparison is starved for evaluation questions (paired SE ~0.047 at
+    # n=40 against a ~0.05 effect).
+    val_idx, acc = set(), 0.0
+    for i in range(len(sized)):
+        acc += args.val_frac
+        if acc >= 1.0 - 1e-9:
+            val_idx.add(i)
+            acc -= 1.0
+    val_questions = [q for i, (_, q) in enumerate(sized) if i in val_idx]
     val_set = {q["question"] for q in val_questions}
     train_questions = [q for _, q in sized if q["question"] not in val_set]
     tr_sz = [n for n, q in sized if q["question"] not in val_set]
