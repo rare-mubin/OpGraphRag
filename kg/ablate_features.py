@@ -1,12 +1,20 @@
 """Feature-representation ablation for the node-relevance objective. No LLM calls.
 
-Question: the trained policy puts 99.2% of its first-layer weight energy on 2048
-embedding dims and 0.8% on the 4 structural features -- the very features the
-heuristic wins with. Does rebalancing the representation beat heuristic_prune's
-node-F1 of 0.599 on the same held-out questions?
+Question: the full-feature policy put 99.2% of its first-layer weight energy on 2048
+embedding dims and 0.8% on the 4 structural features -- the very features the heuristic
+wins with. Which state representation actually carries the signal, measured against
+heuristic_prune on the same held-out questions?
 
-Pure supervised (the auxiliary loss alone), so this answers the representation
-question in minutes instead of a 2-hour RL run.
+Pure supervised (the auxiliary loss alone), so this answers the representation question in
+about a minute instead of a 2-hour RL run. Every variant is scored at the heuristic's own
+KEEP-rate, so the comparison is like-for-like rather than a threshold artefact.
+
+Writes output/feature_ablation.json, which generate_report.py draws as the paper's Fig. 4.
+
+Features are cached in output/ablation_features.npz (gitignored, ~85 MB). The cache is
+rebuilt automatically when knowledge_graph.json or node_embeddings.npy is newer than it,
+since a stale cache would silently score the ablation against a graph that no longer exists.
+The train/val split is NOT cached -- it is read from the current policy checkpoint each run.
 """
 import os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
@@ -19,16 +27,22 @@ from compression_policy import build_state_features, EXTRA_FEATURES
 from train_compression_policy import load_node_embedding_lookup
 from generate_pruning_baselines import heuristic_prune
 
-OUT = Path("output"); CACHE = OUT / "ablation_features.npz"
-ck = torch.load(OUT/"compression_policy.pt", weights_only=False)
+OUT = Path(__file__).resolve().parent / "output"
+CACHE = OUT / "ablation_features.npz"
+ck = torch.load(OUT / "compression_policy.pt", weights_only=False)
 train_qs, val_qs = set(ck["train_questions"]), set(ck["val_questions"])
 
-if CACHE.exists():
+upstream = [OUT / "knowledge_graph.json", OUT / "node_embeddings.npy"]
+stale = CACHE.exists() and CACHE.stat().st_mtime < max(p.stat().st_mtime for p in upstream if p.exists())
+if stale:
+    print(f"{CACHE.name} is older than the graph/embeddings -- rebuilding it.")
+
+if CACHE.exists() and not stale:
     z = np.load(CACHE, allow_pickle=True)
     X, Y, Hh, Q = z["X"], z["Y"], z["H"], z["Q"]
     print(f"Loaded cached features: {X.shape}")
 else:
-    qs = json.load(open(OUT/"subset_questions.json", encoding="utf-8"))
+    qs = json.load(open(OUT / "subset_questions.json", encoding="utf-8"))
     G = load_graph(); lookup = load_node_embedding_lookup(); emb, ids = load_embeddings()
     dev = default_device(); print(f"Embedding {len(qs)} questions on {dev}...")
     model = SentenceTransformer(MODEL_NAME, device=dev)
@@ -64,7 +78,7 @@ def metrics(score, label, keep_rate=None, thr=None):
     tp = int((pred & (label == 1)).sum()); fp = int((pred & (label == 0)).sum())
     fn = int(((~pred) & (label == 1)).sum())
     p = tp/(tp+fp) if tp+fp else 0.0; r = tp/(tp+fn) if tp+fn else 0.0
-    return p, r, (2*p*r/(p+r) if p+r else 0.0), pred.mean()
+    return p, r, (2*p*r/(p+r) if p+r else 0.0), float(pred.mean())
 
 hp, hr, hf, hk = metrics(Hh[va], Y[va], thr=0.5)
 print(f"\nTARGET  heuristic_prune (val): precision={hp:.3f} recall={hr:.3f} node-F1={hf:.3f} KEEP-rate={hk:.3f}\n")
@@ -91,11 +105,14 @@ class Full(nn.Module):
 
 Xtr = torch.tensor(X[tr]); Ytr = torch.tensor(Y[tr]); Xva = torch.tensor(X[va])
 pw = torch.tensor((Y[tr] == 0).sum() / max((Y[tr] == 1).sum(), 1))
-variants = [("full 2052 (control)", Full()), ("emb->64 + struct4", Net(64)),
-            ("emb->16 + struct4", Net(16)), ("struct4 only", Net(0))]
+# (key, figure label, model). Labels use matplotlib mathtext because they go straight onto Fig. 4.
+variants = [("full 2052 (control)", f"Full ({X.shape[1]:,}-d)", Full()),
+            ("emb->64 + struct4", "Emb.$\\rightarrow$64 + 4 structural", Net(64)),
+            ("emb->16 + struct4", "Emb.$\\rightarrow$16 + 4 structural", Net(16)),
+            ("struct4 only", "4 structural only", Net(0))]
 print(f"{'representation':<24}{'dims':>6}{'prec':>8}{'recall':>8}{'node-F1':>9}{'  vs heuristic':>15}")
 results = []
-for name, m in variants:
+for name, label, m in variants:
     torch.manual_seed(42)
     for mod in m.modules():
         if isinstance(mod, nn.Linear): nn.init.xavier_uniform_(mod.weight); nn.init.zeros_(mod.bias)
@@ -109,7 +126,18 @@ for name, m in variants:
     p, r, f, k = metrics(sv, Y[va], keep_rate=hk)   # matched to the heuristic's operating point
     d = (m.proj_dim + EXTRA_FEATURES) if isinstance(m, Net) else X.shape[1]
     print(f"{name:<24}{d:>6}{p:8.3f}{r:8.3f}{f:9.3f}{f-hf:+15.3f}")
-    results.append((name, f))
+    results.append({"name": name, "label": label, "dims": int(d), "precision": p, "recall": r, "f1": f})
 print(f"\n(all evaluated at the heuristic's own KEEP-rate {hk:.3f}, so the comparison is like-for-like)")
-best = max(results, key=lambda x: x[1])
-print(f"best: {best[0]} node-F1={best[1]:.3f} vs heuristic {hf:.3f}")
+best = max(results, key=lambda x: x["f1"])
+print(f"best: {best['name']} node-F1={best['f1']:.3f} vs heuristic {hf:.3f}")
+
+summary = {
+    "split": {"train_questions": len(train_qs), "val_questions": len(val_qs),
+              "val_nodes": int(va.sum()), "val_relevant": int(Y[va].sum())},
+    "keep_rate": hk,
+    "heuristic": {"precision": hp, "recall": hr, "f1": hf},
+    "rows": results,
+}
+with open(OUT / "feature_ablation.json", "w", encoding="utf-8") as f:
+    json.dump(summary, f, indent=2, ensure_ascii=False)
+print(f"Saved -> {OUT / 'feature_ablation.json'}")

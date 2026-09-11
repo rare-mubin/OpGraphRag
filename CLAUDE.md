@@ -44,7 +44,8 @@ After any pipeline rerun (e.g. on a bigger dataset), regenerate everything under
 
 ```bash
 python generate_pruning_baselines.py       # Stage 6 non-adaptive baselines (similarity/heuristic)
-python evaluate_policy_classification.py   # node-level confusion matrix / ROC / AUC (no LLM calls, fast)
+python evaluate_policy_classification.py   # node-level confusion/ROC/AUC + heuristic on the same nodes + per-hop (no LLM calls)
+python ablate_features.py                  # Fig. 4 data -> output/feature_ablation.json (no LLM calls, ~1 min)
 python generate_report.py                  # aggregates everything above into result/ -- no LLM calls, fast
 ```
 
@@ -54,6 +55,8 @@ below). `generate_report.py`'s ablation section is a **fixed historical referenc
 20-question pilot (documenting the reward-gating fix) -- it does not regenerate from the new run, since
 the bug it demonstrates is fixed in the code and a fresh run only ever reproduces the "after" row. That's
 expected and labeled as such in the report; it's not something to chase into matching the new dataset.
+
+`generate_report.py` also draws the paper's result figures into `result/images/` -- Fig. 2 `training_dynamics.png` (from `compression_training_log.json`), Fig. 3 `node_confusion.png` (from the `heuristic` block `evaluate_policy_classification.py` now writes), and Fig. 4 `feature_ablation.png` (from `feature_ablation.json`) -- and prints the paired-significance and context-overflow numbers the paper quotes. Nothing in the figures is hard-coded; each is skipped with a message naming the script to run if its input is missing. **Upload those three PNGs to Overleaf after every rerun** -- `main.tex` includes them by file name.
 
 ## Commands
 
@@ -446,8 +449,8 @@ finding here, independent of learning.
 
 **WHY heuristic pruning still beats the policy -- diagnosed, and it is NOT the decision
 threshold.** Compared both methods' KEEP sets against `supporting_facts` on the 39 val questions
-that have at least one relevant node (no LLM calls; per-question detail in
-`output/keepset_comparison.json`):
+that have at least one relevant node (no LLM calls; this was a one-off analysis, the
+per-question dump is not kept):
 
 | | nodes kept | precision | recall | answer F1 |
 |---|---|---|---|---|
@@ -598,7 +601,7 @@ Two supporting changes landed with it, and both immediately earned their place:
 | **new policy (struct4)** | **0.534** | **0.820** | **0.647** | **0.932** | 0.170 |
 
 Recall went 0.464 -> 0.820, past the heuristic, and precision rose at the same time
-despite keeping ~2x as many nodes. That is genuine dominance, not a threshold slide.
+despite keeping ~2x as many nodes. **CORRECTION (2026-09-11): this comparison is invalid** -- the heuristic row came from the OLD skewed split (7,019 val nodes), not the stratified one. Scored on the same 4,154 nodes by `evaluate_policy_classification.py`, the heuristic gets P 0.586 / R 0.741 / F1 0.655 against the policy's 0.537 / 0.830 / 0.652: **parity in F1**, with the policy trading precision for recall. Every relevant node it keeps beyond the heuristic is two hops from a seed. Always re-measure a baseline on the same split before comparing against it.
 
 **Answer level -- competitive, but the margin is NOT significant. Do not report it as a win:**
 

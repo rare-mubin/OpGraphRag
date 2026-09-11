@@ -23,6 +23,12 @@
       0.5863494833682357,
       0.5984122485116339,
       0.6168956011393261
+    ],
+    "mean_tokens": [
+      26134.2,
+      5942.1,
+      9615.675,
+      5907.525
     ]
   },
   "ablation_reference": {
@@ -51,6 +57,7 @@
     "precision": 0.5365168539325843,
     "recall": 0.8304347826086956,
     "f1": 0.6518771331058021,
+    "keep_rate": 0.17140105922002888,
     "auc": 0.9310374049575103,
     "confusion_matrix": {
       "tn": 3364,
@@ -58,6 +65,56 @@
       "fn": 78,
       "tp": 382
     },
+    "heuristic": {
+      "precision": 0.5859106529209622,
+      "recall": 0.741304347826087,
+      "f1": 0.654510556621881,
+      "keep_rate": 0.1401059220028888,
+      "confusion_matrix": {
+        "tn": 3453,
+        "fp": 241,
+        "fn": 119,
+        "tp": 341
+      }
+    },
+    "by_hop": [
+      {
+        "hop": 0,
+        "name": "seed",
+        "n_nodes": 200,
+        "n_relevant": 124,
+        "policy_keep_rate": 1.0,
+        "policy_tp": 124,
+        "policy_fp": 76,
+        "heuristic_keep_rate": 1.0,
+        "heuristic_tp": 124,
+        "heuristic_fp": 76
+      },
+      {
+        "hop": 1,
+        "name": "1-hop",
+        "n_nodes": 382,
+        "n_relevant": 217,
+        "policy_keep_rate": 0.9502617801047121,
+        "policy_tp": 204,
+        "policy_fp": 159,
+        "heuristic_keep_rate": 1.0,
+        "heuristic_tp": 217,
+        "heuristic_fp": 165
+      },
+      {
+        "hop": 2,
+        "name": "2+-hop",
+        "n_nodes": 3572,
+        "n_relevant": 119,
+        "policy_keep_rate": 0.04171332586786114,
+        "policy_tp": 54,
+        "policy_fp": 95,
+        "heuristic_keep_rate": 0.0,
+        "heuristic_tp": 0,
+        "heuristic_fp": 0
+      }
+    ],
     "roc_curve": {
       "fpr": [
         0.0,
@@ -2341,5 +2398,102 @@
       }
     }
   ],
-  "n_questions": 40
+  "n_questions": 40,
+  "paired": {
+    "policy_vs_uncompressed_f1": {
+      "n": 40,
+      "mean": 0.04984848484848485,
+      "se": 0.04706921682298691,
+      "z": 1.0590464047011856,
+      "better": 5,
+      "worse": 2
+    },
+    "policy_vs_uncompressed_em": {
+      "n": 40,
+      "mean": 0.0,
+      "se": 0.050636968354183326,
+      "z": 0.0,
+      "better": 2,
+      "worse": 2
+    },
+    "policy_vs_heuristic_f1": {
+      "n": 40,
+      "mean": 0.05610516934046346,
+      "se": 0.03254272751985851,
+      "z": 1.7240463113064652,
+      "better": 3,
+      "worse": 0
+    },
+    "policy_vs_similarity_f1": {
+      "n": 40,
+      "mean": 0.1187945632798574,
+      "se": 0.05205624173653485,
+      "z": 2.2820426392111846,
+      "better": 7,
+      "worse": 2
+    }
+  },
+  "overflow": {
+    "num_ctx": 32768,
+    "n_pruning_questions": 200,
+    "policy_fits": {
+      "n": 31,
+      "mean": -1.7906822977825105e-18,
+      "se": 0.04888237167378443,
+      "z": -3.6632475808101014e-17,
+      "better": 2,
+      "worse": 2,
+      "baseline_f1": 0.6808981657179001,
+      "policy_f1": 0.6808981657179001,
+      "mean_T_c": 2803.7419354838707
+    },
+    "heuristic_fits": {
+      "n": 149,
+      "mean": -0.05464312631703078,
+      "se": 0.028955648355460488,
+      "z": -1.887131852349841,
+      "better": 9,
+      "worse": 20
+    },
+    "similarity_fits": {
+      "n": 149,
+      "mean": -0.026690541988607524,
+      "se": 0.0268063649868493,
+      "z": -0.995679272504922,
+      "better": 10,
+      "worse": 17
+    },
+    "policy_overflows": {
+      "n": 9,
+      "mean": 0.22154882154882155,
+      "se": 0.11128137143895593,
+      "z": 1.990888669720911,
+      "better": 3,
+      "worse": 0,
+      "baseline_f1": 0.48888888888888893,
+      "policy_f1": 0.7104377104377104,
+      "mean_T_c": 16752.0
+    },
+    "heuristic_overflows": {
+      "n": 51,
+      "mean": 0.1770520329343859,
+      "se": 0.05554387356363442,
+      "z": 3.1876068695775133,
+      "better": 14,
+      "worse": 3
+    },
+    "similarity_overflows": {
+      "n": 51,
+      "mean": 0.11816059757236227,
+      "se": 0.06716020333323637,
+      "z": 1.7593841547213829,
+      "better": 13,
+      "worse": 6
+    }
+  },
+  "paper_figures": [
+    "training_dynamics.png",
+    "node_confusion.png",
+    "feature_ablation.png"
+  ]
 }

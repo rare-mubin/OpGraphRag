@@ -51,7 +51,7 @@ code/
 ├── result/                        # consolidated results package (generate_report.py output)
 │   ├── report.html                # self-contained HTML report: KPIs, confusion matrix, ROC,
 │   │                              #   comparison heatmap, ablation, per-question tabulation
-│   ├── images/                    # confusion_matrix.png, roc_curve.png, comparison_heatmap.png, ablation_chart.png
+│   ├── images/                    # confusion_matrix.png, roc_curve.png, comparison_heatmap.png, ablation_chart.png, plus paper Figs. 2-4: training_dynamics.png, node_confusion.png, feature_ablation.png
 │   └── data/                      # copies of the underlying JSON results, self-contained
 └── kg/
     ├── select_subset.py           # step 1: sample questions, dedupe passages
@@ -94,7 +94,8 @@ code/
         ├── policy_classification_eval.json  # node-level accuracy/precision/recall/F1/AUC + confusion matrix
         ├── confusion_matrix.png           # node-level KEEP/REMOVE confusion matrix heatmap
         ├── roc_curve.png                  # node-level KEEP-decision ROC curve
-        ├── keepset_comparison.json        # policy vs. heuristic KEEP sets, per question
+        ├── context_ceiling.json           # refusal rate / F1 by context-size quartile
+        ├── feature_ablation.json          # ablate_features.py results (drawn as the paper's Fig. 4)
         └── ablation_features.npz          # cached features/labels for the two analysis scripts
 ```
 
@@ -666,6 +667,7 @@ KEEP-rate against `heuristic_prune`'s operating point instead.
 ### Step 3 — Build the consolidated results report
 
 ```bash
+python ablate_features.py               # Fig. 4 data: state-feature ablation (fast, no LLM calls)
 python generate_report.py
 ```
 
@@ -703,7 +705,6 @@ python generate_pruning_baselines.py    # stage 6: non-adaptive similarity/heuri
 python evaluate_policy_classification.py  # stage 6: confusion matrix / ROC / AUC (val split, fast)
 python generate_report.py               # stage 6: consolidates everything into ../result/
 python analyze_context_ceiling.py       # analysis: why the baseline is weak (fast, no LLM calls)
-python ablate_features.py               # analysis: state-feature ablation (fast, no LLM calls)
 python analyze_hop_shells.py            # analysis: relevance by hop distance (fast, no LLM calls)
 ```
 
@@ -797,8 +798,10 @@ python analyze_hop_shells.py            # analysis: relevance by hop distance (f
 
 | | precision | recall | node-F1 | AUC |
 |---|---|---|---|---|
-| Heuristic pruning (1-hop) | 0.521 | 0.704 | 0.599 | — |
-| **RL policy** | **0.534** | **0.820** | **0.647** | **0.932** |
+| Heuristic pruning (1-hop) | **0.586** | 0.741 | **0.655** | — |
+| RL policy | 0.537 | **0.830** | 0.652 | 0.931 |
+
+Both rows are scored on the same 4,154 validation nodes. Node-level F1 is at **parity** -- the policy trades precision for recall, and every relevant node it keeps beyond the heuristic is two hops from a retrieval seed, where the 1-hop rule keeps nothing.
 
 **Answer-level:**
 

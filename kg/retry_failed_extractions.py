@@ -19,12 +19,11 @@ Usage:
 """
 import json
 import time
-from pathlib import Path
 
 import requests
 
 from extract_kg import (
-    OUT_DIR, EXTRACTIONS_PATH, PASSAGES_PATH, LOG_PATH, OLLAMA_URL, MODEL,
+    EXTRACTIONS_PATH, PASSAGES_PATH, OLLAMA_URL, MODEL,
     SYSTEM_PROMPT, save_extractions, append_log,
 )
 

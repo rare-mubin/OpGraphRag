@@ -13,6 +13,15 @@ final generated *answer* text): this script scores the policy's per-node
 whatever the downstream LLM did with them. No LLM calls -- pure local
 inference over the already-trained policy, fast (seconds, not minutes).
 
+The fixed 1-hop heuristic (`generate_pruning_baselines.heuristic_prune`) is scored on the
+SAME nodes in the same pass, and both are broken down by hop distance from the nearest
+retrieval seed. That comparison has to be computed here rather than borrowed from another
+run: an earlier write-up compared the policy against heuristic numbers measured on a
+different (pre-stratification) validation split and reported a node-level "win" that
+disappears on the same split. `generate_report.py` draws the paper's confusion-matrix
+figure from the `heuristic` block written here, and the per-hop block is where the
+"recovers N relevant two-hop nodes" claim comes from.
+
 Usage:
     python evaluate_policy_classification.py
     python evaluate_policy_classification.py --policy output/compression_policy.pt
@@ -38,8 +47,22 @@ from sentence_transformers import SentenceTransformer
 from retrieve import load_graph, load_embeddings, retrieve, MODEL_NAME, default_device
 from compression_policy import build_state_features, CompressionPolicy
 from train_compression_policy import load_node_embedding_lookup, POLICY_PATH
+from generate_pruning_baselines import heuristic_prune
 
 OUT_DIR = Path(__file__).resolve().parent / "output"
+HOP_NAMES = {0: "seed", 1: "1-hop", 2: "2+-hop"}
+
+
+def decision_block(labels: np.ndarray, pred: np.ndarray) -> dict:
+    """Precision/recall/F1/KEEP-rate/confusion for one set of hard KEEP decisions."""
+    cm = confusion_matrix(labels, pred, labels=[0, 1])
+    return {
+        "precision": precision_score(labels, pred, zero_division=0),
+        "recall": recall_score(labels, pred, zero_division=0),
+        "f1": classification_f1(labels, pred, zero_division=0),
+        "keep_rate": float(pred.mean()) if len(pred) else 0.0,
+        "confusion_matrix": {"tn": int(cm[0, 0]), "fp": int(cm[0, 1]), "fn": int(cm[1, 0]), "tp": int(cm[1, 1])},
+    }
 
 
 def main():
@@ -93,6 +116,7 @@ def main():
     embed_model = SentenceTransformer(MODEL_NAME, device=args.device)
 
     all_probs, all_actions, all_labels = [], [], []
+    all_heur, all_hop = [], []
     per_question = []
 
     for i, q in enumerate(questions, 1):
@@ -119,9 +143,17 @@ def main():
             for nid in node_ids
         ])
 
+        # Heuristic decision and hop bucket for exactly the same nodes. "2+-hop" is everything
+        # the 1-hop rule discards, which with the default --hops 2 means exactly two hops.
+        within_one = set(heuristic_prune(Gq, seed_ids, 1).nodes())
+        heur = np.array([1 if nid in within_one else 0 for nid in node_ids])
+        hop = np.array([0 if nid in seed_ids else (1 if nid in within_one else 2) for nid in node_ids])
+
         all_probs.extend(probs.tolist())
         all_actions.extend(actions.tolist())
         all_labels.extend(labels.tolist())
+        all_heur.extend(heur.tolist())
+        all_hop.extend(hop.tolist())
 
         q_acc = accuracy_score(labels, actions) if len(set(labels)) else float("nan")
         per_question.append({
@@ -134,6 +166,8 @@ def main():
     all_probs = np.array(all_probs)
     all_actions = np.array(all_actions)
     all_labels = np.array(all_labels)
+    all_heur = np.array(all_heur)
+    all_hop = np.array(all_hop)
 
     acc = accuracy_score(all_labels, all_actions)
     prec = precision_score(all_labels, all_actions, zero_division=0)
@@ -148,13 +182,36 @@ def main():
     else:
         fpr, tpr, auc = np.array([]), np.array([]), float("nan")
 
+    heuristic = decision_block(all_labels, all_heur)
+    relevant = all_labels == 1
+    by_hop = []
+    for hv in (0, 1, 2):
+        m = all_hop == hv
+        by_hop.append({
+            "hop": hv, "name": HOP_NAMES[hv], "n_nodes": int(m.sum()), "n_relevant": int((relevant & m).sum()),
+            "policy_keep_rate": float(all_actions[m].mean()) if m.any() else 0.0,
+            "policy_tp": int(((all_actions == 1) & relevant & m).sum()),
+            "policy_fp": int(((all_actions == 1) & ~relevant & m).sum()),
+            "heuristic_keep_rate": float(all_heur[m].mean()) if m.any() else 0.0,
+            "heuristic_tp": int(((all_heur == 1) & relevant & m).sum()),
+            "heuristic_fp": int(((all_heur == 1) & ~relevant & m).sum()),
+        })
+
     print("\n=== Node-Level KEEP/REMOVE Classification (policy decision vs. supporting_facts ground truth) ===")
     print(f"Total nodes evaluated: {len(all_labels)}  (relevant={int(all_labels.sum())}, "
           f"irrelevant={int((1 - all_labels).sum())})")
     print(f"Accuracy:  {acc:.3f}")
-    print(f"Precision: {prec:.3f}  Recall: {rec:.3f}  F1 (classification): {f1:.3f}")
+    print(f"Precision: {prec:.3f}  Recall: {rec:.3f}  F1 (classification): {f1:.3f}  "
+          f"KEEP-rate: {all_actions.mean():.3f}")
     print(f"AUC:       {auc:.3f}" if has_both_classes else "AUC: n/a (only one class present)")
     print(f"Confusion matrix [rows=true, cols=pred, order=(REMOVE,KEEP)]:\n{cm}")
+    print(f"\nSame nodes, fixed 1-hop heuristic: precision {heuristic['precision']:.3f}  "
+          f"recall {heuristic['recall']:.3f}  F1 {heuristic['f1']:.3f}  KEEP-rate {heuristic['keep_rate']:.3f}")
+    print("By hop distance from the nearest retrieval seed:")
+    for b in by_hop:
+        print(f"  {b['name']:<7} nodes={b['n_nodes']:5d} relevant={b['n_relevant']:4d} | "
+              f"policy keeps {100 * b['policy_keep_rate']:5.1f}% (TP {b['policy_tp']}, FP {b['policy_fp']}) | "
+              f"heuristic keeps {100 * b['heuristic_keep_rate']:5.1f}% (TP {b['heuristic_tp']}, FP {b['heuristic_fp']})")
 
     # --- confusion matrix heatmap ---
     fig, ax = plt.subplots(figsize=(4.5, 4))
@@ -189,8 +246,11 @@ def main():
         "n_questions": len(per_question), "n_nodes": len(all_labels),
         "n_relevant": int(all_labels.sum()), "accuracy": acc,
         "precision": prec, "recall": rec, "f1": f1,
+        "keep_rate": float(all_actions.mean()) if len(all_actions) else 0.0,
         "auc": None if not has_both_classes else auc,
         "confusion_matrix": {"tn": int(cm[0, 0]), "fp": int(cm[0, 1]), "fn": int(cm[1, 0]), "tp": int(cm[1, 1])},
+        "heuristic": heuristic,
+        "by_hop": by_hop,
         "roc_curve": {"fpr": fpr.tolist(), "tpr": tpr.tolist()} if has_both_classes else None,
         "per_question": per_question,
     }

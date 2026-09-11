@@ -1,0 +1,48 @@
+{
+  "split": {
+    "train_questions": 160,
+    "val_questions": 40,
+    "val_nodes": 4154,
+    "val_relevant": 460
+  },
+  "keep_rate": 0.1401059220028888,
+  "heuristic": {
+    "precision": 0.5859106529209622,
+    "recall": 0.741304347826087,
+    "f1": 0.6545105566218811
+  },
+  "rows": [
+    {
+      "name": "full 2052 (control)",
+      "label": "Full (2,052-d)",
+      "dims": 2052,
+      "precision": 0.4639175257731959,
+      "recall": 0.5869565217391305,
+      "f1": 0.5182341650671785
+    },
+    {
+      "name": "emb->64 + struct4",
+      "label": "Emb.$\\rightarrow$64 + 4 structural",
+      "dims": 68,
+      "precision": 0.4209621993127148,
+      "recall": 0.532608695652174,
+      "f1": 0.4702495201535509
+    },
+    {
+      "name": "emb->16 + struct4",
+      "label": "Emb.$\\rightarrow$16 + 4 structural",
+      "dims": 20,
+      "precision": 0.3848797250859107,
+      "recall": 0.48695652173913045,
+      "f1": 0.42994241842610365
+    },
+    {
+      "name": "struct4 only",
+      "label": "4 structural only",
+      "dims": 4,
+      "precision": 0.5927835051546392,
+      "recall": 0.75,
+      "f1": 0.6621880998080614
+    }
+  ]
+}

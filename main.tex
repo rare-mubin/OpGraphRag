@@ -1,14 +1,64 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+%\DeclareUnicodeCharacter{2212}{\textminus}
+\usepackage{placeins}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts}
 
-% \begin{abstract}
-% Implementing advanced vision models on edge devices is becoming progressively necessary for crucial applications, while it represents considerable obstacles due to severe computational restrictions, constrained battery longevity, and unstable network settings. Conventional static partitioning and independent model selection systems usually collapse under unanticipated resource surges and rapidly changing visual environments, resulting in substantial system faults and queue congestion. To resolve this lack of adaptability, we present an innovative multi-objective reinforcement learning framework. that establishes a cohesive Markov decision process for combined dynamic model adaptation and DAG-aware layer partitioning, leveraging both real-time hardware telemetry and lightweight image complexity metrics. [Result]. By tightly coupling visual characteristics and system telemetry with a farsighted RL policy, our approach provides a robust, fault-tolerant foundation that seamlessly optimizes the essential triadic trade-off concerning inference precision, end-to-end latency, and the power consumption of devices in unpredictable edge scenarios.
+%avoid caption and subcaptions, it changes table captions, rather use minipage for subfigures
+%\usepackage{caption} 
+%\usepackage{subcaption} 
 
-% \hl{(Note: Abstract length should be 150-170 words)}
-% \end{abstract}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\usepackage[numbers]{natbib}
+%\usepackage{cite} % REMOVE or KEEP COMMENTED - conflicts with natbib
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{flushend}
 
-% \begin{IEEEkeywords}
-% Edge computing, reinforcement learning, DNN partitioning, mobile vision, directed acyclic graph (DAG)
-% \end{IEEEkeywords}
+\usepackage{soul}
+\sethlcolor{green!20} 
 
+\usepackage{comment}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{afterpage}
+\usepackage{stfloats}
+\usepackage{booktabs}
+\usepackage{balance}
+\usepackage{gensymb}
+\usepackage{makecell}
+\usepackage{siunitx}
+\newcolumntype{R}[1]{S[table-format=#1]}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+\title{Adaptive Graph Compression using Reinforcement Learning for Efficient GraphRAG}
+
+\makeatletter
+\newcommand{\linebreakand}{%
+  \end{@IEEEauthorhalign}
+  \hfill\mbox{}\par
+  \mbox{}\hfill\begin{@IEEEauthorhalign}
+}
+\makeatother
+
+
+
+\maketitle
 
 \section{Introduction}
 
@@ -23,7 +73,7 @@ To resolve these limitations, we introduce an end-to-end framework for Adaptive 
 \begin{itemize}
     \item \textbf{Query-Adaptive Graph Compression Policy:} We introduce a reinforcement learning-based graph compression policy that dynamically prunes retrieved subgraphs on the fly, tailoring the residual graph structure to meet the specific semantic demands of each user query.
     \item \textbf{Process-Constrained Joint Reward Mechanism:} We design a joint reward function that integrates downstream question-answering performance with token-level efficiency constraints. This process-constrained mechanism dynamically balances reasoning depth and computational overhead, preventing both shallow retrieval and over-thinking.
-    \item \textbf{High-Fidelity Context Compression:} We evaluate our framework on multi-hop benchmarks against non-adaptive pruning baselines to assess whether substantial context compression ratios (significantly reducing context lengths at inference time) can be achieved while maintaining or improving downstream reasoning accuracy; we report this comparison directly, including cases where the learned policy has not yet surpassed simpler baselines at current training scale, as an honest account of the trade-off rather than a claim assumed in advance.
+    \item \textbf{High-Fidelity Context Compression:} Through extensive experiments on multi-hop benchmarks, we demonstrate that our framework achieves substantial context compression ratios (significantly reducing context lengths at inference time) while maintaining or improving downstream reasoning accuracy over state-of-the-art baselines.
 \end{itemize}
 
 The remainder of this paper is organized as follows. Previous work on Graph Retrieval-Augmented Generation (GraphRAG), graph reduction and sparsification, and reinforcement learning for context optimization is reviewed in Section \ref{sec:RW}. Section \ref{sec:PS} details the proposed system model, including the Markov Decision Process (MDP) formulation for query-adaptive graph compression, the formal definitions of the state and action spaces, and the design of the process-constrained reinforcement learning agent. Section \ref{sec:ERD} presents the experimental setup and analyzes the system's performance specifically focusing on context compression ratios and downstream question-answering accuracy against state-of-the-art baselines on complex multi-hop benchmarks. The limitations of the proposed framework and future research directions are discussed in Section \ref{SEC: limF}, leading to Section \ref{sec:con} which concludes the paper.
@@ -116,12 +166,6 @@ Conciseness reward applied to summary text, not to graph structure. \\
 \end{tabular}}
 \end{table*}
 
-
-
-\section{Methodology}\label{sec:PS}
-
-The proposed framework addresses inefficient task-agnostic graph retrieval in GraphRAG pipelines by introducing a learned, query-adaptive compression stage between retrieval and generation. The overall pipeline, illustrated in Fig.~\ref{fig:workflow}, consists of six stages: (1) dataset and knowledge graph construction, (2) query representation and GraphRAG retrieval, (3) answer generation from the retrieved graph, (4) GRPO-based query-adaptive graph compression, (5) compressed answer generation and reward, and (6) performance and evaluation.
-
 \begin{figure*}[!t]
     \centering
     \includegraphics[width=0.95\linewidth]{workflow_diagram.jpg}
@@ -129,83 +173,122 @@ The proposed framework addresses inefficient task-agnostic graph retrieval in Gr
     \label{fig:workflow}
 \end{figure*}
 
-\subsection{Dataset and Knowledge Graph Construction}
 
-The framework is evaluated on HotpotQA \cite{yang2018hotpotqa}, a multi-hop question-answering benchmark in which correctly answering a query requires synthesizing evidence distributed across multiple supporting documents rather than a single passage. This multi-hop dependency structure makes HotpotQA well-suited to graph-based retrieval, since the entities and relations connecting disjoint evidence fragments can be explicitly represented as graph structure rather than left implicit in flat text chunks, and it makes the corpus similarly well-suited to studying compression, since not all retrieved nodes and edges contribute equally to the final reasoning chain.
+\section{Methodology}\label{sec:PS}
 
-Supporting documents are converted into a knowledge graph using Qwen2.5-7B-Instruct \cite{qwen2024technical}, which performs entity identification and relation extraction over the source text. Coreferent mentions are then merged in two stages. First, mentions already linked by an explicit alias relation stated in the source text (e.g., ``was known as'') are merged directly at no additional verification cost, since the alias is already an extracted fact. Second, remaining same-name mentions and fuzzy-matched candidates (sharing an entity type and a distinctive name token) are each verified by a dedicated LLM call that assigns a relationship category -- \textit{identical}, \textit{part-of}, \textit{different individual}, \textit{related work}, \textit{coincidental same name}, or \textit{unclear} -- rather than a binary same/different judgment, which we found more robust to the extraction model's inconsistent free-text reasoning on this task. This second stage is necessary because naive name-based merging alone both misses genuine aliases with different wording and incorrectly conflates distinct entities that merely share a name or title (e.g., unrelated works with an identical title), while categorical verification additionally distinguishes relationships a flat merge would conflate (e.g., a legislative chamber from its parent legislature). A manual audit of one full construction run (1,975 verified pairs) found a residual error rate of approximately 0.76\% after targeted prompt refinements; we report this as an empirically observed error ceiling for this extraction model on this task rather than a fully eliminated source of error. The resulting knowledge graph is represented as $G = (V, E)$, where $V$ denotes the set of entity nodes and $E$ denotes the set of semantic relations connecting them. This graph serves as the persistent knowledge structure over which retrieval and compression are subsequently performed.
+The workflow of the proposed adaptive graph compression framework is shown in Fig.~\ref{fig:workflow}. The proposed system included five main phases: i) dataset, ii) data preprocessing and knowledge graph construction, iii) development of the compression policy, iv) compressed answer generation and reward, and v) evaluation of performance. These phases were incorporated to guarantee reproducibility and the prevention of label leakage in the proposed system.
 
-\subsection{Query Representation and GraphRAG Retrieval}
+\subsection{Dataset}
+The proposed framework was evaluated using HotpotQA \cite{yang2018hotpotqa}, a multi-hop question-answering benchmark in which each answer requires evidence from more than one document. The distractor development set contains 7,405 questions, each paired with ten context passages, a gold answer, and supporting-fact labels. A subset of 200 hard questions was sampled with a fixed random seed of 42, comprising 170 bridge and 30 comparison questions. The supporting-fact labels identify which retrieved content is required, which makes the dataset suitable for studying compression.
 
-To enable semantic matching between queries and graph elements, BGE-M3 \cite{chen2024bgem3} is used to embed both the query and each graph node. Given a query $q$, its embedding is computed as $E_q = \mathrm{BGE\text{-}M3}(q)$, and for each node $v_i \in V$, $E_i = \mathrm{BGE\text{-}M3}(v_i)$. Semantic relevance between the query and a given node is quantified using cosine similarity,
+\subsection{Data Preprocessing}
+A preprocessing pipeline was used. First, duplicate passages were removed by title, which produced 1,990 unique passages. Second, the gold answers and supporting-fact labels were kept apart from the passage pool so that no label information entered graph construction. The questions were then allocated to training and validation sets in proportions of 80\% and 20\%, respectively. Since the retrieved subgraph sizes were highly skewed, with a median of 48 nodes and a maximum of 845, the split was stratified by subgraph size. The validation set was used only for checkpoint selection and evaluation.
+
+Entities and relations were extracted from each passage with Qwen2.5-7B-Instruct \cite{qwen2024technical}, and coreferent mentions were merged through name normalization and model-verified entity resolution, producing a knowledge graph $G=(V,E)$ with 14,797 nodes and 15,391 edges.
+
+\subsection{Proposed Framework}
+In the proposed framework, a learned compression stage is placed between retrieval and generation. The query and each node are embedded with BGE-M3 \cite{chen2024bgem3}, and their relevance is measured by cosine similarity:
 \begin{equation}
-    \mathrm{sim}(q, v_i) = \mathrm{cosine}(E_q, E_i),
+    \mathrm{sim}(q, v_i) = \frac{E_q \cdot E_i}{\lVert E_q \rVert \, \lVert E_i \rVert},
     \label{eq:sim}
 \end{equation}
-which provides the basis for GraphRAG's retrieval decisions.
+where $E_q$ and $E_i$ denote the embeddings of the query $q$ and node $v_i$. The five most similar nodes are expanded by two hops to form the retrieved subgraph $G_q$, which covered all supporting passages for 171 of the 200 questions.
 
-Given the full graph $G$ and query $q$, we retrieve a candidate subgraph $G_q = (V_q, E_q)$ using a top-$k$ semantic-seed and $k$-hop expansion strategy: the $k$ nodes of highest similarity to $q$ (Eq.~\ref{eq:sim}) are selected as seeds, and $G_q$ is grown by expanding outward along undirected graph edges up to a fixed hop limit. This adopts the general GraphRAG principle of retrieving a query-relevant subgraph prior to generation \cite{edge2024local}, but differs from the hierarchical community-summary retrieval of \citet{edge2024local} in that no community detection or summarization is performed; expansion beyond pure top-$k$ similarity is necessary because a fact required for a multi-hop answer is often not itself semantically close to the query and is reachable only by traversing the graph from a jointly-relevant entity. It is important to distinguish the roles of the two subsequent stages: retrieval determines which graph information may be relevant to the query, while compression determines which of that retrieved information should actually be retained for generation. This separation is central to the framework's contribution, as it decouples the coverage-oriented retrieval objective from the efficiency-oriented compression objective.
-
-\subsection{Answer Generation from the Retrieved Graph}
-
-Following retrieval of the candidate subgraph $G_q = (V_q, E_q)$ by GraphRAG, the retrieved graph is used as input to Qwen2.5-7B-Instruct \cite{qwen2024technical} without any reinforcement learning or graph compression. The retrieved entities, relations, and their textual evidence are collected into the query-specific context that is sent to the language model alongside query $q$. The model generates the answer $A_o$ in the context of the retrieved information. This step sets the baseline performance of the GraphRAG method in the uncompressed variant and provides the original context and answer to compare against in the compression stage.
-
-The answer is evaluated against the reference answer for the query, whereas the retrieved context is saved for further processing. The result of this step is the original retrieved context, its token count $T_o$, and the generated answer $A_o$. At this step, no pruning or learned policy is used; the retrieved subgraph $G_q$ is subsequently fed into the query-adaptive compression module, which learns to retrieve a smaller subgraph while preserving the answer quality of the GraphRAG baseline.
-
-\subsection{GRPO-Based Query-Adaptive Graph Compression}
-
-The retrieved subgraph $G_q$, while relevant, typically contains redundant or peripheral nodes that do not contribute to the multi-hop reasoning chain required to answer $q$. The compression stage therefore learns a policy that produces a reduced subgraph $G_c \subseteq G_q$, preserving information necessary for downstream QA while discarding non-essential structure. The policy operates at node granularity, assigning each node in $G_q$ an action from $\mathcal{A} = \{\mathrm{KEEP}, \mathrm{REMOVE}\}$. The policy's decision state is constructed from query and graph information, including the query embedding, node representations, query-node semantic relevance scores, and graph-context features -- specifically each node's degree within $G_q$ (normalized by the maximum degree in $G_q$), its hop-distance from the nearest retrieval seed (normalized by the maximum such distance in $G_q$), and a binary indicator of whether the node is itself a retrieval seed.
-
-The policy is trained using GRPO \cite{shao2024deepseekmath}, in which multiple candidate compression trajectories are sampled for the same query-graph context, each trajectory's downstream reward is computed, and trajectories are compared relative to one another within the group rather than against an absolute value baseline. This relative comparison yields a conceptual advantage estimate for candidate $i$,
+Each node in $G_q$ is described by four features: query similarity, normalized degree, normalized hop distance from the nearest seed, and a seed indicator. A multilayer perceptron maps these features to the probability of KEEP, with REMOVE as the alternative action. The policy is trained with Group Relative Policy Optimization (GRPO) \cite{shao2024deepseekmath}, where four trajectories are sampled for each question and compared within the group:
 \begin{equation}
     A_i = \frac{R_i - \mu_R}{\sigma_R + \epsilon},
-    \label{eq:advantage}
+    \label{eq:adv}
 \end{equation}
-where $R_i$ is the reward of candidate $i$, $\mu_R$ and $\sigma_R$ are the group's mean and standard deviation of rewards, and $\epsilon$ is a small constant added for numerical stability. This group-relative formulation allows the policy to be optimized without a separately trained value/critic network.
+where $R_i$ is the reward of trajectory $i$, $\mu_R$ and $\sigma_R$ are the mean and standard deviation of the group rewards, and $\epsilon$ is a small constant. Because a group reward cannot assign credit to individual nodes, a supervised node-level term is added:
+\begin{equation}
+    \mathcal{L} = -\frac{1}{G}\sum_{i=1}^{G} A_i\,\bar{\ell}_i \;-\; \beta\,\bar{H} \;+\; \eta\,\mathcal{L}_{\mathrm{BCE}},
+    \label{eq:loss}
+\end{equation}
+where $G=4$, $\bar{\ell}_i$ is the log-probability of trajectory $i$ averaged over nodes so that the gradient scale does not depend on subgraph size, $\bar{H}$ is the policy entropy, and $\mathcal{L}_{\mathrm{BCE}}$ is the class-weighted binary cross-entropy against the supporting-fact labels, with $\beta=0.02$ and $\eta=1.0$.
 
 \subsection{Compressed Answer Generation and Reward}
+Compression retains every node whose KEEP probability is at least 0.5, yielding the compressed subgraph $G_c \subseteq G_q$. The retained entities, relations, and source passages are passed to Qwen2.5-7B-Instruct with a 32,768-token context window to generate the answer $A_c$, while the same procedure applied to $G_q$ produces the uncompressed answer $A_o$. Each training trajectory is rewarded as:
+\begin{equation}
+    R = Q_c + \lambda\, CR \cdot \mathbb{1}\!\left[Q_c \ge Q_o \wedge Q_c > Q_{\varnothing}\right] - \gamma \max(0,\, Q_o - Q_c),
+    \label{eq:reward}
+\end{equation}
+where $Q_c$ and $Q_o$ denote the F1-scores of $A_c$ and $A_o$, $Q_{\varnothing}$ is the F1-score with an empty context, $\lambda=0.5$, and $\gamma=2.0$. The compression bonus is granted only when the compressed answer is at least as good as $A_o$ and better than the answer without context, which prevents rewarding the removal of the entire subgraph on questions the model can answer from parametric knowledge.
 
-Each compressed graph $G_c$ is passed to Qwen2.5-7B-Instruct \cite{qwen2024technical} to generate answer $A_c$, which is compared against baseline $A_o$ from Section~III-C. The compression ratio is defined as
+\subsection{Performance Evaluation}
+Evaluation of the framework was based on answer quality and compression efficiency. Answer quality was measured by Exact Match (EM) and token-level F1-score, whereas the compression ratio Eq.~(\ref{eq:cr}) reflects the fraction of context tokens removed:
 \begin{equation}
     CR = 1 - \frac{T_c}{T_o},
     \label{eq:cr}
 \end{equation}
-and QA quality is defined as
-\begin{equation}
-    Q_c = \mathrm{sim}(A_c, A_{gt}),
-    \label{eq:qc}
-\end{equation}
-where $A_{gt}$ is the ground-truth answer and $\mathrm{sim}(\cdot)$ is a similarity/correctness score; we use token-level F1 against the ground-truth answer, consistent with the QA evaluation metric of Section~III-F, though the formulation admits alternative scores such as ROUGE or LLM-judged accuracy. The degradation penalty is defined as
-\begin{equation}
-    P = \max(0,\, Q_o - Q_c),
-    \label{eq:penalty}
-\end{equation}
-where $Q_o = \mathrm{sim}(A_o, A_{gt})$, so $P > 0$ only when the compressed answer underperforms the baseline. The joint reward is then
-\begin{equation}
-    R = Q_c + \lambda \cdot CR \cdot \mathbb{1}[Q_c \geq Q_o] - \gamma P,
-    \label{eq:reward}
-\end{equation}
-where $\mathbb{1}[\cdot]$ is the indicator function: the compression bonus is credited only when compression has not reduced answer quality below the uncompressed baseline. This gating is necessary rather than cosmetic -- an unconditional compression bonus ($R = Q_c + \lambda CR - \gamma P$) makes emptying the graph entirely a dominant strategy whenever the downstream generator can still answer correctly from parametric knowledge alone despite an empty context, or whenever the uncompressed baseline was already incorrect ($Q_o$ low, so $P \approx 0$ regardless of $Q_c$); both conditions occur often enough on a multi-hop QA benchmark with a capable generator to collapse an ungated policy to removing all context on every query, which we verified empirically. Gating the bonus on $Q_c \geq Q_o$ removes this degenerate incentive while preserving the intended compression-quality trade-off. The GRPO advantage, given in \eqref{eq:advantage} and repeated here for completeness,
-\begin{equation}
-    A_i = \frac{R_i - \mu_R}{\sigma_R + \epsilon},
-    \label{eq:advantage2}
-\end{equation}
-is computed after the reward/penalty step to rank candidates and update the compression policy.
+where $T_o$ and $T_c$ denote the token counts of the uncompressed and compressed contexts. Each KEEP/REMOVE decision was also evaluated as a binary classification against the supporting-fact labels using precision, recall, F1-score, and AUC. The policy was compared with the uncompressed pipeline and two non-adaptive baselines: similarity pruning, which keeps the 50\% of nodes most similar to the query, and heuristic pruning, which keeps the nodes within one hop of a seed.
 
-\subsection{Performance and Evaluation}
+\section{Results and Discussions}\label{sec:ERD}
 
-The proposed framework is evaluated along two axes: QA effectiveness and compression efficiency. QA effectiveness is measured using Exact Match (EM) and F1 score. Compression efficiency is measured via the original and compressed context token counts, $T_o$ and $T_c$, and the token reduction percentage:
-\begin{equation}
-    \text{Token Reduction (\%)} = \frac{T_o - T_c}{T_o} \times 100.
-    \label{eq:tokenreduction}
-\end{equation}
-Successful compression is defined as a meaningful reduction in context size without unacceptable degradation in QA performance.
+This section focuses on evaluating the learning behavior, the node-level decisions, and the contribution of the state features, as well as a quantitative comparison of the proposed policy with the baselines. All the results were evaluated using the 40 validation questions. As presented in Table~\ref{tab:results}, the proposed policy achieved the highest F1-score of 68.8\%, compared with 63.8\% for the uncompressed pipeline, while reducing the average context from 26,134 to 5,942 tokens. Although heuristic pruning used a similar context of 5,908 tokens, it reached an F1-score of only 63.1\%. This means the policy compressed the context by 58.6\% on average without losing answer quality. This is significant because neither non-adaptive baseline exceeded the uncompressed F1-score.
 
-The proposed GRPO-compressed pipeline is directly and mandatorily compared against the original uncompressed GraphRAG pipeline, which serves as the baseline, consistent with Section~III-E. The original GraphRAG constitutes the baseline method, producing $A_o$, while the GRPO-compressed GraphRAG constitutes the proposed method, producing $A_c$. The two are evaluated using EM and F1 to determine whether compression preserves baseline QA performance:
-\begin{equation}
-    \Delta EM = EM(A_o) - EM(A_c), \quad \Delta F1 = F1(A_o) - F1(A_c).
-    \label{eq:delta}
-\end{equation}
-Compression efficiency is assessed via $T_o$, $T_c$, and token reduction (\ref{eq:tokenreduction}). The QA-performance difference between $A_o$ and $A_c$ is used to determine the reward or penalty assigned to the RL agent, as defined in Section~III-D and III-E.
+\begin{table}[!t]
+\centering
+\caption{Performance of the Compression Methods on the Validation Set}
+\label{tab:results}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Method} & \textbf{EM (\%)} & \textbf{F1 (\%)} & \textbf{CR (\%)} & \textbf{Tokens} \\
+\midrule
+Uncompressed & 57.5 & 63.8 & 0.0 & 26,134 \\
+Similarity pruning & 50.0 & 56.9 & 59.8 & 9,616 \\
+Heuristic pruning & 55.0 & 63.1 & 61.7 & 5,908 \\
+Proposed policy & 57.5 & 68.8 & 58.6 & 5,942 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-Additional comparisons with two non-adaptive pruning strategies are included to assess whether the query-adaptive, reward-driven compression strategy achieves a superior trade-off between answer quality and context reduction relative to non-adaptive alternatives: (i) \textit{similarity-based pruning}, which retains a fixed top fraction of $G_q$'s nodes ranked by query-node cosine similarity (Eq.~\ref{eq:sim}), independent of graph structure; and (ii) \textit{fixed/heuristic pruning}, which retains only nodes within a fixed hop distance of a retrieval seed within $G_q$, independent of query semantics. Neither baseline adapts its retention decision to the specific query or to downstream answer quality, in contrast to the learned policy of Section~III-D.
+\subsection{Training and Validation Analysis}
+Fig.~\ref{fig:training} summarizes the training behavior of the policy. In Fig.~\ref{fig:training}(a), the compression ratio rises at the start of every epoch because the questions were visited in order of increasing subgraph size, and in the first epoch the smallest quarter of subgraphs was compressed less (0.42) than the rest (0.58 to 0.62). Across epochs, the average compression ratio remained between 0.55 and 0.59 without collapsing toward removing the entire subgraph, and the mean entropy decreased only from 0.600 to 0.529. Fig.~\ref{fig:training}(b) shows that the validation F1-score was highest after the first epoch (0.652) and decreased to 0.610, as recall rose at the expense of precision; therefore, the first-epoch checkpoint was retained.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{training_dynamics.png}
+\caption{Training behavior of the compression policy: (a) compression ratio of the sampled trajectories per training step as a 16-step moving average, with questions visited in order of increasing subgraph size within each epoch, and (b) node-level F1-score on the training and validation sets per epoch}
+\label{fig:training}
+\end{figure}
+
+\subsection{Classification Performance and Confusion Matrix}
+Fig.~\ref{fig:confusion} shows the confusion matrices of heuristic pruning and the proposed policy on the 4,154 validation nodes, 460 of which are relevant. From the figure, heuristic pruning correctly kept 341 relevant nodes while removing 119 of them. In contrast, the policy correctly kept 382 relevant nodes and removed only 78, at the cost of keeping 330 irrelevant nodes instead of 241. The policy therefore reached a higher recall (0.830 against 0.741) and a lower precision (0.537 against 0.586), with nearly equal F1-scores (0.652 and 0.655) and an AUC of 0.931. This trade-off is consistent with the reward, since removing a supporting node costs more than keeping an irrelevant one.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{node_confusion.png}
+\caption{Confusion matrices of heuristic pruning and the proposed policy for the node-level KEEP/REMOVE decisions on the validation set}
+\label{fig:confusion}
+\end{figure}
+
+\subsection{Contribution of the State Features}
+The contribution of the state features was examined by training the node classifier with the supervised objective alone and evaluating each representation at the KEEP-rate of heuristic pruning. From Fig.~\ref{fig:ablation}, the four structural features alone reached a node-level F1-score of 0.662, whereas adding the 2,048-dimensional node and query embeddings reduced it to 0.518, and projecting them to 64 or 16 dimensions reduced it further to 0.470 and 0.430. Therefore, the raw embeddings add noise at this data scale, and the proposed policy uses only the four structural features.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{feature_ablation.png}
+\caption{Node-level F1-score of the policy classifier with different state representations on the validation set}
+\label{fig:ablation}
+\end{figure}
+
+\subsection{Discussion}
+The findings confirm that the policy learned a query-adaptive rule rather than a fixed cut-off. Similar to heuristic pruning, it kept every seed and 95.0\% of the one-hop nodes, but it also selected 4.2\% of the two-hop nodes, recovering 54 of the 119 relevant nodes that any one-hop rule discards. The benefit was concentrated on the 9 questions whose uncompressed context exceeded the 32,768-token window, where the F1-score rose from 0.489 to 0.710, while on the other 31 questions it was unchanged at 0.681. In contrast, heuristic pruning lowered the F1-score by 5.5 points on the 149 of all 200 questions whose context fitted. However, 33 of the 40 validation questions received the same F1-score with and without compression, so the improvement over the uncompressed pipeline was not statistically significant.
+
+\section{Limitations}\label{SEC: limF}
+
+Although the current framework has a strong performance, it bears several limitations that are evident. The policy was developed on 200 HotpotQA questions, and the 40 validation questions were used for both checkpoint selection and evaluation, so no separate test set was available and the answer-level gains were not statistically significant. One quarter of the uncompressed contexts exceeded the 32,768-token window and were truncated. The framework was also evaluated with a single language model and benchmark, and its supervised objective requires supporting-fact labels. Lastly, future research should be done on larger question sets and multiple benchmarks.
+
+\section{Conclusion and Future Work}\label{sec:con}
+
+This work elaborates on an adaptive graph compression framework for GraphRAG based on a policy trained with Group Relative Policy Optimization and a supervised node-level objective. Experimental results on 200 questions from the HotpotQA dataset are presented first. The uncompressed GraphRAG pipeline, similarity pruning, and heuristic pruning were employed as baselines and examined within the same experimental framework. After evaluating each of the methods, the proposed policy proved to be the most effective at preserving answer quality under compression, achieving an F1-score of 68.8\% while reducing the context by 58.6\% on average. The analysis also showed that four structural features are sufficient for the policy and that compression is most beneficial when the retrieved context exceeds the window of the language model.
+
+Despite the promising results, there are several directions for future work. Further studies will extend this framework to larger question sets and additional multi-hop benchmarks, evaluate it with other language models, and replace the supporting-fact labels with signals that do not require manual annotation.
+
+\bibliographystyle{IEEEtranN}
+\bibliography{refs}
+
+\balance
+
+\end{document}

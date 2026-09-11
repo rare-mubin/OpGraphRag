@@ -31,7 +31,6 @@ os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
 
 import argparse
 import json
-import random
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -46,8 +45,7 @@ from generate_baseline_answers import (
     build_context, generate_answer, shorten_answer, f1_score, load_token_counter,
 )
 from compression_policy import (
-    build_state_features, CompressionPolicy, sample_trajectory, compress_graph,
-    EXTRA_FEATURES, state_dim,
+    build_state_features, CompressionPolicy, sample_trajectory, compress_graph, state_dim,
 )
 
 OUT_DIR = Path(__file__).resolve().parent / "output"
