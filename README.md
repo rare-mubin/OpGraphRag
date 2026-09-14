@@ -51,7 +51,7 @@ code/
 ├── result/                        # consolidated results package (generate_report.py output)
 │   ├── report.html                # self-contained HTML report: KPIs, confusion matrix, ROC,
 │   │                              #   comparison heatmap, ablation, per-question tabulation
-│   ├── images/                    # confusion_matrix.png, roc_curve.png, comparison_heatmap.png, ablation_chart.png, plus paper Figs. 2-4: training_dynamics.png, node_confusion.png, feature_ablation.png
+│   ├── images/                    # confusion_matrix.png, roc_curve.png, comparison_heatmap.png, ablation_chart.png, plus paper Figs. 2-5: training_dynamics.png, node_confusion.png, node_roc.png, feature_ablation.png
 │   └── data/                      # copies of the underlying JSON results, self-contained
 └── kg/
     ├── select_subset.py           # step 1: sample questions, dedupe passages

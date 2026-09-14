@@ -1,119 +1,253 @@
-@inproceedings{chai2025cutter,
-  title     = {Learning to Compress Graphs via Dual Agents for Consistent Topological Robustness Evaluation},
-  author    = {Chai, Qi and Wang, Yu and Huang, Jing and Jia, Tao},
-  journal   = {arXiv preprint arXiv:2511.18958},
-  year      = {2025},
-  url       = {https://arxiv.org/abs/2511.18958}
+@misc{chai2025cutter,
+      title={Learning to Compress Graphs via Dual Agents for Consistent Topological Robustness Evaluation},
+      author={Qisen Chai and Yansong Wang and Junjie Huang and Tao Jia},
+      year={2025},
+      eprint={2511.18958},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2511.18958},
 }
 
-@inproceedings{wickman2022sparrl,
-  title     = {SparRL: A Generic Graph Sparsification Framework using Deep Reinforcement Learning},
-  author    = {Wickman, Ryan and Zhang, Xiaofei and Li, Weizi},
-  booktitle = {Proceedings of the IEEE International Conference on Data Mining Workshops (ICDMW)},
-  year      = {2022},
-  organization = {IEEE}
+@INPROCEEDINGS{wickman2022sparrl,
+  author={Wickman, Ryan and Zhang, Xiaofei and Li, Weizi},
+  booktitle={2022 IEEE International Conference on Data Mining (ICDM)},
+  title={A Generic Graph Sparsification Framework using Deep Reinforcement Learning},
+  year={2022},
+  volume={},
+  number={},
+  pages={1221-1226},
+  keywords={Deep learning;Measurement;Decision making;Reinforcement learning;Data mining;Task analysis;Computational complexity;graph sparsification;deep reinforcement learning},
+  doi={10.1109/ICDM54844.2022.00158},
+  url={https://doi.org/10.1109/ICDM54844.2022.00158}
 }
 
 @inproceedings{tsang2026autographr1,
-  title     = {AutoGraph-R1: End-to-End Reinforcement Learning for Knowledge Graph Construction},
-  author    = {Tsang, Hong Ting and Bai, Jiaxin and Huang, Haoyu and Xiao, Qiao and Zheng, Tianshi and Xu, Baixuan and Liu, Shujie and Song, Yangqiu},
-  booktitle = {Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-  pages     = {23351--23374},
-  year      = {2026},
-  organization = {Association for Computational Linguistics}
+    title = "{A}uto{G}raph-R1: End-to-End Reinforcement Learning for Knowledge Graph Construction",
+    author = "Tsang, Hong Ting  and
+      Bai, Jiaxin  and
+      Huang, Haoyu  and
+      Xiao, Qiao  and
+      Zheng, Tianshi  and
+      Xu, Baixuan  and
+      Liu, Shujie  and
+      Song, Yangqiu",
+    editor = "Liakata, Maria  and
+      Moreira, Viviane P.  and
+      Zhang, Jiajun  and
+      Jurgens, David",
+    booktitle = "Proceedings of the 64th Annual Meeting of the {A}ssociation for {C}omputational {L}inguistics (Volume 1: Long Papers)",
+    month = jul,
+    year = "2026",
+    address = "San Diego, California, United States",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2026.acl-long.1070/",
+    doi = "10.18653/v1/2026.acl-long.1070",
+    pages = "23351--23374",
+    ISBN = "979-8-89176-390-6",
+    abstract = "Building effective knowledge graphs (KGs) for Retrieval-Augmented Generation (RAG) is pivotal for advancing question answering (QA) systems. However, its effectiveness is hindered by a fundamental disconnect: the knowledge graph (KG) construction process is decoupled from its downstream application, yielding suboptimal graph structures. To bridge this gap, we introduce AutoGraph-R1, the first framework to directly optimize KG construction for task performance using Reinforcement Learning (RL). AutoGraph-R1 trains an LLM constructor by framing graph generation as a policy learning problem, where the reward is derived from the graph{'}s functional utility in a RAG pipeline. We design two novel, task-aware reward functions, one for graphs as knowledge carriers and another as knowledge indices. Across multiple QA benchmarks, AutoGraph-R1 consistently enables graph RAG methods to achieve significant performance gains over using task-agnostic baseline graphs. Our work shows it is possible to close the loop between construction and application, shifting the paradigm from building intrinsically `good{`} graphs to building demonstrably `useful{`} ones."
 }
 
 @inproceedings{yu2026graphragr1,
-  title     = {GraphRAG-R1: Graph Retrieval-Augmented Generation with Process-Constrained Reinforcement Learning},
-  author    = {Yu, Chuanyue and Zhao, Kuo and Li, Yuhan and Chang, Heng and Feng, Mingjian and Jiang, Xiangzhe and Sun, Yufei and Li, Jia and Zhang, Yuzhi and Sun, Qingyun and Li, Jianxin and Zhang, Ziwei},
-  booktitle = {Proceedings of the ACM Web Conference 2026 (WWW '26)},
-  year      = {2026},
-  address   = {Dubai, United Arab Emirates},
-  publisher = {ACM},
-  doi       = {10.1145/3774904.3792589}
+author = {Yu, Chuanyue and Zhao, Kuo and Li, Yuhan and Chang, Heng and Feng, Mingjian and Jiang, Xiangzhe and Sun, Yufei and Li, Jia and Zhang, Yuzhi and Sun, Qingyun and Li, Jianxin and Zhang, Ziwei},
+title = {GraphRAG-R1: Graph Retrieval-Augmented Generation with Process-Constrained Reinforcement Learning},
+year = {2026},
+isbn = {9798400723070},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3774904.3792589},
+doi = {10.1145/3774904.3792589},
+abstract = {Graph Retrieval-Augmented Generation (GraphRAG) has shown great effectiveness in enhancing the reasoning abilities of Large Language Models (LLMs) by leveraging graph structures for knowledge representation and modeling complex real-world relationships. However, existing GraphRAG methods still face significant bottlenecks when handling complex problems that require multi-hop reasoning, as their query and retrieval phases are largely based on pre-defined heuristics and do not fully utilize the reasoning potentials of LLMs. To address this problem, we propose GraphRAG-R1, an adaptive GraphRAG framework by training LLMs with process-constrained outcome-based reinforcement learning (RL) to enhance the multi-hop reasoning ability. Our method can decompose complex problems, autonomously invoke retrieval tools to acquire necessary information, and perform effective reasoning. Specifically, we utilize a modified version of Group Relative Policy Optimization (GRPO) that supports rollout-with-thinking capability to train the model. Next, we design two process-constrained reward functions. To handle the shallow retrieval problem, we design a Progressive Retrieval Attenuation (PRA) reward to encourage essential retrievals. Then, to handle the over-thinking problem, we design a Cost-Aware F1 (CAF) reward to balance the model performance with computational costs. We further design a phase-dependent training strategy, containing three training stages corresponding to cold start and these two rewards. These stages empower GraphRAG with format following, behavior shaping, and smartness optimization abilities, respectively. Lastly, our method adopts a hybrid graph-textual retrieval to improve the reasoning capacity. Extensive experimental results demonstrate that GraphRAG-R1 significantly boosts LLM capabilities in solving complex reasoning problems compared to state-of-the-art GraphRAG methods on both in-domain and out-of-domain datasets. Furthermore, our framework can be flexibly integrated with various existing retrieval methods, consistently delivering performance improvements.},
+booktitle = {Proceedings of the ACM Web Conference 2026},
+pages = {1398–1409},
+numpages = {12},
+keywords = {reinforcement learning, graphrag, knowledge graph},
+location = {United Arab Emirates},
+series = {WWW '26}
 }
 
-@inproceedings{luo2026graphr1,
-  title     = {Graph-R1: Towards Agentic {GraphRAG} Framework via End-to-end Reinforcement Learning},
-  author    = {Luo, Haoran and E, Haihong and Chen, Guanting and Lin, Qika and Guo, Yikai and Xu, Fangzhi and Kuang, Zemin and Song, Meina and Wu, Xiaobao and Zhu, Yifan and Tuan, Luu Anh},
-  booktitle = {Proceedings of the 43rd International Conference on Machine Learning (ICML)},
-  year      = {2026},
-  address   = {Seoul, South Korea},
-  volume    = {306},
-  series    = {Proceedings of Machine Learning Research},
-  publisher = {PMLR}
+
+@inproceedings{chen2026pathrag,
+author = {Chen, Boyu and Guo, Zirui and Yang, Zidan and Chen, Yuluo and Chen, Junze and Liu, Zhenghao and Shi, Chuan and Yang, Cheng},
+title = {PathRAG: pruning graph-based retrieval augmented generation with relational paths},
+year = {2026},
+isbn = {978-1-57735-906-7},
+publisher = {AAAI Press},
+url = {https://doi.org/10.1609/aaai.v40i36.40268},
+doi = {10.1609/aaai.v40i36.40268},
+abstract = {Retrieval-augmented generation (RAG) improves the response quality of large language models (LLMs) by retrieving knowledge from external databases. Typical RAG approaches split the text database into chunks, organizing them in a flat structure for efficient searches. To better capture the inherent dependencies and structured relationships across the text database, researchers propose to organize textual information into an indexing graph, known as graph-based RAG. However, we argue that the limitation of current graph-based RAG methods lies in the redundancy of the retrieved information, rather than its insufficiency. Moreover, previous methods use a flat structure to organize retrieved information within the prompts, leading to suboptimal performance. To overcome these limitations, we propose PathRAG, which retrieves key relational paths from the indexing graph, and converts these paths into textual form for prompting LLMs. Specifically, PathRAG effectively reduces redundant information with flow-based pruning, while guiding LLMs to generate more logical and coherent responses with path-based prompting. Experimental results show that PathRAG consistently outperforms state-of-the-art baselines across six datasets and five evaluation dimensions. Code — https://github.com/BUPT-GAMMA/PathRAG},
+booktitle = {Proceedings of the Fortieth AAAI Conference on Artificial Intelligence and Thirty-Eighth Conference on Innovative Applications of Artificial Intelligence and Sixteenth Symposium on Educational Advances in Artificial Intelligence},
+articleno = {3367},
+numpages = {9},
+series = {AAAI'26/IAAI'26/EAAI'26}
 }
 
-@article{cui2025core,
-  title     = {CORE: Lossless Compression for Retrieval-Augmented LLMs via Reinforcement Learning},
-  author    = {Cui, Ziqiang and Weng, Yunpeng and Tang, Xing and Liu, Peiyang and Li, Shiwei and He, Bowei and Chen, Jiamin and Zhang, Yansen and He, Xiuqiang and Ma, Chen},
-  journal   = {arXiv preprint arXiv:2508.19282},
-  year      = {2025},
-  url       = {https://arxiv.org/abs/2508.19282}
+@misc{song2026kgr1,
+      title={Efficient and Transferable Agentic Knowledge Graph RAG via Reinforcement Learning},
+      author={Junhong Lin and Shicheng Liu and Jinyeop Song and Song Wang and Julian Shun and Yada Zhu},
+      year={2026},
+      eprint={2509.26383},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2509.26383},
 }
 
-@article{li2026deepgraphrag,
-  title     = {Deep {GraphRAG}: A Balanced Approach to Hierarchical Retrieval and Adaptive Integration},
-  author    = {Li, Yuejie and others},
-  journal   = {arXiv preprint arXiv:2601.11144},
-  year      = {2026},
-  url       = {https://arxiv.org/abs/2601.11144}
+@misc{fan2026graphragrouter,
+      title={GraphRAG-Router: Learning Cost-Efficient Routing over GraphRAGs and LLMs with Reinforcement Learning},
+      author={Dongzhe Fan and Chuanhao Ji and Zimu Wang and Tong Chen and Qiaoyu Tan},
+      year={2026},
+      eprint={2604.16401},
+      archivePrefix={arXiv},
+      primaryClass={cs.IR},
+      url={https://arxiv.org/abs/2604.16401},
 }
 
-@inproceedings{zhang2026dynarag,
-  title     = {{DynaRAG}: Adaptive Context Compression via Reinforcement Learning for Enhanced Retrieval-Augmented Generation},
-  author    = {Zhang, Y. and Huang, Y. and Luo, W. and Wang, S. and Wu, S. and Yi, Z.},
-  booktitle = {Natural Language Processing and Chinese Computing (NLPCC 2025)},
-  series    = {Lecture Notes in Computer Science},
-  volume    = {16104},
-  year      = {2026},
-  address   = {Singapore},
-  publisher = {Springer},
-  doi       = {10.1007/978-981-95-3349-7_6}
+@misc{luo2026graphr1,
+      title={Graph-R1: Towards Agentic GraphRAG Framework via End-to-end Reinforcement Learning},
+      author={Haoran Luo and Haihong E and Guanting Chen and Qika Lin and Yikai Guo and Fangzhi Xu and Zemin Kuang and Meina Song and Xiaobao Wu and Yifan Zhu and Luu Anh Tuan},
+      year={2026},
+      eprint={2507.21892},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2507.21892},
+}
+
+@misc{cui2025core,
+      title={Less Is More: Elevating RAG via Performance-Driven Context Compression},
+      author={Ziqiang Cui and Yunpeng Weng and Xing Tang and Peiyang Liu and Shiwei Li and Bowei He and Jiamin Chen and Yansen Zhang and Xiuqiang He and Chen Ma},
+      year={2026},
+      eprint={2508.19282},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2508.19282},
+}
+
+@inproceedings{li2026deepgraphrag,
+author = {Li, Yuejie and Yang, Ke and Wang, Tao and Chen, Bolin and Li, Bowen and Mao, Chengjun},
+title = {Deep GraphRAG: A Balanced Approach to Hierarchical Retrieval and Adaptive Integration},
+year = {2026},
+isbn = {9798400723087},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3774905.3795599},
+doi = {10.1145/3774905.3795599},
+abstract = {Graph-based Retrieval-Augmented Generation (GraphRAG) frameworks face a trade-off between the comprehensiveness of global search and the efficiency of local search. Existing methods are often challenged by navigating large-scale hierarchical graphs, optimizing retrieval paths, and balancing exploration-exploitation dynamics, frequently lacking robust multi-stage re-ranking. To overcome these deficits, we propose Deep GraphRAG, a framework designed for a balanced approach to hierarchical retrieval and adaptive integration. It introduces a hierarchical global-to-local retrieval strategy that integrates macroscopic inter-community and microscopic intra-community contextual relations. This strategy employs a three-stage process: (1) inter-community filtering, which prunes the search space using local context; (2) community-level refinement, which prioritizes relevant subgraphs via entity-interaction analysis; and (3) entity-level fine-grained search within target communities. A beam search-optimized dynamic re-ranking module guides this process, continuously filtering candidates to balance efficiency and global comprehensiveness. Deep GraphRAG also features a Knowledge Integration Module leveraging a compact LLM, trained with Dynamic Weighting Reward GRPO (DW-GRPO). This novel reinforcement learning approach dynamically adjusts reward weights to balance three key objectives: relevance, faithfulness, and conciseness. This training enables compact models (1.5B) to approach the performance of large models (70B) in the integration task. Evaluations on Natural Questions and HotpotQA demonstrate that Deep GraphRAG significantly outperforms baseline graph retrieval methods in both accuracy and efficiency.},
+booktitle = {Companion Proceedings of the ACM Web Conference 2026},
+pages = {341–345},
+numpages = {5},
+keywords = {graphrag, reinforcement learning, large language models},
+location = {United Arab Emirates},
+series = {WWW Companion '26}
+}
+
+@InProceedings{zhang2026dynarag,
+author="Zhang, Yizhuo
+and Huang, Yuan
+and Luo, Wei
+and Wang, Sijia
+and Wu, Shuai
+and Yi, Zibo",
+editor="Mao, Xian-Ling
+and Ren, Zhaochun
+and Yang, Muyun",
+title="DynaRAG: Adaptive Context Compression via Reinforcement Learning for Enhanced Retrieval-Augmented Generation",
+booktitle="Natural Language Processing and Chinese Computing",
+year="2026",
+publisher="Springer Nature Singapore",
+address="Singapore",
+pages="68--80",
+abstract="Retrieval-Augmented Generation (RAG) has emerged as a promising approach to addressing the knowledge limitations of Large Language Models (LLMs). However, existing RAG systems often struggle to balance semantic loss and retrieval precision when using fixed compression ratios. This paper introduces DynaRAG, an adaptive compression framework based on reinforcement learning that treats the selection of compression ratios as a Markov Decision Process. Our approach employs Thompson Sampling to strike a balance between exploration and exploitation, utilizing a combined benefit-reward function. This enables dynamic optimization of retrieval precision and compression ratio by applying different compression ratios based on the content's features. For instance, we apply a low compression ratio to information-rich chunks and a high compression ratio to redundant content. The framework achieves Pareto optimization across four retrieval mechanisms, including Contriever, BGE-M3, BM25, and Hybrid, creating an end-to-end system that encompasses ``chunking-compression-retrieval-generation.'' Experiments demonstrate that DynaRAG enhances DCG@1 by 8.31{\%} in Contriever semantic vector retrieval compared to the best baseline, while also achieving an 18.53{\%} reduction in the knowledge base storage. Additionally, for question answering tasks, F1@5 improves by 3.61{\%}.",
+isbn="978-981-95-3349-7",
+doi = {10.1007/978-981-95-3349-7_6},
+url = {https://doi.org/10.1007/978-981-95-3349-7_6}
 }
 
 @inproceedings{hashemi2024comprehensive,
   title     = {A Comprehensive Survey on Graph Reduction: Sparsification, Coarsening, and Condensation},
   author    = {Hashemi, Mohammad and Gong, Shengbo and Ni, Juntong and Fan, Wenqi and Prakash, B. Aditya and Jin, Wei},
-  booktitle = {Proceedings of the 33rd International Joint Conference on Artificial Intelligence (IJCAI)},
+  booktitle = {Proceedings of the Thirty-Third International Joint Conference on
+               Artificial Intelligence, {IJCAI-24}},
+  publisher = {International Joint Conferences on Artificial Intelligence Organization},
+  editor    = {Kate Larson},
   pages     = {8058--8066},
-  year      = {2024}
+  year      = {2024},
+  month     = {8},
+  note      = {Survey Track},
+  doi       = {10.24963/ijcai.2024/891},
+  url       = {https://doi.org/10.24963/ijcai.2024/891},
 }
 
-@article{edge2024local,
-  title     = {From Local to Global: A Graph {RAG} Approach to Query-Focused Summarization},
-  author    = {Edge, Darren and Trinh, Ha and Cheng, Newman and Bradley, Joshua and Chao, Alex and Mody, Apurva and Truitt, Steven and Metropolitansky, Dasha and Ness, Robert Osazuwa and Larson, Jonathan},
-  journal   = {arXiv preprint arXiv:2404.16130},
-  year      = {2024},
-  url       = {https://arxiv.org/abs/2404.16130}
+@misc{edge2024local,
+      title={From Local to Global: A Graph RAG Approach to Query-Focused Summarization},
+      author={Darren Edge and Ha Trinh and Newman Cheng and Joshua Bradley and Alex Chao and Apurva Mody and Steven Truitt and Dasha Metropolitansky and Robert Osazuwa Ness and Jonathan Larson},
+      year={2025},
+      eprint={2404.16130},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2404.16130},
 }
 
 @inproceedings{yang2018hotpotqa,
-  title     = {{HotpotQA}: A Dataset for Diverse, Explainable Multi-hop Question Answering},
-  author    = {Yang, Zhilin and Qi, Peng and Zhang, Saizheng and Bengio, Yoshua and Cohen, William and Salakhutdinov, Ruslan and Manning, Christopher D.},
-  booktitle = {Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
-  year      = {2018}
+    title = "{H}otpot{QA}: A Dataset for Diverse, Explainable Multi-hop Question Answering",
+    author = "Yang, Zhilin  and
+      Qi, Peng  and
+      Zhang, Saizheng  and
+      Bengio, Yoshua  and
+      Cohen, William  and
+      Salakhutdinov, Ruslan  and
+      Manning, Christopher D.",
+    editor = "Riloff, Ellen  and
+      Chiang, David  and
+      Hockenmaier, Julia  and
+      Tsujii, Jun{'}ichi",
+    booktitle = "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing",
+    month = oct # "-" # nov,
+    year = "2018",
+    address = "Brussels, Belgium",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/D18-1259/",
+    doi = "10.18653/v1/D18-1259",
+    pages = "2369--2380",
+    abstract = "Existing question answering (QA) datasets fail to train QA systems to perform complex reasoning and provide explanations for answers. We introduce HotpotQA, a new dataset with 113k Wikipedia-based question-answer pairs with four key features: (1) the questions require finding and reasoning over multiple supporting documents to answer; (2) the questions are diverse and not constrained to any pre-existing knowledge bases or knowledge schemas; (3) we provide sentence-level supporting facts required for reasoning, allowing QA systems to reason with strong supervision and explain the predictions; (4) we offer a new type of factoid comparison questions to test QA systems' ability to extract relevant facts and perform necessary comparison. We show that HotpotQA is challenging for the latest QA systems, and the supporting facts enable models to improve performance and make explainable predictions."
 }
 
-@article{qwen2024technical,
-  title     = {Qwen2.5 Technical Report},
-  author    = {{Qwen Team}},
-  journal   = {arXiv preprint arXiv:2412.15115},
-  year      = {2024},
-  url       = {https://arxiv.org/abs/2412.15115}
+@misc{qwen2024technical,
+      title={Qwen2.5 Technical Report},
+      author={Qwen and : and An Yang and Baosong Yang and Beichen Zhang and Binyuan Hui and Bo Zheng and Bowen Yu and Chengyuan Li and Dayiheng Liu and Fei Huang and Haoran Wei and Huan Lin and Jian Yang and Jianhong Tu and Jianwei Zhang and Jianxin Yang and Jiaxi Yang and Jingren Zhou and Junyang Lin and Kai Dang and Keming Lu and Keqin Bao and Kexin Yang and Le Yu and Mei Li and Mingfeng Xue and Pei Zhang and Qin Zhu and Rui Men and Runji Lin and Tianhao Li and Tianyi Tang and Tingyu Xia and Xingzhang Ren and Xuancheng Ren and Yang Fan and Yang Su and Yichang Zhang and Yu Wan and Yuqiong Liu and Zeyu Cui and Zhenru Zhang and Zihan Qiu},
+      year={2025},
+      eprint={2412.15115},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2412.15115},
 }
 
 @inproceedings{chen2024bgem3,
-  title     = {{BGE M3-Embedding}: Multi-Lingual, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},
-  author    = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and Liu, Zheng},
-  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},
-  year      = {2024}
+    title = "{M}3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation",
+    author = "Chen, Jianlyu  and
+      Xiao, Shitao  and
+      Zhang, Peitian  and
+      Luo, Kun  and
+      Lian, Defu  and
+      Liu, Zheng",
+    editor = "Ku, Lun-Wei  and
+      Martins, Andre  and
+      Srikumar, Vivek",
+    booktitle = "Findings of the Association for Computational Linguistics: ACL 2024",
+    month = aug,
+    year = "2024",
+    address = "Bangkok, Thailand",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.findings-acl.137/",
+    doi = "10.18653/v1/2024.findings-acl.137",
+    pages = "2318--2335",
+    abstract = "In this paper, we introduce a new embedding model called M3-Embedding, which is distinguished for its versatility in Multi-Linguality, Multi-Functionality, and Multi-Granularity. It provides a uniform support for the semantic retrieval of more than 100 working languages. It can simultaneously accomplish the three common retrieval functionalities: dense retrieval, multi-vector retrieval, and sparse retrieval. Besides, it is also capable of processing inputs of different granularities, spanning from short sentences to long documents of up to 8,192 tokens. The effective training of M3-Embedding presents a series of technical contributions. Notably, we propose a novel self-knowledge distillation approach, where the relevance scores from different retrieval functionalities can be integrated as the teacher signal to enhance the training quality. We also optimize the batching strategy, which enables a large batch size and high training throughput to improve the discriminativeness of embeddings. M3-Embedding exhibits a superior performance in our experiment, leading to new state-of-the-art results on multilingual, cross-lingual, and long-document retrieval benchmarks."
 }
 
-@article{shao2024deepseekmath,
-  title     = {{DeepSeekMath}: Pushing the Limits of Mathematical Reasoning in Open Language Models},
-  author    = {Shao, Zhihong and Wang, Peiyi and Zhu, Qihao and Xu, Runxin and Song, Junxiao and Zhang, Mingchuan and Li, Y. K. and Wu, Y. and Guo, Daya},
-  journal   = {arXiv preprint arXiv:2402.03300},
-  year      = {2024},
-  url       = {https://arxiv.org/abs/2402.03300}
+@misc{shao2024deepseekmath,
+      title={DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models},
+      author={Zhihong Shao and Peiyi Wang and Qihao Zhu and Runxin Xu and Junxiao Song and Xiao Bi and Haowei Zhang and Mingchuan Zhang and Y. K. Li and Y. Wu and Daya Guo},
+      year={2024},
+      eprint={2402.03300},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2402.03300},
 }

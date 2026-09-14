@@ -242,12 +242,55 @@ def _fig_ablation(out: Path):
     return None
 
 
+def _fig_roc(clf: dict, out: Path):
+    """ROC for the node-level KEEP decision, with both methods' operating points marked.
+
+    The curve alone would only restate the AUC. Plotting where each method actually operates is
+    what explains the near-equal node-F1: the policy sits higher and further right than the fixed
+    1-hop rule (more relevant nodes kept, at more irrelevant ones), rather than strictly above it."""
+    roc = clf.get("roc_curve")
+    if not roc or not roc.get("fpr"):
+        return "skipped: no ROC points in policy_classification_eval.json (only one class present?)"
+
+    def point(cm):
+        return cm["fp"] / max(cm["fp"] + cm["tn"], 1), cm["tp"] / max(cm["tp"] + cm["fn"], 1)
+    p_fpr, p_tpr = point(clf["confusion_matrix"])
+
+    fig, ax = plt.subplots(figsize=(3.5, 2.5))
+    _style(ax)
+    ax.grid(axis="x", color=P_GRID, linewidth=0.5, linestyle="-")
+    ax.plot([0, 1], [0, 1], color=P_MUTED, linewidth=1, linestyle=(0, (4, 3)), label="Chance")
+    ax.plot(roc["fpr"], roc["tpr"], color=P_BLUE, linewidth=1.4, solid_capstyle="round",
+            label=f"Policy (AUC = {clf['auc']:.3f})")
+    ax.fill_between(roc["fpr"], roc["tpr"], color=P_BLUE, alpha=0.08, linewidth=0)
+
+    mk = dict(markersize=5, markeredgecolor=P_SURFACE, markeredgewidth=0.9, linestyle="none", zorder=3)
+    ax.plot([p_fpr], [p_tpr], marker="o", color=P_BLUE, **mk)
+    ax.annotate(f"policy at $p \\geq 0.5$\n({p_fpr:.3f}, {p_tpr:.3f})", xy=(p_fpr, p_tpr),
+                xytext=(p_fpr + 0.10, p_tpr - 0.10), fontsize=6, color=P_INK2,
+                arrowprops=dict(arrowstyle="-", color=P_MUTED, linewidth=0.5))
+    if clf.get("heuristic"):
+        h_fpr, h_tpr = point(clf["heuristic"]["confusion_matrix"])
+        ax.plot([h_fpr], [h_tpr], marker="s", color=P_ORANGE, **mk)
+        ax.annotate(f"heuristic pruning\n({h_fpr:.3f}, {h_tpr:.3f})", xy=(h_fpr, h_tpr),
+                    xytext=(h_fpr + 0.14, h_tpr - 0.26), fontsize=6, color=P_INK2,
+                    arrowprops=dict(arrowstyle="-", color=P_MUTED, linewidth=0.5))
+    ax.set_xlim(0, 1); ax.set_ylim(0, 1.02)
+    ax.set_xlabel("False positive rate"); ax.set_ylabel("True positive rate")
+    ax.legend(frameon=False, fontsize=6.5, loc="lower right", handlelength=1.6, borderaxespad=0.4)
+    fig.tight_layout(pad=0.3)
+    fig.savefig(out, dpi=PAPER_DPI)
+    plt.close(fig)
+    return None
+
+
 def build_paper_figures(clf: dict) -> list:
-    """Draws Figs. 2-4 into result/images/. Returns the file names actually written."""
+    """Draws Figs. 2-5 into result/images/. Returns the file names actually written."""
     written = []
     with plt.rc_context(PAPER_RC):
         for fname, fn in (("training_dynamics.png", lambda p: _fig_training(p)),
                           ("node_confusion.png", lambda p: _fig_confusion(clf, p)),
+                          ("node_roc.png", lambda p: _fig_roc(clf, p)),
                           ("feature_ablation.png", lambda p: _fig_ablation(p))):
             reason = fn(IMAGES_DIR / fname)
             if reason:
@@ -563,7 +606,9 @@ def _build_html(D: dict, images_dir: Path, result_dir: Path):
                                  "visited in order of increasing |G_q| within each epoch) and node-level F1 per epoch.",
         "node_confusion.png": "Fig. 3 &mdash; node-level confusion matrices, heuristic pruning vs. the policy, on the "
                               "same validation nodes and one shared colour scale.",
-        "feature_ablation.png": "Fig. 4 &mdash; node-level F1 by state representation, each scored at the "
+        "node_roc.png": "Fig. 4 &mdash; ROC for the node-level KEEP decision, with both methods' operating "
+                        "points marked.",
+        "feature_ablation.png": "Fig. 5 &mdash; node-level F1 by state representation, each scored at the "
                                 "heuristic's KEEP-rate.",
     }
     panels = [f'<figure class="imgpanel"><img src="data:image/png;base64,{_b64(images_dir / f)}" alt="{f}" />'

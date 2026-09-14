@@ -56,7 +56,7 @@ below). `generate_report.py`'s ablation section is a **fixed historical referenc
 the bug it demonstrates is fixed in the code and a fresh run only ever reproduces the "after" row. That's
 expected and labeled as such in the report; it's not something to chase into matching the new dataset.
 
-`generate_report.py` also draws the paper's result figures into `result/images/` -- Fig. 2 `training_dynamics.png` (from `compression_training_log.json`), Fig. 3 `node_confusion.png` (from the `heuristic` block `evaluate_policy_classification.py` now writes), and Fig. 4 `feature_ablation.png` (from `feature_ablation.json`) -- and prints the paired-significance and context-overflow numbers the paper quotes. Nothing in the figures is hard-coded; each is skipped with a message naming the script to run if its input is missing. **Upload those three PNGs to Overleaf after every rerun** -- `main.tex` includes them by file name.
+`generate_report.py` also draws the paper's result figures into `result/images/` -- Fig. 2 `training_dynamics.png` (from `compression_training_log.json`), Fig. 3 `node_confusion.png` and Fig. 4 `node_roc.png` (both from the `heuristic` block `evaluate_policy_classification.py` now writes, plus the stored ROC points), and Fig. 5 `feature_ablation.png` (from `feature_ablation.json`) -- and prints the paired-significance and context-overflow numbers the paper quotes. Nothing in the figures is hard-coded; each is skipped with a message naming the script to run if its input is missing. **Upload those four PNGs to Overleaf after every rerun** -- `main.tex` includes them by file name.
 
 ## Commands
 

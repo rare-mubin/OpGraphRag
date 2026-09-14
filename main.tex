@@ -9,8 +9,8 @@
 \usepackage{amsmath,amssymb,amsfonts}
 
 %avoid caption and subcaptions, it changes table captions, rather use minipage for subfigures
-%\usepackage{caption} 
-%\usepackage{subcaption} 
+%\usepackage{caption}
+%\usepackage{subcaption}
 
 \usepackage{textcomp}
 \usepackage{xcolor}
@@ -26,7 +26,7 @@
 \usepackage{flushend}
 
 \usepackage{soul}
-\sethlcolor{green!20} 
+\sethlcolor{green!20}
 
 \usepackage{comment}
 \usepackage{multirow}
@@ -56,119 +56,90 @@
 }
 \makeatother
 
-
-
 \maketitle
+
+\begin{abstract}
+Retrieval-Augmented Generation grounded in knowledge graphs offers a promising path toward multi-hop reasoning over large document collections, but encoding entire retrieved subgraphs at inference time imposes substantial token and computational overhead on downstream generators. Existing graph reduction and context compression techniques remain either task-agnostic, relying on fixed topological heuristics, or decoupled from the specific semantic demands of each query, leaving the trade-off between context size and answer quality poorly optimized. We propose a reinforcement learning framework that learns a query-adaptive graph compression policy, trained with Group Relative Policy Optimization and a joint reward combining downstream question-answering accuracy with token-efficiency constraints, to prune retrieved subgraphs on the fly before they reach the generator. On 200 hard multi-hop questions from HotpotQA, the learned policy achieves an F1-score of 68.8\%, compared with 63.8\% for the uncompressed pipeline, while reducing the average retrieved context from 26,134 to 5,942 tokens (a 58.6\% compression ratio) and consistently outperforming similarity- and heuristic-pruning baselines. These findings indicate that aligning graph compression directly with generator feedback yields more effective and efficient GraphRAG pipelines than static, task-agnostic reduction schemes.
+\end{abstract}
+\begin{IEEEkeywords}
+Retrieval-Augmented Generation, GraphRAG, Reinforcement Learning, Graph Compression, Group Relative Policy Optimization, Multi-hop Question Answering
+\end{IEEEkeywords}
 
 \section{Introduction}
 
-Retrieval-Augmented Generation (RAG) has emerged as a highly successful paradigm to alleviate factual hallucinations and ground Large Language Models (LLMs) in external document collections. However, traditional vector RAG typically operates on chunk-based linear document slices that lack structural semantic connections and struggle with complex multi-hop queries. To address this, GraphRAG structures unstructured text as entity-relation graphs and hierarchical community summaries to support comprehensive global reasoning \cite{edge2024local}. Concurrently, Reinforcement Learning (RL) has shown great potential in training language models to make sequential decisions and navigate complex retrieval spaces . By formulating retrieval and reasoning as Markov Decision Processes and optimizing policies using environmental task-level rewards, RL provides a dynamic optimization mechanism to adapt static graph structures for downstream utility \cite{tsang2026autographr1}.
+Retrieval-Augmented Generation (RAG) mitigates factual hallucination in Large Language Models (LLMs) by grounding their outputs in external document collections. However, conventional RAG operates over flat, chunk-based passages that lack explicit structural relationships, which limits its effectiveness on multi-hop queries. GraphRAG addresses this by organizing text into entity-relation graphs and hierarchical community summaries, enabling more comprehensive reasoning \cite{edge2024local}. Reinforcement learning (RL) has separately proven effective for training sequential decision-making policies over such structures, as demonstrated by agentic multi-turn retrieval frameworks \cite{luo2026graphr1}, offering a natural mechanism for adapting a graph's structure to a specific downstream task rather than relying on fixed heuristics.
 
-A rich line of research has explored learning-based graph reduction, sparsification, and context compression to handle the scale of complex graphs . In graph reduction, frameworks such as SparRL and Cutter \cite{chai2025cutter} leverage RL to prune non-essential edges and nodes to preserve graph robustness and topological properties \cite{hashemi2024comprehensive} . For context compression, methods like CORE \cite{cui2025core} and DynaRAG \cite{zhang2026dynarag} utilize RL to adaptively compress textual contexts based on downstream task performance . More recently, RL has been integrated directly into knowledge graph construction (AutoGraph-R1 \cite{tsang2026autographr1}) and agentic multi-turn GraphRAG reasoning (Graph-R1 \cite{luo2026graphr1} and GraphRAG-R1 \cite{yu2026graphragr1}) to optimize generation quality, retrieval relevance, and reasoning path correctness.
+Despite this potential, three gaps remain open. First, existing graph reduction and sparsification methods are typically optimized for task-agnostic structural properties, such as degree or density, rather than downstream generation quality. Second, GraphRAG pipelines commonly encode entire retrieved subgraphs or dense community summaries at inference time, incurring substantial token and computational overhead. Third, most compression schemes rely on fixed heuristics or hop-count rules that cannot adapt to the varying semantic complexity of individual queries.
 
-Despite these substantial advances, existing frameworks suffer from critical bottlenecks. First, traditional graph sparsification and reduction methods remain decoupled from downstream generator requirements, optimizing instead for task-agnostic, intrinsic topological metrics like degree or density. Second, current GraphRAG pipelines incur significant computational and token overhead from encoding entire retrieved subgraphs or dense community summaries at inference time. Third, existing schemas rely on rigid, predefined heuristics or hop counts, failing to adaptively compress graph contexts based on the specific semantic complexity of each query.
-
-To resolve these limitations, we introduce an end-to-end framework for Adaptive Graph Compression using Reinforcement Learning for Efficient GraphRAG. Rather than task-agnostic preprocessing, our framework directly aligns graph reduction with downstream question-answering utility using direct generator feedback. Specifically, we address the core challenges of structural redundancy, massive token overhead, and rigid retrieval schemes. Our key contributions are summarized as follows:
+To address these gaps, this paper proposes Adaptive Graph Compression using Reinforcement Learning (AGC-RL), a framework that learns a query-adaptive compression policy aligned directly with downstream question-answering performance. The key contributions are as follows:
 
 \begin{itemize}
-    \item \textbf{Query-Adaptive Graph Compression Policy:} We introduce a reinforcement learning-based graph compression policy that dynamically prunes retrieved subgraphs on the fly, tailoring the residual graph structure to meet the specific semantic demands of each user query.
-    \item \textbf{Process-Constrained Joint Reward Mechanism:} We design a joint reward function that integrates downstream question-answering performance with token-level efficiency constraints. This process-constrained mechanism dynamically balances reasoning depth and computational overhead, preventing both shallow retrieval and over-thinking.
-    \item \textbf{High-Fidelity Context Compression:} Through extensive experiments on multi-hop benchmarks, we demonstrate that our framework achieves substantial context compression ratios (significantly reducing context lengths at inference time) while maintaining or improving downstream reasoning accuracy over state-of-the-art baselines.
+    \item A reinforcement learning-based, query-adaptive graph compression policy that prunes retrieved subgraphs on the fly rather than applying a fixed reduction rule.
+    \item A joint reward function combining downstream question-answering accuracy with token-efficiency constraints, balancing reasoning depth against computational cost.
+    \item An empirical evaluation on multi-hop HotpotQA questions showing that the learned policy compresses retrieved context substantially while matching or exceeding the accuracy of the uncompressed pipeline.
 \end{itemize}
 
-The remainder of this paper is organized as follows. Previous work on Graph Retrieval-Augmented Generation (GraphRAG), graph reduction and sparsification, and reinforcement learning for context optimization is reviewed in Section \ref{sec:RW}. Section \ref{sec:PS} details the proposed system model, including the Markov Decision Process (MDP) formulation for query-adaptive graph compression, the formal definitions of the state and action spaces, and the design of the process-constrained reinforcement learning agent. Section \ref{sec:ERD} presents the experimental setup and analyzes the system's performance specifically focusing on context compression ratios and downstream question-answering accuracy against state-of-the-art baselines on complex multi-hop benchmarks. The limitations of the proposed framework and future research directions are discussed in Section \ref{SEC: limF}, leading to Section \ref{sec:con} which concludes the paper.
+The remainder of this paper is organized as follows. Section \ref{sec:RW} reviews related work on GraphRAG, graph reduction, and RL-based context optimization. Section \ref{sec:PS} presents the proposed methodology, including the MDP formulation and reward design. Section \ref{sec:ERD} reports experimental results. Section \ref{SEC: limF} discusses limitations, and Section \ref{sec:con} concludes the paper.
 
 
 
 \section{Related Work}
 \label{sec:RW}
 
-The paradigm of Retrieval-Augmented Generation (RAG) has substantially advanced the applicability of Large Language Models (LLMs) by prepending relevant external documents to the user query, successfully reducing factual hallucinations and grounding model outputs \cite{edge2024local, cui2025core}. However, traditional vector-based RAG approaches are typically restricted to flat, chunk-based document segments that fail to capture high-order semantic relationships among entities, making them ill-suited for complex multi-hop queries or global corpus summarization \cite{luo2026graphr1, edge2024local}. To address these limitations, \citet{edge2024local} pioneered the GraphRAG framework, which constructs structured entity-relationship graphs from raw text and partitions them hierarchically using Leiden community detection. Nonetheless, a major limitation of the approach by \citet{edge2024local} is that the graph construction and community-summarization processes are entirely heuristic and lack a learned compression policy, frequently resulting in severe token bloat and massive computational overhead at inference time. To balance hierarchical retrieval with adaptive semantic integration, \citet{li2026deepgraphrag} proposed Deep GraphRAG to maintain local precision and global context. However, the model designed by \citet{li2026deepgraphrag} applies conciseness or semantic weight rewards primarily to textual summaries rather than performing any adaptive structural compression on the underlying graph topology. Towards dynamic and agentic retrieval pipelines, \citet{luo2026graphr1} proposed Graph-R1, which models the retrieval process as an agentic, multi-turn loop over a knowledge hypergraph. Concurrently, \citet{yu2026graphragr1} developed GraphRAG-R1, which leverages process-constrained reinforcement learning (RL) with progressive retrieval attenuation to guide tool invocation. Despite their reasoning gains, both \citet{luo2026graphr1} and \citet{yu2026graphragr1} focus exclusively on optimizing the step-by-step retrieval navigation policy, leaving the retrieved graph or hypergraph size fixed and uncompressed, which still subjects the downstream generator to significant token overhead.
+Beyond the foundational GraphRAG construction discussed above, a growing body of work targets the efficiency of GraphRAG retrieval and inference without altering the size of the underlying graph. \citet{yu2026graphragr1} proposed GraphRAG-R1, which applies process-constrained RL with a cost-aware reward to guide multi-hop retrieval, and \citet{chen2026pathrag} proposed PathRAG, which prunes redundant relational paths using a fixed flow-based heuristic rather than a learned policy. \citet{song2026kgr1} proposed KG-R1, a single-agent RL framework that reduces inference cost by learning the retrieval trajectory itself, and \citet{fan2026graphragrouter} proposed GraphRAG-Router, which uses a two-stage RL procedure to route queries across heterogeneous GraphRAG-LLM pipelines under a cost-aware reward. In each case, the retrieved graph or hypergraph passed to the generator remains fixed in size; none of these methods reduces the structure of the subgraph after retrieval.
 
-To handle the scaling bottlenecks associated with large-scale graph databases, graph reduction has emerged as a key preprocessing step to compress networks while preserving vital properties, as detailed in the comprehensive survey by \citet{hashemi2024comprehensive}. However, as a literature survey, the work of \citet{hashemi2024comprehensive} does not propose an empirical methodology of its own nor does it address task-specific downstream generation requirements. In the domain of learning-based sparsification, \citet{wickman2022sparrl} proposed SparRL, which trains deep reinforcement learning agents to prune non-essential edges. Nevertheless, the framework by \citet{wickman2022sparrl} relies on a purely structural reward (e.g., preserving PageRank or community structures) and is not evaluated on any downstream semantic question-answering task, which makes it task-agnostic. Expanding on structural robustness under targeted node-deletion attacks, \citet{chai2025cutter} developed Cutter, which utilizes a dual-agent RL architecture consisting of a node detector and an edge compressor. However, similar to other sparsification baselines, \citet{chai2025cutter} optimize their agents solely for topological connectivity metrics in a structure-only setting, ignoring the semantic and task-specific demands of downstream LLM generators.
+A separate class of work reshapes graph content earlier in the pipeline. \citet{li2026deepgraphrag} proposed Deep GraphRAG, which applies a dynamically weighted reward to textual community summaries to balance local precision against global context, but the reward operates on summary text rather than on the graph topology itself. \citet{hashemi2024comprehensive} surveys graph reduction broadly across sparsification, coarsening, and condensation, but as a survey it does not propose or evaluate an empirical method against a downstream generation task.
 
-Parallel to structural reduction, several works have focused on task-aligned context compression and index optimization. In document context compression, \citet{cui2025core} proposed CORE, an end-to-end framework that leverages Group Relative Policy Optimization (GRPO) to condense retrieved text down to 3\% of its original length based on downstream task-level feedback. Similarly, \citet{zhang2026dynarag} developed DynaRAG, employing reinforcement learning to adaptively select context compression ratios according to dynamic query demands. Although highly effective at reducing inference cost, both \citet{cui2025core} and \citet{zhang2026dynarag} operate strictly on flat, unstructured text chunks and are incapable of exploiting or preserving graph-structured topologies. To bridge the gap between graph index building and downstream performance, \citet{tsang2026autographr1} presented AutoGraph-R1, which formulates knowledge graph construction as a policy learning problem optimized via GRPO. However, \citet{tsang2026autographr1} optimize the triple generation process exclusively at construction time; their method lacks a post hoc mechanism to compress the retrieved subgraph size dynamically during query execution. Our work bridges these disparate lines of research by learning a query-adaptive graph compression policy that dynamically prunes retrieved subgraphs on the fly, optimizing downstream generation accuracy and inference token efficiency in unison.
+Across this literature, no method combines RL-trained structural operators over an already-retrieved subgraph with a reward grounded in downstream GraphRAG answer quality and query-time adaptivity. Table~\ref{tab:related_work} summarizes representative RL-based graph-reduction and context-compression methods that inform this gap.
 
 \begin{table*}[!t]
 \centering
 \caption{Summary of related studies on reinforcement learning for graph compression and GraphRAG optimization}
 \label{tab:related_work}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{c c p{3.2cm} p{4.5cm} p{3.6cm} p{3.8cm}}
+\begin{tabular}{c c p{3.6cm} p{3.2cm} p{3.6cm} p{3.6cm}}
 \toprule
-\textbf{Ref.} & \textbf{Year} & \textbf{Method / Algorithm} & \textbf{Dataset} & \textbf{Results} & \textbf{Limitations} \\
+\textbf{Ref.} & \textbf{Year} & \textbf{Method} & \textbf{Dataset} & \textbf{Results} & \textbf{Limitations} \\
 \midrule
 
-{\cite{wickman2022sparrl}} &
-2022 &
-MDP-based edge sparsification with user-specified reward. &
-Generic benchmark graphs (structural evaluation, no QA corpus). &
-Consistent gains over sampling-based sparsification baselines across structural objectives. &
-Purely structural reward; not evaluated on any retrieval-and-generation task. \\
+\cite{wickman2022sparrl} & 2022 &
+MDP-based edge sparsification, user-specified reward &
+Generic benchmark graphs &
+Outperforms sampling-based sparsification baselines &
+Purely structural reward; no QA evaluation \\
 
-{\cite{edge2024local}} &
-2024 &
-Heuristic LLM-based entity-relation extraction with Leiden community partitioning. &
-Podcast transcripts and MultiHop-RAG corpora. &
-Enables query-focused summarization across large corpora via community summaries. &
-Construction and reduction are entirely heuristic; no learned compression policy. \\
+\cite{chai2025cutter} & 2025 &
+Dual-agent RL (node detector + edge compressor) &
+Generic benchmark graphs (robustness) &
+Preserves topological robustness under compression &
+Structure-only reward; no downstream task \\
 
-{\cite{cui2025core}} &
-2025 &
-End-to-end GRPO-trained context compressor rewarded by downstream accuracy. &
-Four open-domain QA datasets. &
-3\% compression ratio with a 3.3-point average EM gain over uncompressed context. &
-Operates on flat, unstructured text; no graph topology exploited. \\
+\cite{cui2025core} & 2025 &
+GRPO-trained context compressor &
+Four open-domain QA datasets &
+3\% compression ratio, +3.3 EM &
+Flat text only; no graph structure \\
 
-{\cite{chai2025cutter}} &
-2025 &
-Dual-agent RL (Vital Detection + Redundancy Detection) with shared GCN encoder. &
-Generic benchmark graphs (topological robustness evaluation). &
-Preserves topological robustness profile of graphs under aggressive compression. &
-Structural robustness objective only; not tailored to retrieval or GraphRAG. \\
+\cite{zhang2026dynarag} & 2026 &
+RL per-chunk compression ratio (Thompson sampling) &
+Multi-retriever QA benchmarks &
+18.5\% storage cut, +8.3\% DCG@1 &
+Flat text only; no graph structure \\
 
-{\cite{tsang2026autographr1}} &
-2026 &
-GRPO-fine-tuned LLM triple extractor rewarded by downstream retrieval utility. &
-HotpotQA, MuSiQue, 2WikiMultihopQA, NQ, PopQA. &
-Up to +4.39 average F1 gain over zero-shot construction across retrieval paradigms. &
-Optimizes graph content at construction time; does not reduce graph size post hoc. \\
-
-{\cite{yu2026graphragr1}} &
-2026 &
-Modified GRPO with Progressive Retrieval Attenuation and Cost-Aware F1 rewards. &
-HotpotQA, 2Wiki, MuSiQue, PopQA. &
-Up to 38.08--83.81\% F1 improvement over strongest baselines across datasets. &
-Optimizes retrieval-invocation policy only; graph size remains fixed. \\
-
-{\cite{luo2026graphr1}} &
-2026 &
-Multi-turn agentic RL (GRPO) over a lightweight knowledge hypergraph. &
-2WikiMultiHopQA, HotpotQA, Musique, NQ, PopQA, TriviaQA. &
-Outperforms chunk- and graph-based RL baselines in F1 across all six benchmarks. &
-Retrieval-policy optimization only; hypergraph construction remains lightweight/heuristic. \\
-
-{\cite{zhang2026dynarag}} &
-2026 &
-MDP-based per-chunk compression ratio selection via Thompson Sampling. &
-Multi-retriever QA benchmarks (Contriever, BGE-M3, BM25, Hybrid). &
-18.53\% knowledge-base storage reduction with an 8.31\% DCG@1 improvement. &
-Operates on flat text chunks; no structural graph-reduction operators. \\
-
-{\cite{li2026deepgraphrag}} &
-2026 &
-Dynamically-Weighted GRPO (DW-GRPO) for adaptive multi-objective reward balancing. &
-Natural Questions, HotpotQA. &
-Compact 1.5B model approaches large-model performance in knowledge integration. &
-Conciseness reward applied to summary text, not to graph structure. \\
+\cite{tsang2026autographr1} & 2026 &
+GRPO-tuned LLM triple extractor &
+HotpotQA, MuSiQue, 2Wiki, NQ, PopQA &
++4.39 F1 over zero-shot construction &
+Construction-time only; no post-hoc reduction \\
 
 \bottomrule
 \end{tabular}}
 \end{table*}
 
+
 \begin{figure*}[!t]
     \centering
-    \includegraphics[width=0.95\linewidth]{workflow_diagram.jpg}
+    \includegraphics[width=0.95\linewidth]{workflow_diagram.png}
     \caption{Overview of the proposed adaptive graph compression workflow. Retrieved subgraph $G_q$ is processed with GRPO-based compression to $G_c$ (answer $A_c$) and without RL compression (answer $A_o$); token ratio and reward/penalty are computed by comparing $A_c$ against $A_o$, which in turn updates the compression policy.}
     \label{fig:workflow}
 \end{figure*}
@@ -254,13 +225,22 @@ Fig.~\ref{fig:training} summarizes the training behavior of the policy. In Fig.~
 \end{figure}
 
 \subsection{Classification Performance and Confusion Matrix}
-Fig.~\ref{fig:confusion} shows the confusion matrices of heuristic pruning and the proposed policy on the 4,154 validation nodes, 460 of which are relevant. From the figure, heuristic pruning correctly kept 341 relevant nodes while removing 119 of them. In contrast, the policy correctly kept 382 relevant nodes and removed only 78, at the cost of keeping 330 irrelevant nodes instead of 241. The policy therefore reached a higher recall (0.830 against 0.741) and a lower precision (0.537 against 0.586), with nearly equal F1-scores (0.652 and 0.655) and an AUC of 0.931. This trade-off is consistent with the reward, since removing a supporting node costs more than keeping an irrelevant one.
+Fig.~\ref{fig:confusion} shows the confusion matrices of heuristic pruning and the proposed policy on the 4,154 validation nodes, 460 of which are relevant. From the figure, heuristic pruning correctly kept 341 relevant nodes while removing 119 of them. In contrast, the policy correctly kept 382 relevant nodes and removed only 78, at the cost of keeping 330 irrelevant nodes instead of 241. The policy therefore reached a higher recall (0.830 against 0.741) and a lower precision (0.537 against 0.586), with nearly equal F1-scores (0.652 and 0.655). This trade-off is consistent with the reward, since removing a supporting node costs more than keeping an irrelevant one.
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\linewidth]{node_confusion.png}
 \caption{Confusion matrices of heuristic pruning and the proposed policy for the node-level KEEP/REMOVE decisions on the validation set}
 \label{fig:confusion}
+\end{figure}
+
+Fig.~\ref{fig:roc} shows the ROC curve of the KEEP probability, with an AUC of 0.931. The policy at the 0.5 threshold reaches a true-positive rate of 0.830 at a false-positive rate of 0.089, whereas heuristic pruning reaches 0.741 at 0.065. The operating point of the heuristic lies marginally above the curve, since the policy reaches only 0.704 at the same false-positive rate; the higher recall of the policy therefore follows from operating at a different point rather than from a better ranking of the nodes.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{node_roc.png}
+\caption{ROC curve of the node-level KEEP decision on the validation set, with the operating points of the proposed policy and of heuristic pruning marked}
+\label{fig:roc}
 \end{figure}
 
 \subsection{Contribution of the State Features}

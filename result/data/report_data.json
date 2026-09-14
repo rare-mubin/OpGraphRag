@@ -2494,6 +2494,7 @@
   "paper_figures": [
     "training_dynamics.png",
     "node_confusion.png",
+    "node_roc.png",
     "feature_ablation.png"
   ]
 }
